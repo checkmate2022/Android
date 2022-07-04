@@ -17,5 +17,9 @@ interface UserService {
     @GET("users")
     fun get_user():Call<userGetBody>
 
+    //유저검색
+    @GET("users/search")
+    fun get_user_search(@Query("query") query:String):Call<userGetBody2>
+
 }
 

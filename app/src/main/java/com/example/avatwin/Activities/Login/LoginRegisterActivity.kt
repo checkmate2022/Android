@@ -1,10 +1,9 @@
-package com.example.avatwin.Login
+package com.example.avatwin.Activities.Login
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.avatwin.Service.ApiService
 import com.example.avatwin.DataClass.joinGetBody
 import com.example.avatwin.DataClass.joinReqBody
 import com.example.avatwin.R

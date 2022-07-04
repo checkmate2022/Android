@@ -12,4 +12,10 @@ class PreferenceUtil(context: Context) {
         set(value){
             prefs.edit().putString("token",value).apply()
         }
+
+    var userId:String?
+        get() = prefs.getString("userId",null)
+        set(value){
+            prefs.edit().putString("userId",value).apply()
+        }
 }

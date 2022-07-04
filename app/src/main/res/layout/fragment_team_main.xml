@@ -6,24 +6,36 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/gray"
-    tools:context=".Activities.MainActivity">
+    tools:context=".Fragment.Team.TeamMainFragment">
 
-
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <ImageView
+        android:id="@+id/menu_button"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_baseline_menu_24"
+        android:layout_marginBottom="20dp" />
 
     <!--team탭 타이틀-->
     <TextView
+        android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:background="@color/white"
+        android:layout_marginTop="5dp"
         android:gravity="center_vertical"
-        android:text="TEAM"
+        android:text=" TEAM"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
         android:letterSpacing="-0.05"
-        android:paddingLeft="20dp"
-        android:paddingBottom="5dp"/>
-
+       />
+    </LinearLayout>
     <!--team탭 구분선-->
     <View
         android:layout_width="match_parent"
@@ -43,30 +55,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/register_team"
-                style="@style/registerEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginTop="36dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="30dp"
-                android:background="@drawable/btn_pup"
-                android:letterSpacing="-0.05"
-                android:text="생성"
-                android:textColor="@color/white"
-                android:textSize="14dp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_team"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:overScrollMode="never"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="15dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" />
 
             <!--Footer-->
             <LinearLayout
