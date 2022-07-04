@@ -16,7 +16,7 @@
         android:layout_height="45dp"
         android:background="@color/white"
         android:gravity="center_vertical"
-        android:text="TEAM"
+        android:text="참여자 조회"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
@@ -43,19 +43,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/register_team"
-                style="@style/registerEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginTop="36dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="30dp"
-                android:background="@drawable/btn_pup"
-                android:letterSpacing="-0.05"
-                android:text="생성"
-                android:textColor="@color/white"
-                android:textSize="14dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_team"

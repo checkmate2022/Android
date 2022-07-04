@@ -8,11 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.avatwin.Adapter.teamAdapter
-import com.example.avatwin.Auth.App
 import com.example.avatwin.DataClass.myteamGetBody
 import com.example.avatwin.Service.ApiService
 import com.example.avatwin.R
 import com.example.avatwin.Auth.AuthInterceptor
+import com.example.avatwin.Fragment.Team.TeamMainFragment
+import com.example.avatwin.Fragment.Team.TeamRegisterFragment
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -25,6 +26,18 @@ class HomeFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_home, container, false)
+
+        //팀생성 페이지로 이동
+        root.register_team.setOnClickListener {
+            val fragmentA = TeamRegisterFragment()
+            val bundle = Bundle()
+            fragmentA.arguments=bundle
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.add(R.id.container,fragmentA)
+            transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
+            transaction.commit()
+        }
+
 
         //layoutmanager설정
         val layoutManager = GridLayoutManager(activity,2)
@@ -46,6 +59,22 @@ class HomeFragment: Fragment() {
                     Log.e("team",mList.toString())
                     adapter = teamAdapter(mList.list)
                     root.recyclerView_team.adapter= adapter
+
+                    adapter.setItemClickListener(object : teamAdapter.ItemClickListener {
+                        override fun onClick(view: View, position: Int) {
+
+                            Log.e("ddd", "Ss")
+                            val teamaBody =mList.list[position]
+                            val fragmentA = TeamMainFragment(teamaBody)
+                            val bundle = Bundle()
+                            fragmentA.arguments=bundle
+                            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                            transaction.add(R.id.container,fragmentA)
+                            transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
+                            transaction.commit()
+
+                        }
+                    })
                 } }
 
             override fun onFailure(call: Call<myteamGetBody>, t: Throwable) {

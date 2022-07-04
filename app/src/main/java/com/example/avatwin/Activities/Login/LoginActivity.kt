@@ -1,4 +1,4 @@
-package com.example.avatwin.Login
+package com.example.avatwin.Activities.Login
 
 import android.content.Intent
 import android.os.Bundle
@@ -44,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
                         val result = response.body()
                         var intent = Intent(applicationContext, MainActivity::class.java)
                         App.prefs.token=result!!.data
+                        App.prefs.userId=login_id.text.toString()
                         startActivityForResult(intent, 0)
                     }
                 }

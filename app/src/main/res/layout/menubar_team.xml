@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_drawer_layout"
+    tools:openDrawer="start"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--fitsSystemWindows를 true로 지정할 경우
+    뷰가 차지할 수 있는 영역을 소프트키, 상태바를 제외한 영역까지 넓혀줍니다.-->
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/fragment_team_main"/>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:orientation="vertical"
+        android:background="@color/ivory"
+        android:layout_gravity = "left"
+        app:itemTextColor="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+        <LinearLayout
+
+            android:background="@color/purple_200"
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+        <TextView
+
+            android:textSize="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="팀명"/>
+        </LinearLayout>
+
+<LinearLayout
+    android:layout_marginTop="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+    <TextView
+        style="@style/registerTitle"
+        android:textSize="15dp"
+        android:id="@+id/team_member_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="팀 참여자"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        style="@style/registerTitle"
+        android:textSize="15dp"
+        android:id="@+id/team_update_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="팀 관리"/>
+
+</LinearLayout>
+
+</LinearLayout>
+    </com.google.android.material.navigation.NavigationView>
+</androidx.drawerlayout.widget.DrawerLayout>
