@@ -21,6 +21,7 @@
         android:id="@+id/tab3"
         android:enabled="true"
         app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_baseline_access_alarm_24"
         android:layout_marginLeft="10dp"
         android:title="알림"/>
     <item
