@@ -31,7 +31,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
-class TeamMemberFragment(val teamBody : teamaBody): Fragment() {
+class TeamMemberFragment(): Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_team_member, container, false)
@@ -52,7 +52,7 @@ class TeamMemberFragment(val teamBody : teamaBody): Fragment() {
                 .addConverterFactory(ScalarsConverterFactory.create()).build()
 
         var apiService = retrofit.create(TeamService::class.java)
-        apiService.get_teamUser(teamBody.teamSeq!!).enqueue(object : Callback<teamUserGetBody> {
+        apiService.get_teamUser(App.prefs.teamSeq!!.toLong()).enqueue(object : Callback<teamUserGetBody> {
             override fun onResponse(call: Call<teamUserGetBody>, response: Response<teamUserGetBody>) {
                 val result = response.body()
 

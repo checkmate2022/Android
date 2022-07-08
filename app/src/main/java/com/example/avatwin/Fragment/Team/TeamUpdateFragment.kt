@@ -35,7 +35,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
-class TeamUpdateFragment(val teamBody: teamaBody): Fragment() {
+class TeamUpdateFragment(): Fragment() {
     val layoutManager = LinearLayoutManager(activity)
     lateinit var listAdapter: teamListAdapter
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -59,7 +59,7 @@ class TeamUpdateFragment(val teamBody: teamaBody): Fragment() {
         var apiService = retrofit.create(TeamService::class.java)
 
 
-        apiService.get_teamId(teamBody.teamSeq!!).enqueue(object : Callback<teamIdGetBody> {
+        apiService.get_teamId(App.prefs.teamSeq!!.toLong()).enqueue(object : Callback<teamIdGetBody> {
             override fun onResponse(call: Call<teamIdGetBody>, response: Response<teamIdGetBody>) {
                 val result = response.body()
                 root.register_id.setText(result!!.data.teamName)
@@ -73,7 +73,7 @@ class TeamUpdateFragment(val teamBody: teamaBody): Fragment() {
         })
 
         //참여자 조회
-        apiService.get_teamUser(teamBody.teamSeq!!).enqueue(object : Callback<teamUserGetBody> {
+        apiService.get_teamUser(App.prefs.teamSeq!!.toLong()).enqueue(object : Callback<teamUserGetBody> {
             override fun onResponse(call: Call<teamUserGetBody>, response: Response<teamUserGetBody>) {
                 val result = response.body()
 
@@ -99,7 +99,7 @@ class TeamUpdateFragment(val teamBody: teamaBody): Fragment() {
 //팀수정
         //팀삭제
         root.delete_team_button.setOnClickListener {
-        deleteTeam(teamBody)}
+        deleteTeam()}
         return root
     }
 
@@ -122,7 +122,7 @@ class TeamUpdateFragment(val teamBody: teamaBody): Fragment() {
 
 
             var data = teamReqBody(register_id.text.toString(),register_pwd.text.toString(),items)
-            apiService.put_team(teamBody.teamSeq!!,data).enqueue(object : Callback<teamPostGetBody> {
+            apiService.put_team(App.prefs.teamSeq!!.toLong(),data).enqueue(object : Callback<teamPostGetBody> {
                 override fun onResponse(call: Call<teamPostGetBody>, response: Response<teamPostGetBody>) {
                     val result = response.body()
                     Log.e("성공",result.toString())
@@ -201,7 +201,7 @@ class TeamUpdateFragment(val teamBody: teamaBody): Fragment() {
 
     }
 
-    fun deleteTeam(teamBody: teamaBody){
+    fun deleteTeam(){
 
             val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
             var retrofit = Retrofit.Builder()
@@ -212,7 +212,7 @@ class TeamUpdateFragment(val teamBody: teamaBody): Fragment() {
 
             var apiService = retrofit.create(TeamService::class.java)
 
-            apiService.delete_team(teamBody.teamSeq!!).enqueue(object : Callback<myteamGetBody> {
+            apiService.delete_team(App.prefs.teamSeq!!.toLong()).enqueue(object : Callback<myteamGetBody> {
                 override fun onResponse(call: Call<myteamGetBody>, response: Response<myteamGetBody>) {
                     val result = response.body()
                     Log.e("성공",result.toString())

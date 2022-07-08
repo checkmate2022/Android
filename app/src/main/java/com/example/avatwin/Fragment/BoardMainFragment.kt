@@ -8,15 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.avatwin.Adapter.teamAdapter
-import com.example.avatwin.Auth.App
 import com.example.avatwin.DataClass.myteamGetBody
 import com.example.avatwin.Service.ApiService
 import com.example.avatwin.R
 import com.example.avatwin.Auth.AuthInterceptor
-import com.example.avatwin.DataClass.teamaBody
 import com.example.avatwin.Fragment.Team.TeamMainFragment
 import com.example.avatwin.Fragment.Team.TeamRegisterFragment
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -25,7 +22,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class HomeFragment: Fragment() {
+class BoardMainFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_home, container, false)
@@ -66,12 +63,9 @@ class HomeFragment: Fragment() {
                     adapter.setItemClickListener(object : teamAdapter.ItemClickListener {
                         override fun onClick(view: View, position: Int) {
 
-
                             Log.e("ddd", "Ss")
                             val teamaBody =mList.list[position]
-                            App.prefs.teamSeq=teamaBody.teamSeq.toString()
-
-                            val fragmentA = TeamMainFragment()
+                            val fragmentA = TeamMainFragment(teamaBody)
                             val bundle = Bundle()
                             fragmentA.arguments=bundle
                             val transaction = requireActivity().supportFragmentManager.beginTransaction()

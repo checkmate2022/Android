@@ -18,4 +18,10 @@ class PreferenceUtil(context: Context) {
         set(value){
             prefs.edit().putString("userId",value).apply()
         }
+
+    var teamSeq:String?
+        get() = prefs.getString("teamSeq",null)
+        set(value){
+            prefs.edit().putString("teamSeq",value).apply()
+        }
 }

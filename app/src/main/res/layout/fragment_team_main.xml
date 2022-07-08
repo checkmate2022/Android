@@ -55,6 +55,39 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:text="팀 일정"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:letterSpacing="-0.05"
+                />
+            <ImageView
+                android:id="@+id/schedule_add_button"
+                android:layout_marginLeft="280dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_baseline_add_24"
+                android:layout_marginBottom="20dp" />
+
+            </LinearLayout>
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                android:id="@+id/calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                app:mcv_selectionColor="@color/purple_700"
+                app:mcv_showOtherDates="all" />
 
 
             <!--Footer-->

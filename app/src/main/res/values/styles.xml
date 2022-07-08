@@ -33,4 +33,13 @@
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:spinnerMode">dialog</item>
     </style>
+    <style name="registerButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="backgroundColor">#B9B7BE</item>
+        <item name="android:letterSpacing" tools:ignore="NewApi">-0.05</item>
+    </style>
 </resources>
