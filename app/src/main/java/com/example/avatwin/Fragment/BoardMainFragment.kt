@@ -65,7 +65,7 @@ class BoardMainFragment: Fragment() {
 
                             Log.e("ddd", "Ss")
                             val teamaBody =mList.list[position]
-                            val fragmentA = TeamMainFragment(teamaBody)
+                            val fragmentA = TeamMainFragment()
                             val bundle = Bundle()
                             fragmentA.arguments=bundle
                             val transaction = requireActivity().supportFragmentManager.beginTransaction()

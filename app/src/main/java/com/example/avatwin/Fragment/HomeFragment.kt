@@ -70,7 +70,7 @@ class HomeFragment: Fragment() {
                             Log.e("ddd", "Ss")
                             val teamaBody =mList.list[position]
                             App.prefs.teamSeq=teamaBody.teamSeq.toString()
-
+                            Log.e("teamSq",App.prefs.teamSeq.toString())
                             val fragmentA = TeamMainFragment()
                             val bundle = Bundle()
                             fragmentA.arguments=bundle
