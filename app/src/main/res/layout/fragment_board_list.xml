@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Fragment.BoardMainFragment">
+    tools:context=".Fragment.Board.BoardMainFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -111,24 +111,25 @@
                 android:id="@+id/footer"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
+                android:background="@color/gray"
                 android:orientation="vertical"
                 android:padding="20dp">
 
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginBottom="20dp"
-                    android:src="@drawable/logo" />
+                    android:src="@drawable/at_logo"
+                    android:layout_marginBottom="20dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:text="상호명: 드림메이트\n대표자: 임현승\n이메일: temp@gmail.com\n카카오톡: @드림메이트 친구 추가하고 소식을 받아보세요"
+                    android:lineSpacingMultiplier="1.2"
+                    android:text="상호명: Avatwin\n대표자: 체크메이트\n이메일: checkmate@gmail.com"
                     android:textSize="8dp"
                     android:textColor="#ff191919"
                     android:letterSpacing="-0.02"
-                    android:lineSpacingMultiplier="1.2" />
+                    android:layout_marginBottom="20dp" />
 
             </LinearLayout>
 

@@ -20,7 +20,7 @@
             android:layout_marginBottom="5dp"
             android:gravity="center_vertical"
             android:letterSpacing="-0.05"
-            android:text="공모전"
+            android:text="게시글"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="20dp"
             android:textStyle="bold"
@@ -67,21 +67,6 @@
                 android:paddingRight="20dp"
                 android:paddingBottom="10dp">
 
-                <!--모집 여부-->
-                <TextView
-                    android:id="@+id/board_detail_recruiting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:background="@drawable/edit_text_border"
-                    android:letterSpacing="-0.05"
-                    android:text="모집중"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="12dp" />
 
                 <!--작성 날짜-->
                 <TextView
@@ -100,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:letterSpacing="-0.05"
-                    android:text="앱 아이디어 공모전 같이 참여할 개발자 구합니다!"
+                    android:text="오늘 공지"
                     android:textColor="@color/black"
                     android:textSize="19dp" />
 
@@ -145,30 +130,7 @@
                 android:padding="20dp"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:text="팀명"
-                        android:textSize="14dp"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:letterSpacing="-0.05"/>
-
-                    <TextView
-                        android:id="@+id/board_detail_team"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:letterSpacing="-0.05"
-                        android:text="원티드 피우다팀"
-                        android:textColor="@color/black"
-                        android:textSize="14dp" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -188,7 +150,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:letterSpacing="-0.05"
-                        android:text="안녕하세요~ 2021년 12월에 하는 앱 아이디어 공모전에 참여하실 안드로이드 개발자 구합니다. 현재 서버개발자 2명있고, 프로젝트 경험있으면 좋겠지만 없어도 같이 만들어가실 분이면 좋겠습니다! 자세한 사항은 쪽지 부탁드립니다."
+                        android:text="안녕하세요~ 오늘 회의 안건에 대해 내일 나눠보는게 좋겠습니다! 자세한 사항은 쪽지 부탁드립니다."
                         android:textColor="@color/black"
                         android:textSize="14dp" />
 
@@ -213,16 +175,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp" />
 
-            <!--버튼-->
-            <Button
-                android:id="@+id/posting_detail_request"
-                android:layout_gravity="center_horizontal"
-                android:text="참가 신청"
-                android:textColor="@color/white"
-                style="@style/btnBasic"
-                android:background="@drawable/btn_teal"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"/>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

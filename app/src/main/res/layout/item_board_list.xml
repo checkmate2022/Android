@@ -15,7 +15,7 @@
 
 
         <TextView
-            android:id="@+id/schedule_usrid"
+            android:id="@+id/board_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="7월 5일 회의"
@@ -31,25 +31,25 @@
        >
 
             <TextView
-                android:id="@+id/schedule_start"
+                android:id="@+id/board_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="sia7997"
-                android:layout_marginLeft="5dp"
-                android:textSize="14sp"
-                android:textColor="@color/black"
+
+                android:textSize="12sp"
+                android:textColor="@color/grayDark"
                 android:letterSpacing="-0.05"
                 android:layout_marginBottom="8dp"/>
 
 
             <TextView
-                android:id="@+id/schedule_participant"
+                android:id="@+id/board_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="시간"
                 android:layout_marginLeft="10dp"
-                android:textSize="14sp"
-                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textColor="@color/grayDark"
                 android:letterSpacing="-0.05"
                 android:layout_marginBottom="8dp"/>
 
