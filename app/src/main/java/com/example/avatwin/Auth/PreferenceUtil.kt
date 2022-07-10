@@ -24,4 +24,10 @@ class PreferenceUtil(context: Context) {
         set(value){
             prefs.edit().putString("teamSeq",value).apply()
         }
+
+    var channelId:String?
+        get() = prefs.getString("channelId",null)
+        set(value){
+            prefs.edit().putString("channelId",value).apply()
+        }
 }

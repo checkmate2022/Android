@@ -126,18 +126,33 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Spinner
-                    android:id="@+id/spinner"
+
+                <RadioGroup
+                    android:id="@+id/register_schedule_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginEnd="304dp"
-                    android:paddingVertical="10dp"
+                    android:layout_marginEnd="196dp"
+                    android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/register_type_title"/>
+                    app:layout_constraintTop_toBottomOf="@+id/register_type_title">
 
+                    <RadioButton
+                        android:id="@+id/basic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="basic"></RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/conference"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="conference"></RadioButton>
+
+
+                </RadioGroup>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -176,9 +191,9 @@
                     android:id="@+id/register_start_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="196dp"
-                    android:text="13:00"
+                    android:layout_marginEnd="148dp"
                     android:background="#00ff0000"
+                    android:text="13:00"
                     android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -220,14 +235,14 @@
                     android:id="@+id/register_end_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="196dp"
+                    android:layout_marginEnd="148dp"
                     android:background="#00ff0000"
-                    android:textColor="@color/black"
                     android:text="13:00"
+                    android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/register_end_title"
-                    app:layout_constraintVertical_bias="0.1" />
+                    app:layout_constraintVertical_bias="0.0" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -300,15 +315,19 @@
             <Button
                 android:id="@+id/register_schedule_button"
                 style="@style/btnBasic"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/btn_teal"
                 android:text="등록"
                 android:textColor="@color/white"
-                app:layout_constraintTop_toBottomOf="@id/register_nickname_group"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/register_nickname_group" />
+
+                <View
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                    tools:ignore="MissingConstraints" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

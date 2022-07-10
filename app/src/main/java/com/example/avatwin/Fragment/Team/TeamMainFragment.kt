@@ -9,30 +9,20 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.avatwin.Adapter.teamListAdapter
 import com.example.avatwin.Adapter.teamMenuAdapter
-import com.example.avatwin.Adapter.teamSearchListAdapter
 import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.*
-import com.example.avatwin.Decorator.EventDecorator
 import com.example.avatwin.Decorator.TodayDecorator
+import com.example.avatwin.Fragment.Board.BoardMainFragment
 import com.example.avatwin.Fragment.Schedule.ScheduleRegisterFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.ChannelService
-import com.example.avatwin.Service.TeamService
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import kotlinx.android.synthetic.main.dialog_channel_register.view.*
-import kotlinx.android.synthetic.main.dialog_member_search.view.*
-import kotlinx.android.synthetic.main.dialog_member_search.view.search_edittext
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.fragment_team_main.*
 import kotlinx.android.synthetic.main.fragment_team_main.view.*
-import kotlinx.android.synthetic.main.fragment_team_register.*
 import kotlinx.android.synthetic.main.menubar_team.*
 import kotlinx.android.synthetic.main.menubar_team.view.*
 import okhttp3.OkHttpClient
@@ -42,7 +32,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.util.*
 
 class TeamMainFragment() : Fragment() {
     //채널 adapter
@@ -98,8 +87,24 @@ class TeamMainFragment() : Fragment() {
                 Log.e("성공",result.toString())
                 for(i in 0..result.list.size-1){
                 adapter.addItem(result.list[i].channelName.toString())}
-
                 root.recyclerView_team_menu.adapter = adapter
+
+                adapter.setItemClickListener(object : teamMenuAdapter.ItemClickListener {
+                    override fun onClick(view: View, position: Int) {
+
+                        App.prefs.channelId=result.list[position].channelSeq.toString()
+
+                        val fragmentA = BoardMainFragment()
+                        val bundle = Bundle()
+                        fragmentA.arguments=bundle
+                        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                        transaction.add(R.id.container,fragmentA)
+                        transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
+                        transaction.commit()
+
+                    }
+                })
+
 
             }
 

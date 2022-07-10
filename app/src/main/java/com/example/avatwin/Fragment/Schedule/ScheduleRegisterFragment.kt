@@ -1,5 +1,7 @@
 package com.example.avatwin.Fragment.Schedule
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,7 +21,9 @@ import com.example.avatwin.Fragment.Team.TeamMainFragment
 import com.example.avatwin.Service.ScheduleService
 import com.example.avatwin.Service.TeamService
 import com.example.avatwin.Service.UserService
+import kotlinx.android.synthetic.main.dialog_channel_register.view.*
 import kotlinx.android.synthetic.main.dialog_member_search.view.*
+import kotlinx.android.synthetic.main.fragment_avatar_register.*
 import kotlinx.android.synthetic.main.fragment_schedule_register.*
 import kotlinx.android.synthetic.main.fragment_team_register.*
 import kotlinx.android.synthetic.main.fragment_team_register.register_id
@@ -35,6 +39,11 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ScheduleRegisterFragment: Fragment() {
 
@@ -49,12 +58,81 @@ class ScheduleRegisterFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        var startDateString = ""
+        var startTimeString = ""
+        var endDateString = ""
+        var endTimeString = ""
+        var start =""
+        var end=""
+        val items: ArrayList<String> = arrayListOf()
         //시작 날짜
+        register_start_day.setOnClickListener {
+
+            val cal = Calendar.getInstance()
+            val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                startDateString = "${year}-${month + 1}-${dayOfMonth}"
+                register_start_day.text = startDateString
+            }
+            DatePickerDialog(requireContext(), dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+
+        }
 
         //시작 시간
-        //종료 날짜
+        register_start_time.setOnClickListener {
+            val cal = Calendar.getInstance()
+            val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+                startTimeString = "${hourOfDay}:${minute}"
+                register_start_time.text = startTimeString
+                start = startDateString+" "+startTimeString+":00"
+            }
+            TimePickerDialog(requireContext(), timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),true).show()
+        }
+
+        //종료날짜
+        register_end_day.setOnClickListener {
+
+            val cal = Calendar.getInstance()
+            val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                endDateString = "${year}-${month + 1}-${dayOfMonth}"
+                register_end_day.text = endDateString
+            }
+            DatePickerDialog(requireContext(), dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+        }
+
         //종료 시간
+        register_end_time.setOnClickListener {
+            val cal = Calendar.getInstance()
+            val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+                endTimeString = "${hourOfDay}:${minute}"
+                register_end_time.text = endTimeString
+                end = endDateString+" "+endTimeString+":00"
+            }
+            TimePickerDialog(requireContext(), timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),true).show()
+        }
+
+        //일정종류
+        var scheduleType = ""
+        register_schedule_type.setOnCheckedChangeListener{ group, checkedId ->
+            when(checkedId){
+                R.id.basic -> scheduleType = "BASIC"
+
+                R.id.conference -> scheduleType = "CONFERENCE"
+
+            }
+        }
+
+        val dateFormatter = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+
+
+        //Log.e("Start",start)
+        //val startdate= LocalDateTime.parse(start, dateFormatter)
+
+        //enddate= LocalDateTime.parse(end, dateFormatter)}
+
 
         //스케쥴 참여자
         val layoutManager = LinearLayoutManager(activity)
@@ -62,9 +140,10 @@ class ScheduleRegisterFragment: Fragment() {
         lateinit var listAdapter: teamListAdapter
         listAdapter = teamListAdapter()
 
-        val items: ArrayList<String> = arrayListOf()
+
 
  //스케쥴등록
+
         register_schedule_button.setOnClickListener {
             val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
             var retrofit = Retrofit.Builder()
@@ -75,24 +154,25 @@ class ScheduleRegisterFragment: Fragment() {
 
             var apiService = retrofit.create(ScheduleService::class.java)
 
-
-            var data = scheduleReqBody(register_id.text.toString(),register_description.text.toString(),,,items, App.prefs.teamSeq)
-            apiService.post_schedule(data).enqueue(object : Callback<scheduleReqBody> {
-                override fun onResponse(call: Call<teamPostGetBody>, response: Response<scheduleReqBody>) {
+            //LocalDateTime.parse(start, dateFormatter)
+            var data = scheduleReqBody(register_id.text.toString(),register_description.text.toString(),scheduleType,start,end,items, App.prefs.teamSeq!!.toLong())
+            apiService.post_schedule(data).enqueue(object : Callback<scheduleGetBody> {
+                override fun onResponse(call: Call<scheduleGetBody>, response: Response<scheduleGetBody>) {
                     val result = response.body()
                     Log.e("D",result.toString())
+                    /*
                     val fragmentA = TeamMainFragment()
                     val bundle = Bundle()
                     fragmentA.arguments=bundle
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
                     transaction.add(R.id.container,fragmentA)
                     transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
-                    transaction.commit()
+                    transaction.commit()*/
 
                 }
 
-                override fun onFailure(call: Call<scheduleReqBody>, t: Throwable) {
-                    Log.e("avatar_create", "OnFailuer+${t.message}")
+                override fun onFailure(call: Call<scheduleGetBody>, t: Throwable) {
+                    Log.e("schedule", "OnFailuer+${t.message}")
                 }
             })
 
