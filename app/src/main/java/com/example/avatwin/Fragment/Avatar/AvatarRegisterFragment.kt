@@ -1,4 +1,4 @@
-package com.example.avatwin.Fragment
+package com.example.avatwin.Fragment.Avatar
 
 import android.Manifest
 import android.app.Activity
@@ -25,6 +25,7 @@ import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.myAvatarRes
+import com.example.avatwin.Fragment.MyPageFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.AvatarService
 import com.google.gson.GsonBuilder
