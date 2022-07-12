@@ -13,6 +13,9 @@ import com.example.avatwin.R
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.myAvatarRes
 import com.example.avatwin.DataClass.userGetBody
+import com.example.avatwin.Fragment.Avatar.AvatarRegisterFragment
+import com.example.avatwin.Fragment.Avatar.AvatarUpdateFragment
+import com.example.avatwin.Fragment.Team.TeamMainFragment
 import com.example.avatwin.Service.AvatarService
 import com.example.avatwin.Service.UserService
 import kotlinx.android.synthetic.main.fragment_mypage.*
@@ -57,7 +60,8 @@ class MyPageFragment  : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //캐릭터 가져오기
+
+        //아바타 조회
         val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
         val layoutManager = LinearLayoutManager(activity,RecyclerView.HORIZONTAL, false)
         recyclerView_avatar.layoutManager = layoutManager
@@ -73,16 +77,35 @@ class MyPageFragment  : Fragment(){
         myavatar.enqueue(object : Callback<myAvatarRes> {
             override fun onResponse(call: Call<myAvatarRes>, response: Response<myAvatarRes>) {
                 if (response.isSuccessful) {
-                    var re2 = response.body()!!
-                    Log.e("avatar", re2.toString())
-                    adapter = avatarAdapter(re2.list)
+                    var re = response.body()!!
+                    Log.e("avatar", re.toString())
+                    adapter = avatarAdapter(re.list)
                     recyclerView_avatar.adapter= adapter
+
+                    adapter.setItemClickListener(object : avatarAdapter.ItemClickListener {
+                        override fun onClick(view: View, position: Int) {
+
+
+                            val avatarSeq =re.list[position].avatarSeq
+
+                            val fragmentA = AvatarUpdateFragment(avatarSeq!!)
+                            val bundle = Bundle()
+                            fragmentA.arguments=bundle
+                            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                            transaction.add(R.id.container,fragmentA)
+                            transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
+                            transaction.commit()
+
+                        }
+                    })
                 } }
 
             override fun onFailure(call: Call<myAvatarRes>, t: Throwable) {
                 Log.e("avatar", "OnFailuer+${t.message}")
             } })
 
+
+        //아바타 생성페이지로 이동
         av_add.setOnClickListener {
             val fragmentA = AvatarRegisterFragment()
             val bundle = Bundle()

@@ -27,9 +27,26 @@ interface AvatarService {
         @Part("avatarStyleId") avatarStyleId: Long,
     ): Call<myAvatarRes>
 
+    //캐릭터 수정
+    @Multipart
+    @PUT("avatar/{avatarId}")
+    fun put_avatar(
+            @Path("avatarId") avatarId:Long,
+            @Part originfile: MultipartBody.Part,
+            @Part createdfile: MultipartBody.Part,
+            @Part("avatarName") avatarName: String,
+            @Part("avatarDescription") avatarDescription: String,
+            @Part("avatarStyle") avatarStyle: String,
+            @Part("avatarStyleId") avatarStyleId: Long,
+    ): Call<myAvatarRes>
+
     //사용자별 캐릭터 조회
     @GET("avatar/user")
     fun get_myAvatar():Call<myAvatarRes>
+
+    //아이디로 단건 캐릭터 조회
+    @GET("avatar/{avatarId}")
+    fun get_avatarId(@Path("avatarId") avatarId:Long):Call<avatarGetIdRes>
 
     //아바타 변형
     @Multipart
@@ -46,5 +63,9 @@ interface AvatarService {
         @Part file: MultipartBody.Part,
         @Part("user_id") id: Long,
     ): Call<ResponseBody>
+
+    //아바타삭제
+    @DELETE("avatar/{avatarId}")
+    fun delete_avatar(@Path("avatarId") avatarId:Long):Call<avatarDelRes>
 }
 
