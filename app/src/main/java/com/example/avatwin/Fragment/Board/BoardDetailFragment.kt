@@ -29,7 +29,7 @@ import java.lang.reflect.Type
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class BoardMainFragment: Fragment() {
+class BoardDetailFragment: Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -76,9 +76,9 @@ class BoardMainFragment: Fragment() {
                     adapter.setItemClickListener(object : boardAdapter.ItemClickListener {
                         override fun onClick(view: View, position: Int) {
 
+                            
 
-
-                            val fragmentA = BoardMainFragment()
+                            val fragmentA = BoardDetailFragment()
                             val bundle = Bundle()
                             fragmentA.arguments=bundle
                             val transaction = requireActivity().supportFragmentManager.beginTransaction()

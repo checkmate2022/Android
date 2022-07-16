@@ -49,7 +49,7 @@ class boardAdapter(var item:ArrayList<boardTeamBody>):RecyclerView.Adapter<board
         fun setItem(item:boardTeamBody){
             itemView.board_title.text = item.title
             itemView.board_username.text = item.username
-            itemView.board_time.text = item.createdDate.toString()
+            itemView.board_time.text = item.createDate.toString()
            // var a= URLDecoder.decode(item.image!!.substring(ApiService.API_URL.length+1), "utf-8");
             //Glide.with(itemView).load(item.image!!).into(itemView.limg)
 
