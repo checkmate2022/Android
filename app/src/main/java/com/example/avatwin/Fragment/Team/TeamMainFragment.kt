@@ -9,7 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.avatwin.Adapter.teamMenuAdapter
+import com.example.avatwin.Adapter.Team.teamMenuAdapter
 import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.*
@@ -69,7 +69,7 @@ class TeamMainFragment() : Fragment() {
 
         //메뉴 초기화
         root.recyclerView_team_menu.layoutManager = layoutManager1
-        adapter =teamMenuAdapter()
+        adapter = teamMenuAdapter()
         adapter.clearItem()
         val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
         var retrofit = Retrofit.Builder()

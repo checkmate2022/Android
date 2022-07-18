@@ -10,14 +10,12 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.avatwin.Adapter.boardAdapter
-import com.example.avatwin.Adapter.teamMenuAdapter
 import com.example.avatwin.Auth.*
+import com.example.avatwin.Converter.LocalDateTimeConverter
 import com.example.avatwin.R
 import com.example.avatwin.DataClass.boardTeamGetBody
-import com.example.avatwin.Fragment.Schedule.ScheduleRegisterFragment
 import com.example.avatwin.Service.BoardService
 import com.google.gson.*
-import com.google.gson.annotations.JsonAdapter
 import kotlinx.android.synthetic.main.fragment_board_list.view.*
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -25,9 +23,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.reflect.Type
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class BoardMainFragment: Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -77,8 +73,9 @@ class BoardMainFragment: Fragment() {
                         override fun onClick(view: View, position: Int) {
 
 
+                            App.prefs.boardSeq=mList.list[position].boardSeq.toString()
 
-                            val fragmentA = BoardMainFragment()
+                            val fragmentA = BoardDetailFragment()
                             val bundle = Bundle()
                             fragmentA.arguments=bundle
                             val transaction = requireActivity().supportFragmentManager.beginTransaction()

@@ -14,5 +14,6 @@ data class boardTeamGetBody(val list:ArrayList<boardTeamBody>)
 data class boardTeamBody(val boardSeq:Long?, val title:String?, val content:String?, val createDate: LocalDateTime,
                          val username:String?, val usrImage:String?)
 
-
+//단건 게시판 조회
+data class boardGetBodyById(val data:boardTeamBody)
 

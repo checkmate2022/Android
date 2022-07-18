@@ -7,16 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.avatwin.Adapter.teamAdapter
+import com.example.avatwin.Adapter.Team.teamAdapter
 import com.example.avatwin.Auth.App
 import com.example.avatwin.DataClass.myteamGetBody
 import com.example.avatwin.Service.ApiService
 import com.example.avatwin.R
 import com.example.avatwin.Auth.AuthInterceptor
-import com.example.avatwin.DataClass.teamaBody
 import com.example.avatwin.Fragment.Team.TeamMainFragment
 import com.example.avatwin.Fragment.Team.TeamRegisterFragment
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import okhttp3.OkHttpClient
 import retrofit2.Call

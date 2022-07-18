@@ -12,11 +12,11 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.avatwin.Adapter.teamListAdapter
-import com.example.avatwin.Adapter.teamSearchListAdapter
+import com.example.avatwin.Adapter.Team.teamListAdapter
+import com.example.avatwin.Adapter.Team.teamSearchListAdapter
 import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
-import com.example.avatwin.Auth.LocalDateTimeConverter
+import com.example.avatwin.Converter.LocalDateTimeConverter
 import com.example.avatwin.DataClass.scheduleGetBody
 import com.example.avatwin.DataClass.scheduleReqBody
 import com.example.avatwin.DataClass.userGetBody2
@@ -24,6 +24,8 @@ import com.example.avatwin.R
 import com.example.avatwin.Service.ScheduleService
 import com.example.avatwin.Service.UserService
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
 import kotlinx.android.synthetic.main.dialog_member_search.view.*
 import kotlinx.android.synthetic.main.fragment_schedule_register.*
 import kotlinx.android.synthetic.main.fragment_team_register.register_id
@@ -36,9 +38,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.lang.reflect.Type
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ScheduleRegisterFragment: Fragment() {
@@ -142,8 +143,14 @@ class ScheduleRegisterFragment: Fragment() {
  //스케쥴등록
         val gson = GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter()).create()
-
+                .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter())
+                .registerTypeAdapter(LocalDateTime::class.java, object: JsonDeserializer<LocalDateTime> {
+            override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): LocalDateTime {
+//			return LocalDateTime.parse(json?.asString,
+//				DateTimeFormatter.ofPattern("uuuu-MM-dd[ ]['T']HH:mm:ss.SS[X]").withLocale(Locale.ENGLISH));
+                return ZonedDateTime.parse(json?.asString).truncatedTo(ChronoUnit.SECONDS).toLocalDateTime()
+            }
+        }).create()
 
         register_schedule_button.setOnClickListener {
             val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
