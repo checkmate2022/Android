@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.avatwin.Adapter.Team.teamMemberAdapter
@@ -14,6 +15,8 @@ import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.teamUserGetBody
 import com.example.avatwin.Service.TeamService
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.android.synthetic.main.fragment_team_main.view.*
+import kotlinx.android.synthetic.main.menubar_team.*
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,6 +30,10 @@ class TeamMemberFragment(): Fragment() {
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_team_member, container, false)
 
+        /*
+        root.menu_button.setOnClickListener {
+            main_drawer_layout.openDrawer((GravityCompat.START))
+        }*/
 
         //layoutmanager설정
         val layoutManager = GridLayoutManager(activity,2)

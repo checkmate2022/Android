@@ -1,10 +1,12 @@
 package com.example.avatwin.Fragment.Team
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
@@ -12,12 +14,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.avatwin.Adapter.Team.teamMenuAdapter
 import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
+import com.example.avatwin.Converter.LocalDateTimeConverter
 import com.example.avatwin.DataClass.*
 import com.example.avatwin.Decorator.TodayDecorator
 import com.example.avatwin.Fragment.Board.BoardMainFragment
 import com.example.avatwin.Fragment.Schedule.ScheduleRegisterFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.ChannelService
+import com.example.avatwin.Service.ScheduleService
+import com.example.avatwin.Service.TeamService
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
@@ -32,6 +41,9 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.lang.reflect.Type
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class TeamMainFragment() : Fragment() {
     //채널 adapter
@@ -39,12 +51,16 @@ class TeamMainFragment() : Fragment() {
 
     lateinit var adapter: teamMenuAdapter
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.menubar_team, container, false)
 
         lateinit var calendar: MaterialCalendarView
 
+
+        //팀 일정조회
+        getTeamSchedule();
         calendar = root.findViewById(R.id.calendar)
         calendar.setSelectedDate(CalendarDay.today())
         calendar.addDecorator(TodayDecorator())
@@ -183,7 +199,41 @@ class TeamMainFragment() : Fragment() {
         return root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getTeamSchedule(){
 
+        val gson = GsonBuilder()
+                .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter())
+                .registerTypeAdapter(LocalDateTime::class.java, object: JsonDeserializer<LocalDateTime> {
+                    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): LocalDateTime {
+                        return LocalDateTime.parse(json!!.asString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                    }
+                }).create()
+
+        val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
+        var retrofit = Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(ScheduleService.API_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(ScalarsConverterFactory.create()).build()
+
+        var apiService = retrofit.create(ScheduleService::class.java)
+
+
+        apiService.get_teamSchedule(App.prefs.teamSeq!!.toLong()).enqueue(object : Callback<scheduleTeamGetBody> {
+            override fun onResponse(call: Call<scheduleTeamGetBody>, response: Response<scheduleTeamGetBody>) {
+                val result = response.body()
+                Log.e("성공schedule",result!!.list.toString())
+                //adapter.addItem(name.toString())
+                //root.recyclerView_team_menu.adapter = adapter
+
+            }
+
+            override fun onFailure(call: Call<scheduleTeamGetBody>, t: Throwable) {
+                Log.e("schedule", "OnFailuer+${t.message}")
+            }
+        })
+    }
 
 }
 

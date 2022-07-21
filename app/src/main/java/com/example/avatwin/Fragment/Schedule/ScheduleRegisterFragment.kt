@@ -24,6 +24,7 @@ import com.example.avatwin.R
 import com.example.avatwin.Service.ScheduleService
 import com.example.avatwin.Service.UserService
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import kotlinx.android.synthetic.main.dialog_member_search.view.*
@@ -40,6 +41,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ScheduleRegisterFragment: Fragment() {
@@ -142,13 +144,10 @@ class ScheduleRegisterFragment: Fragment() {
 
  //스케쥴등록
         val gson = GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter())
                 .registerTypeAdapter(LocalDateTime::class.java, object: JsonDeserializer<LocalDateTime> {
             override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): LocalDateTime {
-//			return LocalDateTime.parse(json?.asString,
-//				DateTimeFormatter.ofPattern("uuuu-MM-dd[ ]['T']HH:mm:ss.SS[X]").withLocale(Locale.ENGLISH));
-                return ZonedDateTime.parse(json?.asString).truncatedTo(ChronoUnit.SECONDS).toLocalDateTime()
+                return LocalDateTime.parse(json!!.asString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             }
         }).create()
 

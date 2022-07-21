@@ -84,14 +84,21 @@ class BoardUpdateFragment: Fragment() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun updateBoard(){
 
+        val gson = GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter()).create()
+
+
+        //채널별 게시글 가져오기
         val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
         var retrofit = Retrofit.Builder()
                 .client(okHttpClient)
                 .baseUrl(BoardService.API_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addConverterFactory(ScalarsConverterFactory.create()).build()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
 
         var apiService = retrofit.create(BoardService::class.java)
 
