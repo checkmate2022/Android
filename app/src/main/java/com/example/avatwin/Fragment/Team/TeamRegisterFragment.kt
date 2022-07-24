@@ -93,6 +93,9 @@ class TeamRegisterFragment: Fragment() {
             var dlg = AlertDialog.Builder(requireContext())
             var dialogView = View.inflate(context, R.layout.dialog_member_search, null)
             dlg.setView(dialogView)
+            dlg.setPositiveButton("확인") { dialog, which ->
+
+            }
             dlg.show()
             var seachtext = dialogView.search_edittext.getText()
 
@@ -143,6 +146,8 @@ class TeamRegisterFragment: Fragment() {
                     }
                 })
             }
+
+
 
 
         }

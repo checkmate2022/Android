@@ -13,6 +13,9 @@ data class chatBody(val id:String?, val name:String?, val username1:String?, val
 //채팅방 조회
 data class chatUserGetBody(val list:ArrayList<chatBody>)
 
+//채팅방 메시지 조회
+data class chatMessageGetBody(val list:ArrayList<Chat>)
+
 data class Chat (
         @Json(name = "type")
         val type: String,

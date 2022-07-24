@@ -2,6 +2,8 @@ package com.example.avatwin.Activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import com.example.avatwin.Auth.App
 import com.example.avatwin.Fragment.Chat.ChatListFragment
 import com.example.avatwin.Fragment.HomeFragment
 import com.example.avatwin.Fragment.MyPageFragment
@@ -13,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Log.e("Auth", App.prefs.userId.toString())
         with(supportFragmentManager.beginTransaction()) {
             val fragment5 = HomeFragment()
             replace(R.id.container, fragment5)

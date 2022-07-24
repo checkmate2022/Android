@@ -10,12 +10,16 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.beust.klaxon.Klaxon
+import com.example.avatwin.Adapter.Team.teamSearchListAdapter
 import com.example.avatwin.Auth.*
 import com.example.avatwin.Constant
 import com.example.avatwin.DataClass.Chat
+import com.example.avatwin.DataClass.chatMessageGetBody
 import com.example.avatwin.DataClass.chatUserGetBody
+import com.example.avatwin.DataClass.userGetBody2
 import com.example.avatwin.R
 import com.example.avatwin.Service.ChatService
+import com.example.avatwin.Service.UserService
 import com.example.testchat.adapter.ChatAdapter
 import com.example.testchat.adapter.roomAdapter
 import com.google.gson.*
@@ -36,12 +40,17 @@ import java.util.concurrent.TimeUnit
 import com.gmail.bishoybasily.stomp.lib.Event
 import com.gmail.bishoybasily.stomp.lib.StompClient
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.dialog_member_search.view.*
+import kotlinx.android.synthetic.main.fragment_chat.*
+import kotlinx.android.synthetic.main.fragment_team_register.*
+import kotlinx.android.synthetic.main.item_chat_list.view.*
+
 class ChatFragment: Fragment() {
 
     lateinit var cAdapter: ChatAdapter
 
     var jsonObject = JSONObject()
-
+    val constant: Constant = Constant
     lateinit var stompConnection: Disposable
     lateinit var topic: Disposable
     @RequiresApi(Build.VERSION_CODES.O)
@@ -52,10 +61,11 @@ class ChatFragment: Fragment() {
         var root = inflater.inflate(R.layout.fragment_chat, container, false)
 
         val bundle = arguments
-        val constant: Constant = Constant
+
         if(bundle != null) {
-            constant.set(bundle.getString("sender")!!, bundle.getString("roomId")!!)
-            Log.e("chatIntent",bundle.getString("sender")!!+bundle.getString("roomId")!!)
+            constant.set(App.prefs.userId.toString(), bundle.getString("roomId")!!)
+            root.chat_sender.text=bundle.getString("sender")
+            Log.e("chatIntent",bundle.getString("roomId")!!)
         }
 
 
@@ -63,6 +73,12 @@ class ChatFragment: Fragment() {
         root.recycler_chat.adapter = cAdapter
         root.recycler_chat.layoutManager = LinearLayoutManager(requireContext())
         root.recycler_chat.setHasFixedSize(true)
+
+
+        //원래 채팅기록 가져오기
+
+        init_chat()
+
 
         //1. STOMP init
         // url: ws://[도메인]/[엔드포인트]/websocket
@@ -132,7 +148,33 @@ class ChatFragment: Fragment() {
         return root
     }
 
+    fun init_chat(){
 
+        val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
+        var retrofit = Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(ChatService.API_URL)
+                .addConverterFactory(GsonConverterFactory.create()).build()
+        var apiService = retrofit.create(ChatService::class.java)
+        var tests = apiService.get_chatMessage(constant.CHATROOM_ID)
+        tests.enqueue(object : Callback<chatMessageGetBody> {
+            override fun onResponse(call: Call<chatMessageGetBody>, response: Response<chatMessageGetBody>) {
+                if (response.isSuccessful) {
+                    var mList = response.body()!!
+
+                    for( i: Int in 0..mList.list.size-1){
+                        if(mList.list[i].type!="ENTER"){
+                            cAdapter.chatDatas.add(mList.list[i])}
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<chatMessageGetBody>, t: Throwable) {
+                Log.e("teamDialog", "OnFailuer+${t.message}")
+            }
+        })
+    }
 
 }
 

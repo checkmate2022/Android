@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.avatwin.Auth.App
 import com.example.avatwin.DataClass.chatBody
 import com.example.avatwin.R
 import kotlinx.android.synthetic.main.item_chat_list.view.*
@@ -37,12 +38,20 @@ class roomAdapter(var item:ArrayList<chatBody>):RecyclerView.Adapter<roomAdapter
         }
     }
 
+    fun addItem(chat:chatBody){
+        items.add(chat)
+    }
     override fun getItemCount()=items.size
 
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
 
         fun setItem(item:chatBody){
-            itemView.sender_txt_nickname.text = item.username2
+
+            if(App.prefs.userId==item.username1){
+            itemView.sender_txt_nickname.text = item.username2}
+            else{
+                itemView.sender_txt_nickname.text = item.username1
+            }
 
 
         }

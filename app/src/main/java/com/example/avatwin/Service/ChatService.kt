@@ -2,6 +2,7 @@ package com.example.avatwin.Service
 
 
 import com.example.avatwin.DataClass.chatGetBody
+import com.example.avatwin.DataClass.chatMessageGetBody
 import com.example.avatwin.DataClass.chatUserGetBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -20,6 +21,8 @@ interface ChatService {
     @POST("chat/room")
     fun post_chat(@Query("other") other: String):Call<chatGetBody>
 
-
+  //방별메시지보기
+  @GET("chat/room/{roomId}")
+  fun get_chatMessage(@Path("roomId") roomId:String):Call<chatMessageGetBody>
 }
 
