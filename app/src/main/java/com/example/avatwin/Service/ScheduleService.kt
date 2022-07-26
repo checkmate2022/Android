@@ -15,7 +15,7 @@ interface ScheduleService {
 
     //팀별 일정 가져오기
     @GET("schedule/team/{teamId}")
-    fun get_teamSchedule(@Path("teamId") teamId:Long):Call<scheduleGetBody>
+    fun get_teamSchedule(@Path("teamId") teamId:Long):Call<scheduleTeamGetBody>
 
 
 

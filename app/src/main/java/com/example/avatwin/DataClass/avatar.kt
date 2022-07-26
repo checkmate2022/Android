@@ -2,7 +2,7 @@ package com.example.avatwin.DataClass
 
 //아바타 등록
 data class myAvatarRes(val success:String?,val code:Long?, val msg:String?,val list:ArrayList<avatarBody>)
-data class avatarBody(val avatarSeq:Long?,val avatarName:String?,val avatarDescription:String?,
+data class avatarBody(val avatarSeq:Long?,val avatarName:String?,val avatarDescription:String?,val avatarStyle:String?,
                       val avatarOriginUrl:String?,val avatarCreatedUrl:String?,
                       val avatarStyleId: Long?, val avatarDate: String?, val isBasic: Boolean)
 

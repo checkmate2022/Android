@@ -1,16 +1,11 @@
-package com.example.avatwin.Adapter
+package com.example.avatwin.Adapter.Team
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.avatwin.DataClass.*
 import com.example.avatwin.R
-import kotlinx.android.synthetic.main.item_myteam.view.*
-import kotlinx.android.synthetic.main.item_myteam.view.team_name
 import kotlinx.android.synthetic.main.item_team_channel.view.*
-import kotlinx.android.synthetic.main.item_team_member_list.view.*
-import kotlinx.android.synthetic.main.item_team_member_list.view.member_title
 
 
 class teamMenuAdapter():RecyclerView.Adapter<teamMenuAdapter.ViewHolder>(){
@@ -28,12 +23,12 @@ class teamMenuAdapter():RecyclerView.Adapter<teamMenuAdapter.ViewHolder>(){
     fun setItemClickListener(itemClickListener: ItemClickListener) {
         this.itemClickListner = itemClickListener
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):teamMenuAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView=LayoutInflater.from(parent.context).inflate(R.layout.item_team_channel,parent,false)
         return ViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: teamMenuAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item=items[position]
         holder.setItem(item)
 

@@ -1,20 +1,16 @@
-package com.example.avatwin.Adapter
+package com.example.avatwin.Adapter.Team
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.avatwin.DataClass.*
+import com.example.avatwin.DataClass.teamaBody
 import com.example.avatwin.R
 import kotlinx.android.synthetic.main.item_myteam.view.*
-import kotlinx.android.synthetic.main.item_myteam.view.team_name
-import kotlinx.android.synthetic.main.item_team_member_list.view.*
 
 
-class teamListAdapter():RecyclerView.Adapter<teamListAdapter.ViewHolder>(){
-
-    val items : ArrayList<String> = arrayListOf()
-
+class teamAdapter(var item:ArrayList<teamaBody>):RecyclerView.Adapter<teamAdapter.ViewHolder>(){
+    var items=item
         interface ItemClickListener {
             fun onClick(view: View, position: Int)
         }
@@ -26,12 +22,12 @@ class teamListAdapter():RecyclerView.Adapter<teamListAdapter.ViewHolder>(){
     fun setItemClickListener(itemClickListener: ItemClickListener) {
         this.itemClickListner = itemClickListener
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):teamListAdapter.ViewHolder {
-        val itemView=LayoutInflater.from(parent.context).inflate(R.layout.item_team_member_list,parent,false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val itemView=LayoutInflater.from(parent.context).inflate(R.layout.item_myteam,parent,false)
         return ViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: teamListAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item=items[position]
         holder.setItem(item)
 
@@ -40,15 +36,17 @@ class teamListAdapter():RecyclerView.Adapter<teamListAdapter.ViewHolder>(){
 
         }
     }
-    fun clearItem() = items.clear()
-    override fun getItemCount()=items.size
 
-    fun addItem(item : String) {items.add(item)}
+    override fun getItemCount()=items.size
 
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
 
-        fun setItem(item:String){
-            itemView.member_title.text = item
+        fun setItem(item:teamaBody){
+            itemView.team_name.text = item.teamName
+            itemView.team_description.text = item.teamDescription
+
+           // var a= URLDecoder.decode(item.image!!.substring(ApiService.API_URL.length+1), "utf-8");
+            //Glide.with(itemView).load(item.image!!).into(itemView.limg)
 
         }
     }

@@ -91,8 +91,12 @@ class AvatarUpdateFragment(val avatarSeq: Long)  : Fragment(){
                 val result = response.body()
                 root.register_avatar_name.setText(result!!.data.avatarName)
                 root.register_avatar_description.setText(result!!.data.avatarDescription)
-                //if(result.data.avatar)
-                root.cartoon.isChecked
+                if(result.data.avatarStyle=="cartoon"){
+                    root.cartoon.isChecked
+                }else if(result.data.avatarStyle=="arcane"){
+                    root.arcane.isChecked
+                }
+
                 root.register_avatar_styleid.setText(result!!.data.avatarStyleId.toString())
             }
 

@@ -6,7 +6,16 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/dialog_white">
-
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:hint="대화 상대를 선택해주세요."
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+      />
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
