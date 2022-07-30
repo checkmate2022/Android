@@ -48,22 +48,9 @@
                 android:letterSpacing="-0.05"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/sender_txt_content"/>
+                />
 
-            <!--내용-->
-            <TextView
-                android:id="@+id/sender_txt_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="저 같이 하고 싶습니다! 이러이런거 해봤고 이러이러이런거 할 줄 알아요!"
-                android:textSize="14dp"
-                android:textColor="@color/black"
-                android:letterSpacing="-0.05"
-                android:ellipsize="end"
-                android:maxLines="1"
-                app:layout_constraintTop_toBottomOf="@id/sender_txt_nickname"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="3dp"/>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

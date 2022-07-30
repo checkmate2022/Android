@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "282271367333",
+    "project_id": "fcm-checkmate",
+    "storage_bucket": "fcm-checkmate.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282271367333:android:77f1685dd9f0a43716cd4c",
+        "android_client_info": {
+          "package_name": "com.example.avatwin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "282271367333-ifcnqrd3ji7nsn40lmn3cjnoubdavck8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.avatwin",
+            "certificate_hash": "aa21fab855ff85fc68d338123a4bbf447c6f9a89"
+          }
+        },
+        {
+          "client_id": "282271367333-aq5jq7de7ej5bcifosk4ja1li2obg4ii.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPAtPewiTT8rPdLRDDh6YsALUy17aYNRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "282271367333-aq5jq7de7ej5bcifosk4ja1li2obg4ii.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

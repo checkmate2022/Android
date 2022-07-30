@@ -65,16 +65,17 @@ class BoardMainFragment: Fragment() {
             override fun onResponse(call: Call<boardTeamGetBody>, response: Response<boardTeamGetBody>) {
                 if (response.isSuccessful) {
                     var mList = response.body()!!
-                    Log.e("board-date",mList.list[1].toString())
-                    adapter = boardAdapter(mList.list)
+                    Log.e("board-date",mList.list.toString())
+                    adapter = boardAdapter()
+                    adapter.items=mList.list
                     root.recyclerView_board_more.adapter= adapter
 
                     adapter.setItemClickListener(object : boardAdapter.ItemClickListener {
                         override fun onClick(view: View, position: Int) {
 
 
-                            App.prefs.boardSeq=mList.list[position].baordSeq.toString()
-
+                            App.prefs.boardSeq=mList.list[position].boardSeq.toString()
+                            //Log.e("boardSeq",mList.list[position].baordSeq.toString())
                             val fragmentA = BoardDetailFragment()
                             val bundle = Bundle()
                             fragmentA.arguments=bundle

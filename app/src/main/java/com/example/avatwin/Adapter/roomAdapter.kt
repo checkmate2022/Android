@@ -41,20 +41,15 @@ class roomAdapter(var item:ArrayList<chatBody>):RecyclerView.Adapter<roomAdapter
     fun addItem(chat:chatBody){
         items.add(chat)
     }
+
     override fun getItemCount()=items.size
 
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
 
         fun setItem(item:chatBody){
 
-            if(App.prefs.userId==item.username1){
-            itemView.sender_txt_nickname.text = item.username2}
-            else{
-                itemView.sender_txt_nickname.text = item.username1
-            }
+            itemView.sender_txt_nickname.text = item.name}
 
-
-        }
     }
 
 }

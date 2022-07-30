@@ -15,11 +15,8 @@ import com.example.avatwin.Adapter.Team.teamSearchListAdapter
 import com.example.avatwin.Adapter.boardAdapter
 import com.example.avatwin.Auth.*
 import com.example.avatwin.Converter.LocalDateTimeConverter
+import com.example.avatwin.DataClass.*
 import com.example.avatwin.R
-import com.example.avatwin.DataClass.boardTeamGetBody
-import com.example.avatwin.DataClass.chatGetBody
-import com.example.avatwin.DataClass.chatUserGetBody
-import com.example.avatwin.DataClass.userGetBody2
 import com.example.avatwin.Fragment.Board.BoardDetailFragment
 import com.example.avatwin.Service.BoardService
 import com.example.avatwin.Service.ChatService
@@ -85,6 +82,7 @@ class ChatListFragment: Fragment() {
                         Log.e("Sender",sender)
                         bundle.putString("sender", sender)
                         bundle.putString("roomId",  result.list[position].id)
+
                         val fragmentA = ChatFragment()
                         fragmentA.arguments=bundle
                         val transaction = requireActivity().supportFragmentManager.beginTransaction()
@@ -190,6 +188,7 @@ class ChatListFragment: Fragment() {
 
 
  }
+
 
 }
 

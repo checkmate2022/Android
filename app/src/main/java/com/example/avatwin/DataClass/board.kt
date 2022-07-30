@@ -11,8 +11,8 @@ data class boardBody(val boardSeq:Long?, val title:String?,val content:String?, 
 
 //팀별 게시판조회 = 전체게시판
 data class boardTeamGetBody(val list:ArrayList<boardTeamBody>)
-data class boardTeamBody(val baordSeq:Long?, val title:String?, val content:String?, val createDate: LocalDateTime,
-                         val username:String?, val usrImage:String?)
+data class boardTeamBody(val boardSeq:Long?, val title:String?, val content:String?, val createDate: LocalDateTime,
+                         val username:String?, val usrImage:String?,val comments: ArrayList<commentBody>)
 
 //단건 게시판 조회
 data class boardGetBodyById(val data:boardTeamBody)

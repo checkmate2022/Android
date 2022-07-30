@@ -10,15 +10,18 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.avatwin.Adapter.boardAdapter
+import com.example.avatwin.Adapter.commentAdapter
 import com.example.avatwin.Auth.*
 import com.example.avatwin.Converter.LocalDateTimeConverter
 import com.example.avatwin.DataClass.avatarDelRes
 import com.example.avatwin.DataClass.boardGetBodyById
 import com.example.avatwin.R
 import com.example.avatwin.DataClass.boardTeamGetBody
+import com.example.avatwin.DataClass.commentGetBody
 import com.example.avatwin.Fragment.MyPageFragment
 import com.example.avatwin.Service.AvatarService
 import com.example.avatwin.Service.BoardService
+import com.example.avatwin.Service.CommentService
 import com.google.gson.*
 import kotlinx.android.synthetic.main.fragment_board.*
 import kotlinx.android.synthetic.main.fragment_board.view.*
@@ -34,10 +37,13 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.time.LocalDateTime
 
 class BoardDetailFragment: Fragment() {
+    lateinit var adapter: commentAdapter
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_board, container, false)
+        val layoutManager = LinearLayoutManager(requireActivity())
+        root.recyclerView_board_detail.layoutManager = layoutManager
 
         //init
         initBoard()
@@ -58,13 +64,18 @@ class BoardDetailFragment: Fragment() {
             deleteBoard()
         }
 
-        //댓글 추후
-
+        //댓글
+        comment_button.setOnClickListener{
+            registerComment()
+        }
 
         return root
     }
     @RequiresApi(Build.VERSION_CODES.O)
     fun initBoard(){
+
+
+
         val gson = GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter()).create()
@@ -93,7 +104,10 @@ class BoardDetailFragment: Fragment() {
                     board_detail_name.setText(mList.data.username)
                     //내용
                     board_detail_content.setText(mList.data.content)
-
+                    //댓글 리스트
+                    adapter = commentAdapter()
+                    adapter.items=mList.data.comments
+                    recyclerView_board_detail.adapter= adapter
                 } }
 
             override fun onFailure(call: Call<boardGetBodyById>, t: Throwable) {
@@ -132,5 +146,29 @@ class BoardDetailFragment: Fragment() {
 
     }
 
+
+    fun registerComment(){
+        val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
+        var retrofit = Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(CommentService.API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create()).build()
+
+        var apiService = retrofit.create(CommentService::class.java)
+
+        apiService.post_comment(App.prefs.boardSeq!!.toLong(),comment_text.toString()).enqueue(object : Callback<commentGetBody> {
+            override fun onResponse(call: Call<commentGetBody>, response: Response<commentGetBody>) {
+                val result = response.body()
+                Log.e("성공",result.toString())
+                adapter.addItem(result!!.data)
+            }
+
+            override fun onFailure(call: Call<commentGetBody>, t: Throwable) {
+                Log.e("team_put", "OnFailuer+${t.message}")
+            }
+        })
+
+    }
 }
 
