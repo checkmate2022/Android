@@ -3,14 +3,13 @@ package com.example.avatwin.Fragment.Team
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.avatwin.Adapter.Team.teamAdapter
 import com.example.avatwin.Adapter.Team.teamMenuAdapter
 import com.example.avatwin.Adapter.scheduleAdapter
 import com.example.avatwin.Auth.App
@@ -32,6 +31,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import kotlinx.android.synthetic.main.dialog_channel_register.view.*
+import kotlinx.android.synthetic.main.dialog_schedule_detail.*
 import kotlinx.android.synthetic.main.dialog_schedule_list.*
 import kotlinx.android.synthetic.main.fragment_team_main.view.*
 import kotlinx.android.synthetic.main.menubar_team.*
@@ -51,7 +51,7 @@ class TeamMainFragment() : Fragment() {
     //채널 adapter
     val layoutManager1 = LinearLayoutManager(activity)
     val layoutManager2 = LinearLayoutManager(activity)
-    lateinit var tnrBottomSheetDialog : BottomSheetDialog
+    lateinit var tnrBottomSheetDialog: BottomSheetDialog
     lateinit var adapter: teamMenuAdapter
     lateinit var scheduleAdapter: scheduleAdapter
 
@@ -63,19 +63,20 @@ class TeamMainFragment() : Fragment() {
 
         lateinit var calendar: MaterialCalendarView
 
-
         //팀 일정조회
         //getTeamSchedule();
         calendar = root.findViewById(R.id.calendar)
         calendar.setSelectedDate(CalendarDay.today())
         calendar.addDecorator(TodayDecorator())
+        val tnrBottomSheetView = layoutInflater.inflate(R.layout.dialog_schedule_list, null)
+        tnrBottomSheetDialog = BottomSheetDialog(requireContext(), R.style.DialogCustomTheme) // dialog에 sytle 추가
+        tnrBottomSheetDialog.setContentView(tnrBottomSheetView)
+        tnrBottomSheetDialog.recycler_schedule.layoutManager = layoutManager2
         calendar.setOnDateChangedListener(object : OnDateSelectedListener {
             override fun onDateSelected(widget: MaterialCalendarView, date: CalendarDay, selected: Boolean) {
                 //여기에 가져온 일정 apater추가
                 //calendar.addDecorator(EventDecorator(Collections.singleton(date)))
-                val tnrBottomSheetView = layoutInflater.inflate(R.layout.dialog_schedule_list, null)
-                tnrBottomSheetDialog = BottomSheetDialog(requireContext(), R.style.DialogCustomTheme) // dialog에 sytle 추가
-                tnrBottomSheetDialog.setContentView(tnrBottomSheetView)
+
                 tnrBottomSheetDialog.show()
                 var str_sub = date.toString().substring(12)
                 val r = str_sub.replace("}", "")
@@ -83,18 +84,18 @@ class TeamMainFragment() : Fragment() {
 
                 //팀일정중에 startdate이 같은것만 가져온다.
                 //숫자가 일의 자리수면 0 을 붙이고 schedulestartdate와 같은것만 adapter에 넣어준다.
-                val year = r.substring(0,4)
+                val year = r.substring(0, 4)
                 val string = r.substring(5)
                 val s = string.split("-")
                 val month = s[0].toInt()
                 val day = s[1].toInt()
-                var rmonth=""
-                var rday=""
+                var rmonth = ""
+                var rday = ""
 
                 if (month / 10 < 1) {
-                    rmonth = "0${month+1}"
+                    rmonth = "0${month + 1}"
                 } else {
-                    rmonth = {month+1}.toString()
+                    rmonth = { month + 1 }.toString()
                 }
 
                 if (day / 10 < 1) {
@@ -103,20 +104,20 @@ class TeamMainFragment() : Fragment() {
                     rday = day.toString()
                 }
 
-                var rselect =""
+                var rselect = ""
                 rselect = year + "-" + rmonth + "-" + rday
 
                 tnrBottomSheetDialog.dialog_date.text = rselect
                 //날짜에 맞는 어댑터 item 설정
 
-                tnrBottomSheetDialog.recycler_schedule.layoutManager = layoutManager2
-                scheduleAdapter =scheduleAdapter()
+
+                scheduleAdapter = scheduleAdapter()
                 scheduleAdapter.clearItem()
                 getTeamSchedule(rselect)
                 tnrBottomSheetDialog.btn_write.setOnClickListener {
                     val fragmentA = ScheduleRegisterFragment()
                     val bundle = Bundle()
-                    fragmentA.arguments=bundle
+                    fragmentA.arguments = bundle
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
                     transaction.add(R.id.container, fragmentA)
                     transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
@@ -131,7 +132,7 @@ class TeamMainFragment() : Fragment() {
         root.schedule_add_button.setOnClickListener {
             val fragmentA = ScheduleRegisterFragment()
             val bundle = Bundle()
-            fragmentA.arguments=bundle
+            fragmentA.arguments = bundle
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             transaction.add(R.id.container, fragmentA)
             transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
@@ -186,7 +187,6 @@ class TeamMainFragment() : Fragment() {
         })
 
 
-
         //채널등록
         root.channel_add_button.setOnClickListener {
             var dlg = AlertDialog.Builder(requireContext())
@@ -224,7 +224,6 @@ class TeamMainFragment() : Fragment() {
         }
 
 
-
         //메뉴바
         root.menu_button.setOnClickListener {
             main_drawer_layout.openDrawer((GravityCompat.START))
@@ -234,7 +233,7 @@ class TeamMainFragment() : Fragment() {
         root.team_update_button.setOnClickListener {
             val fragmentA = TeamUpdateFragment()
             val bundle = Bundle()
-            fragmentA.arguments=bundle
+            fragmentA.arguments = bundle
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             transaction.add(R.id.container, fragmentA)
             transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
@@ -246,7 +245,7 @@ class TeamMainFragment() : Fragment() {
         root.team_member_button.setOnClickListener {
             val fragmentA = TeamMemberFragment()
             val bundle = Bundle()
-            fragmentA.arguments=bundle
+            fragmentA.arguments = bundle
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             transaction.add(R.id.container, fragmentA)
             transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
@@ -255,8 +254,13 @@ class TeamMainFragment() : Fragment() {
         return root
     }
 
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        requireActivity().menuInflater.inflate(R.menu.schdule_menu, menu)
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getTeamSchedule(rselect: String){
+    fun getTeamSchedule(rselect: String) {
 
         val gson = GsonBuilder()
                 .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter())
@@ -279,22 +283,46 @@ class TeamMainFragment() : Fragment() {
         apiService.get_teamSchedule(App.prefs.teamSeq!!.toLong()).enqueue(object : Callback<scheduleTeamGetBody> {
             override fun onResponse(call: Call<scheduleTeamGetBody>, response: Response<scheduleTeamGetBody>) {
                 val result = response.body()
-                Log.e("성공schedule", result!!.list[0].scheduleStartDate.toString().substring(0,10).toString())
-                for(i: scheduleReqBody in result!!.list){
-                    if(i.scheduleStartDate.toString().substring(0,10)==rselect){
+                for (i: scheduleReqBody in result!!.list) {
+                    if (i.scheduleStartDate.toString().substring(0, 10) == rselect) {
                         scheduleAdapter.addItem(i)
                     }
                 }
-                Log.e("성공schedule", result!!.list.toString())
-                //adapter.addItem(name.toString())
-                //root.recyclerView_team_menu.adapter = adapter
+
                 tnrBottomSheetDialog.recycler_schedule.adapter = scheduleAdapter
+                scheduleAdapter.setItemClickListener(object : scheduleAdapter.ItemClickListener {
+                    override fun onClick(view: View, position: Int) {
+
+                        Log.e("ddd", "Ss")
+                        val tnrBottomSheetView = layoutInflater.inflate(R.layout.dialog_schedule_detail, null)
+                        tnrBottomSheetDialog.setContentView(tnrBottomSheetView)
+                        registerForContextMenu(tnrBottomSheetDialog.btn_mores)
+                        tnrBottomSheetDialog.show()
+
+
+
+                    }
+                })
+
             }
 
             override fun onFailure(call: Call<scheduleTeamGetBody>, t: Throwable) {
                 Log.e("schedule", "OnFailuer+${t.message}")
             }
         })
+    }
+
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.update -> {
+
+            }
+            R.id.delete -> {
+
+            }
+        }
+        return super.onContextItemSelected(item)
     }
 
 }
