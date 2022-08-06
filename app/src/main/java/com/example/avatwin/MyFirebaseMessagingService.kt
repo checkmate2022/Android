@@ -35,6 +35,8 @@ class MyFirebaseMessagingService: FirebaseMessagingService()
     // 받은 알림을 기기에 표시하는 메서드
     private fun sendNotification(title: String?, body: String)
     {
+        Log.e("FCM",title.toString())
+        Log.e("FCM",body.toString())
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -44,6 +46,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService()
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setContentTitle(title)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentText(body)
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
