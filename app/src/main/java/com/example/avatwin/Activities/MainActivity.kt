@@ -45,11 +45,12 @@ class MainActivity : AppCompatActivity() {
 
             // Log and toast
             msg = token.toString()
+            registerFcmToken(msg);
             Log.e("FCM", msg)
             Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
         })
 
-        registerFcmToken(msg);
+
 
         
         Log.e("Auth", App.prefs.userId.toString())
@@ -110,7 +111,7 @@ class MainActivity : AppCompatActivity() {
             .addConverterFactory(ScalarsConverterFactory.create()).build()
 
         var apiService = retrofit.create(FcmService::class.java)
-
+        Log.e("token",token)
         //var data = fcmReqBody(register_id.text.toString(),register_pwd.text.toString(),items)
         apiService.post_fcmToken(token).enqueue(object : Callback<fcmResBody> {
             override fun onResponse(call: Call<fcmResBody>, response: Response<fcmResBody>) {
