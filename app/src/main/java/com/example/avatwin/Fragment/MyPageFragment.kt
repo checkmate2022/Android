@@ -53,18 +53,10 @@ class MyPageFragment  : Fragment(){
                 Log.e("mypage", "OnFailuer+${t.message}")
             } })
 
-
-
-        return root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         //아바타 조회
-        val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
+        //val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
         val layoutManager = LinearLayoutManager(activity,RecyclerView.HORIZONTAL, false)
-        recyclerView_avatar.layoutManager = layoutManager
+        root.recyclerView_avatar.layoutManager = layoutManager
         lateinit var adapter: avatarAdapter
 
         var retrofit2 = Retrofit.Builder()
@@ -78,9 +70,9 @@ class MyPageFragment  : Fragment(){
             override fun onResponse(call: Call<myAvatarRes>, response: Response<myAvatarRes>) {
                 if (response.isSuccessful) {
                     var re = response.body()!!
-                    Log.e("avatar", re.toString())
+                    Log.e("avata555555555r", re.toString())
                     adapter = avatarAdapter(re.list)
-                    recyclerView_avatar.adapter= adapter
+                    root.recyclerView_avatar.adapter= adapter
 
                     adapter.setItemClickListener(object : avatarAdapter.ItemClickListener {
                         override fun onClick(view: View, position: Int) {
@@ -103,6 +95,14 @@ class MyPageFragment  : Fragment(){
             override fun onFailure(call: Call<myAvatarRes>, t: Throwable) {
                 Log.e("avatar", "OnFailuer+${t.message}")
             } })
+
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
 
 
         //아바타 생성페이지로 이동

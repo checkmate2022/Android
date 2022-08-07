@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.item_myteam.view.*
 import kotlinx.android.synthetic.main.item_myteam.view.team_description
 
 
-class boardAdapter(var item:ArrayList<boardTeamBody>):RecyclerView.Adapter<boardAdapter.ViewHolder>(){
-    var items=item
+class boardAdapter():RecyclerView.Adapter<boardAdapter.ViewHolder>(){
+    var items= ArrayList<boardTeamBody>()
         interface ItemClickListener {
             fun onClick(view: View, position: Int)
         }
@@ -44,12 +44,13 @@ class boardAdapter(var item:ArrayList<boardTeamBody>):RecyclerView.Adapter<board
 
     override fun getItemCount()=items.size
 
+
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
 
         fun setItem(item:boardTeamBody){
             itemView.board_title.text = item.title
             itemView.board_username.text = item.username
-            itemView.board_time.text = item.createdDate.toString()
+            itemView.board_time.text = item.createDate.toString()
            // var a= URLDecoder.decode(item.image!!.substring(ApiService.API_URL.length+1), "utf-8");
             //Glide.with(itemView).load(item.image!!).into(itemView.limg)
 

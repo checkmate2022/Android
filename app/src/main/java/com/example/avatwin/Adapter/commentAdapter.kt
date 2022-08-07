@@ -4,17 +4,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.avatwin.DataClass.joinGetBody
-import com.example.avatwin.DataClass.teamBody
-import com.example.avatwin.DataClass.teamGetBody
-import com.example.avatwin.DataClass.teamaBody
+import com.example.avatwin.DataClass.*
 import com.example.avatwin.R
+import kotlinx.android.synthetic.main.item_board_list.view.*
+import kotlinx.android.synthetic.main.item_board_list.view.board_title
+import kotlinx.android.synthetic.main.item_comment.view.*
 import kotlinx.android.synthetic.main.item_myteam.view.*
-import kotlinx.android.synthetic.main.item_team_member.view.*
+import kotlinx.android.synthetic.main.item_myteam.view.team_description
 
 
-class teamMemberAdapter():RecyclerView.Adapter<teamMemberAdapter.ViewHolder>(){
-    val items : ArrayList<joinGetBody> = arrayListOf()
+class commentAdapter():RecyclerView.Adapter<commentAdapter.ViewHolder>(){
+    var items= ArrayList<commentBody>()
         interface ItemClickListener {
             fun onClick(view: View, position: Int)
         }
@@ -26,12 +26,12 @@ class teamMemberAdapter():RecyclerView.Adapter<teamMemberAdapter.ViewHolder>(){
     fun setItemClickListener(itemClickListener: ItemClickListener) {
         this.itemClickListner = itemClickListener
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):teamMemberAdapter.ViewHolder {
-        val itemView=LayoutInflater.from(parent.context).inflate(R.layout.item_team_member,parent,false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):commentAdapter.ViewHolder {
+        val itemView=LayoutInflater.from(parent.context).inflate(R.layout.item_comment,parent,false)
         return ViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: teamMemberAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: commentAdapter.ViewHolder, position: Int) {
         val item=items[position]
         holder.setItem(item)
 
@@ -40,15 +40,16 @@ class teamMemberAdapter():RecyclerView.Adapter<teamMemberAdapter.ViewHolder>(){
 
         }
     }
-fun addItem(item : joinGetBody){items.add(item)}
-    override fun getItemCount()=items.size
 
+    override fun getItemCount()=items.size
+    fun addItem(item: commentBody){
+        items.add(item)
+    }
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
 
-        fun setItem(item:joinGetBody){
-            itemView.member_usrid.text = item.userId
-            itemView.member_username.text = item.username
-
+        fun setItem(item:commentBody){
+            itemView.comment_username.text = item.username
+            itemView.comment_content.text = item.content
            // var a= URLDecoder.decode(item.image!!.substring(ApiService.API_URL.length+1), "utf-8");
             //Glide.with(itemView).load(item.image!!).into(itemView.limg)
 

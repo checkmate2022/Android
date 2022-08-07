@@ -4,17 +4,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.avatwin.DataClass.avatarBody
-import com.example.avatwin.DataClass.teamBody
-import com.example.avatwin.DataClass.teamGetBody
-import com.example.avatwin.DataClass.teamaBody
+import com.example.avatwin.DataClass.*
 import com.example.avatwin.R
 import kotlinx.android.synthetic.main.item_avatar.view.*
+import kotlinx.android.synthetic.main.item_avatar.view.ia_name
 import kotlinx.android.synthetic.main.item_myteam.view.*
+import kotlinx.android.synthetic.main.item_team_schedule.view.*
 
 
-class scheduleAdapter(var item:ArrayList<avatarBody>):RecyclerView.Adapter<scheduleAdapter.ViewHolder>(){
-    var items=item
+class scheduleAdapter():RecyclerView.Adapter<scheduleAdapter.ViewHolder>(){
+    var items=ArrayList<scheduleReqBody>()
         interface ItemClickListener {
             fun onClick(view: View, position: Int)
         }
@@ -27,7 +26,7 @@ class scheduleAdapter(var item:ArrayList<avatarBody>):RecyclerView.Adapter<sched
         this.itemClickListner = itemClickListener
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):scheduleAdapter.ViewHolder {
-        val itemView=LayoutInflater.from(parent.context).inflate(R.layout.item_avatar,parent,false)
+        val itemView=LayoutInflater.from(parent.context).inflate(R.layout.item_team_schedule,parent,false)
         return ViewHolder(itemView)
     }
 
@@ -43,11 +42,20 @@ class scheduleAdapter(var item:ArrayList<avatarBody>):RecyclerView.Adapter<sched
 
     override fun getItemCount()=items.size
 
+    fun addItem(item: scheduleReqBody){
+        items.add(item)
+    }
+
+    fun clearItem(){
+        items.clear()
+    }
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
 
-        fun setItem(item:avatarBody){
-            itemView.ia_name.text = item.avatarName
-
+        fun setItem(item: scheduleReqBody){
+            itemView.schedule_start.text = item.scheduleStartDate.toString().substring(11,16)
+            itemView.schedule_end.text = item.scheduleEndDate.toString().substring(11,16)
+            itemView.schedule_content.text = item.scheduleName
+            //schedule_start
            // var a= URLDecoder.decode(item.image!!.substring(ApiService.API_URL.length+1), "utf-8");
             //Glide.with(itemView).load(item.image!!).into(itemView.limg)
 
