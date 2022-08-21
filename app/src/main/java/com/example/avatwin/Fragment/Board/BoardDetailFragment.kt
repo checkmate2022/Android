@@ -65,8 +65,8 @@ class BoardDetailFragment: Fragment() {
         }
 
         //댓글
-        comment_button.setOnClickListener{
-            registerComment()
+        root.comment_button.setOnClickListener{
+            registerComment(root.comment_text.text.toString())
         }
 
         return root
@@ -147,7 +147,7 @@ class BoardDetailFragment: Fragment() {
     }
 
 
-    fun registerComment(){
+    fun registerComment(content:String){
         val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
         var retrofit = Retrofit.Builder()
                 .client(okHttpClient)
@@ -157,7 +157,7 @@ class BoardDetailFragment: Fragment() {
 
         var apiService = retrofit.create(CommentService::class.java)
 
-        apiService.post_comment(App.prefs.boardSeq!!.toLong(),comment_text.toString()).enqueue(object : Callback<commentGetBody> {
+        apiService.post_comment(App.prefs.boardSeq!!.toLong(),content).enqueue(object : Callback<commentGetBody> {
             override fun onResponse(call: Call<commentGetBody>, response: Response<commentGetBody>) {
                 val result = response.body()
                 Log.e("성공",result.toString())
