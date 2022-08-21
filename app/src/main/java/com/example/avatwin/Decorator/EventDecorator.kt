@@ -6,10 +6,13 @@ import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
 
-class EventDecorator(dates: Collection<CalendarDay>): DayViewDecorator {
+class EventDecorator(): DayViewDecorator {
 
-    var dates: HashSet<CalendarDay> = HashSet(dates)
-
+    var date : Collection<CalendarDay> = mutableListOf()
+    var dates: HashSet<CalendarDay> = HashSet(date)
+    fun addDate(day : CalendarDay){
+        dates.add(day)
+    }
     override fun shouldDecorate(day: CalendarDay?): Boolean {
         return dates.contains(day)
     }
@@ -17,4 +20,6 @@ class EventDecorator(dates: Collection<CalendarDay>): DayViewDecorator {
     override fun decorate(view: DayViewFacade?) {
         view?.addSpan(DotSpan(5F, Color.parseColor("#1D872A")))
     }
+
+
 }

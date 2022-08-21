@@ -45,13 +45,13 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class ScheduleRegisterFragment: Fragment() {
+class ScheduleUpdateFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_schedule_register, container, false)
 
-
+        //기존 정보 가져오기
 
         return root
     }
@@ -171,7 +171,7 @@ class ScheduleRegisterFragment: Fragment() {
             apiService.post_schedule(data).enqueue(object : Callback<scheduleGetBody> {
                 override fun onResponse(call: Call<scheduleGetBody>, response: Response<scheduleGetBody>) {
                     val result = response.body()
-                    //Log.e("D", result!!.data.scheduleStartdate.toString())
+                   // Log.e("D", result!!.data.scheduleStartdate.toString())
 
                     val fragmentA = TeamMainFragment()
                     val bundle = Bundle()

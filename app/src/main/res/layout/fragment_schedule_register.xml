@@ -309,6 +309,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- 알람설정 -->
 
 
             <!--등록버튼-->
@@ -324,10 +325,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/register_nickname_group" />
 
-                <View
-                android:layout_width="wrap_content"
-                android:layout_height="70dp"
-                    tools:ignore="MissingConstraints" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

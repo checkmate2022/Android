@@ -51,13 +51,16 @@
 
 
             <LinearLayout
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
 
                 <TextView
-                    android:textColor="#2196F3"
+
+                    android:textColor="#673AB7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="종류"
@@ -69,7 +72,7 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:text="제목"
-                   android:textSize="22sp"
+                   android:textSize="30sp"
                    android:id="@+id/detail_title"/>
 
                 <TextView
@@ -80,6 +83,7 @@
                     android:textSize="16sp"
                     android:id="@+id/detail_content"/>
 <LinearLayout
+    android:layout_marginTop="20dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -87,6 +91,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
+        android:layout_marginLeft="15dp"
+
         android:layout_height="wrap_content">
                 <TextView
                     android:textColor="@color/black"
@@ -103,6 +109,7 @@
                     android:id="@+id/detail_starttime"/>
     </LinearLayout>
                 <ImageView
+                    android:layout_marginLeft="15dp"
                     android:id="@+id/btn_more"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
@@ -135,38 +142,71 @@
             </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="50dp"
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <ImageView
+            android:layout_marginLeft="15dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_baseline_access_alarm_24"
+            app:tint="#673AB7" />
     <TextView
         android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="16sp"
         android:text="알람" />
-
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_height="wrap_content">
     <TextView
+        android:gravity="center_horizontal"
+        android:layout_gravity="clip_horizontal"
         android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="5분전"
+        android:textSize="16sp"
         android:id="@+id/detail_notice"/>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="15dp"
         android:layout_height="wrap_content">
-    <TextView
-        android:textColor="@color/black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="참여자" />
 
+        <ImageView
+            android:layout_marginLeft="15dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_baseline_face_24"
+            app:tint="#673AB7" />
     <TextView
         android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="참여자" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_height="wrap_content">
+    <TextView
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
         android:text="참여자목록"
         android:id="@+id/detail_participant"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

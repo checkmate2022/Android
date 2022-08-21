@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.item_team_schedule.view.*
 
 
 class scheduleAdapter():RecyclerView.Adapter<scheduleAdapter.ViewHolder>(){
-    var items=ArrayList<scheduleReqBody>()
+    var items=ArrayList<scheduleBody>()
         interface ItemClickListener {
             fun onClick(view: View, position: Int)
         }
@@ -42,7 +42,7 @@ class scheduleAdapter():RecyclerView.Adapter<scheduleAdapter.ViewHolder>(){
 
     override fun getItemCount()=items.size
 
-    fun addItem(item: scheduleReqBody){
+    fun addItem(item: scheduleBody){
         items.add(item)
     }
 
@@ -51,7 +51,7 @@ class scheduleAdapter():RecyclerView.Adapter<scheduleAdapter.ViewHolder>(){
     }
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
 
-        fun setItem(item: scheduleReqBody){
+        fun setItem(item: scheduleBody){
             itemView.schedule_start.text = item.scheduleStartDate.toString().substring(11,16)
             itemView.schedule_end.text = item.scheduleEndDate.toString().substring(11,16)
             itemView.schedule_content.text = item.scheduleName
