@@ -148,7 +148,7 @@ class TeamUpdateFragment(): Fragment() {
             val layoutManager1 = LinearLayoutManager(activity)
             dialogView.recyclerView_search.layoutManager = layoutManager1
             lateinit var adapter: teamSearchListAdapter
-
+            adapter = teamSearchListAdapter()
 
             dialogView.search_btn.setOnClickListener {
 
@@ -167,7 +167,11 @@ class TeamUpdateFragment(): Fragment() {
                             //adapter.addItem(mList.data[0])
                             Log.e("teamDialog", mList.toString())
 
-                            adapter = teamSearchListAdapter(mList.list)
+                            for (i: joinGetBody in mList.list) {
+                                if (i.userId.toString() != App.prefs.userId) {
+                                    adapter.addItem(i)
+                                }
+                            }
                             dialogView.recyclerView_search.adapter = adapter
 
 

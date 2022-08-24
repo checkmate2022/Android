@@ -8,6 +8,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.avatwin.Adapter.Team.teamMenuAdapter
 import com.example.avatwin.Adapter.scheduleAdapter
@@ -17,6 +19,7 @@ import com.example.avatwin.Converter.LocalDateTimeConverter
 import com.example.avatwin.DataClass.*
 import com.example.avatwin.Decorator.EventDecorator
 import com.example.avatwin.Decorator.TodayDecorator
+import com.example.avatwin.Fragment.Board.BoardEntireFragment
 import com.example.avatwin.Fragment.Board.BoardMainFragment
 import com.example.avatwin.Fragment.Schedule.ScheduleDetailFragment
 import com.example.avatwin.Fragment.Schedule.ScheduleDialogFragment
@@ -36,6 +39,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import kotlinx.android.synthetic.main.dialog_channel_register.view.*
 import kotlinx.android.synthetic.main.dialog_schedule_detail.*
 import kotlinx.android.synthetic.main.dialog_schedule_list.*
+import kotlinx.android.synthetic.main.fragment_board_list.view.*
 import kotlinx.android.synthetic.main.fragment_team_main.view.*
 import kotlinx.android.synthetic.main.menubar_team.*
 import kotlinx.android.synthetic.main.menubar_team.view.*
@@ -67,12 +71,10 @@ class TeamMainFragment() : Fragment() {
         var root = inflater.inflate(R.layout.menubar_team, container, false)
 
 
-
-        //bud  null이 아니면
-
-
-        //팀 일정조회
-        //getTeamSchedule();
+        //메뉴바 팀명
+        arguments?.let{
+            root.channel_teamName.text=it.getString("teamName")
+        }
 
 
         //일정추가 페이지로 이동
@@ -117,6 +119,8 @@ class TeamMainFragment() : Fragment() {
                         val fragmentA = BoardMainFragment()
                         val bundle = Bundle()
                         fragmentA.arguments = bundle
+                        bundle.putString("channelName",result.list[position].channelName)
+                        bundle.putLong("channelSeq",result.list[position].channelSeq!!)
                         val transaction = requireActivity().supportFragmentManager.beginTransaction()
                         transaction.add(R.id.container, fragmentA)
                         transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
@@ -158,7 +162,14 @@ class TeamMainFragment() : Fragment() {
                         Log.e("성공", result.toString())
                         adapter.addItem(name.toString())
                         root.recyclerView_team_menu.adapter = adapter
-
+                        adapter.notifyDataSetChanged()
+                        val fragmentA = TeamMainFragment()
+                        val bundle = Bundle()
+                        fragmentA.arguments = bundle
+                        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                        transaction.add(R.id.container, fragmentA)
+                        transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
+                        transaction.commit()
                     }
 
                     override fun onFailure(call: Call<channelGetBody>, t: Throwable) {
@@ -174,6 +185,17 @@ class TeamMainFragment() : Fragment() {
         //메뉴바
         root.menu_button.setOnClickListener {
             main_drawer_layout.openDrawer((GravityCompat.START))
+        }
+
+        //채널 전체페이지로 이동
+        root.entire_channel.setOnClickListener {
+            val fragmentA = BoardEntireFragment()
+            val bundle = Bundle()
+            fragmentA.arguments = bundle
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.add(R.id.container, fragmentA)
+            transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
+            transaction.commit()
         }
 
         //팀 관리페이지로 이동
@@ -199,6 +221,10 @@ class TeamMainFragment() : Fragment() {
             transaction.commit()
         }
         return root
+    }
+    fun refreshFragment(fragment: Fragment, fragmentManager: FragmentManager) {
+        var ft: FragmentTransaction = fragmentManager.beginTransaction()
+        ft.detach(fragment).attach(fragment).commit()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

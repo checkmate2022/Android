@@ -143,7 +143,7 @@ class ChatListFragment: Fragment() {
      val layoutManager1 = LinearLayoutManager(activity)
      dialogView.recyclerView_search.layoutManager = layoutManager1
      lateinit var adapter: teamSearchListAdapter
-
+     adapter = teamSearchListAdapter()
     //검색버튼
      dialogView.search_btn.setOnClickListener {
 
@@ -159,10 +159,11 @@ class ChatListFragment: Fragment() {
              override fun onResponse(call: Call<userGetBody2>, response: Response<userGetBody2>) {
                  if (response.isSuccessful) {
                      var mList = response.body()!!
-                     //adapter.addItem(mList.data[0])
-                     Log.e("teamDialog", mList.toString())
-                     //if(App.prefs.userId==mList.list)
-                     adapter = teamSearchListAdapter(mList.list)
+                     for (i: joinGetBody in mList.list) {
+                         if (i.userId.toString() != App.prefs.userId) {
+                             adapter.addItem(i)
+                         }
+                     }
                      dialogView.recyclerView_search.adapter = adapter
 
 

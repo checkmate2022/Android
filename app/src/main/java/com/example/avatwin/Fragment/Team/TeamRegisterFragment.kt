@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.avatwin.Adapter.Team.teamListAdapter
 import com.example.avatwin.Adapter.Team.teamSearchListAdapter
+import com.example.avatwin.Auth.App
 import com.example.avatwin.R
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.*
@@ -17,6 +18,7 @@ import com.example.avatwin.Fragment.HomeFragment
 import com.example.avatwin.Service.TeamService
 import com.example.avatwin.Service.UserService
 import kotlinx.android.synthetic.main.dialog_member_search.view.*
+import kotlinx.android.synthetic.main.dialog_schedule_list.*
 import kotlinx.android.synthetic.main.fragment_team_register.*
 import kotlinx.android.synthetic.main.fragment_team_register.register_id
 import kotlinx.android.synthetic.main.fragment_team_register.register_nickname
@@ -103,7 +105,7 @@ class TeamRegisterFragment: Fragment() {
             val layoutManager1 = LinearLayoutManager(activity)
             dialogView.recyclerView_search.layoutManager = layoutManager1
             lateinit var adapter: teamSearchListAdapter
-
+            adapter = teamSearchListAdapter()
 
             dialogView.search_btn.setOnClickListener {
 
@@ -120,9 +122,14 @@ class TeamRegisterFragment: Fragment() {
                         if (response.isSuccessful) {
                             var mList = response.body()!!
                             //adapter.addItem(mList.data[0])
-                            Log.e("teamDialog", mList.toString())
+                            //Log.e("teamDialog", mList.toString())
+                            var userList=ArrayList<userGetBody2>()
+                            for (i: joinGetBody in mList.list) {
+                                if (i.userId.toString() != App.prefs.userId) {
+                                    adapter.addItem(i)
+                                }
+                            }
 
-                            adapter = teamSearchListAdapter(mList.list)
                             dialogView.recyclerView_search.adapter = adapter
 
 

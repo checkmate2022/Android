@@ -17,6 +17,7 @@ import com.example.avatwin.Adapter.Team.teamSearchListAdapter
 import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.Converter.LocalDateTimeConverter
+import com.example.avatwin.DataClass.joinGetBody
 import com.example.avatwin.DataClass.scheduleGetBody
 import com.example.avatwin.DataClass.scheduleReqBody
 import com.example.avatwin.DataClass.userGetBody2
@@ -206,7 +207,7 @@ class ScheduleUpdateFragment: Fragment() {
             val layoutManager1 = LinearLayoutManager(activity)
             dialogView.recyclerView_search.layoutManager = layoutManager1
             lateinit var adapter: teamSearchListAdapter
-
+            adapter = teamSearchListAdapter()
 
             dialogView.search_btn.setOnClickListener {
 
@@ -225,7 +226,11 @@ class ScheduleUpdateFragment: Fragment() {
                             //adapter.addItem(mList.data[0])
                             Log.e("teamDialog", mList.toString())
 
-                            adapter = teamSearchListAdapter(mList.list)
+                            for (i: joinGetBody in mList.list) {
+                                if (i.userId.toString() != App.prefs.userId) {
+                                    adapter.addItem(i)
+                                }
+                            }
                             dialogView.recyclerView_search.adapter = adapter
 
 

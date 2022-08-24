@@ -13,11 +13,8 @@ import com.example.avatwin.Adapter.boardAdapter
 import com.example.avatwin.Adapter.commentAdapter
 import com.example.avatwin.Auth.*
 import com.example.avatwin.Converter.LocalDateTimeConverter
-import com.example.avatwin.DataClass.avatarDelRes
-import com.example.avatwin.DataClass.boardGetBodyById
+import com.example.avatwin.DataClass.*
 import com.example.avatwin.R
-import com.example.avatwin.DataClass.boardTeamGetBody
-import com.example.avatwin.DataClass.commentGetBody
 import com.example.avatwin.Fragment.MyPageFragment
 import com.example.avatwin.Service.AvatarService
 import com.example.avatwin.Service.BoardService
@@ -36,7 +33,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.time.LocalDateTime
 
-class BoardDetailFragment: Fragment() {
+class BoardDetailFragment(): Fragment() {
     lateinit var adapter: commentAdapter
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -95,7 +92,8 @@ class BoardDetailFragment: Fragment() {
                 if (response.isSuccessful) {
                     var mList = response.body()!!
                     //날짜
-                    board_detail_date.setText(mList.data.createDate.toString())
+                    var date = mList.data.createDate.toString().substring(0,10)+" "+mList.data.createDate.toString().substring(11,16)
+                    board_detail_date.setText(date)
                     //제목
                     board_detail_title.setText(mList.data.title)
                     //이미지
