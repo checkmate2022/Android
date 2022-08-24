@@ -1,5 +1,6 @@
 package com.example.avatwin.Adapter.Team
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +10,9 @@ import com.example.avatwin.R
 import kotlinx.android.synthetic.main.item_team_member_list.view.*
 
 
-class teamSearchListAdapter(var item:ArrayList<joinGetBody>):RecyclerView.Adapter<teamSearchListAdapter.ViewHolder>(){
+class teamSearchListAdapter :RecyclerView.Adapter<teamSearchListAdapter.ViewHolder>(){
 
-    val items = item
+    val items = ArrayList<joinGetBody>()
 
         interface ItemClickListener {
             fun onClick(view: View, position: Int)
@@ -37,6 +38,10 @@ class teamSearchListAdapter(var item:ArrayList<joinGetBody>):RecyclerView.Adapte
             itemClickListner.onClick(it, position)
 
         }
+
+        holder.itemView.member_delete.setOnClickListener{
+            Log.e("deleteTest","Test")
+        }
     }
     fun clearItem() = items.clear()
     override fun getItemCount()=items.size
@@ -44,6 +49,7 @@ class teamSearchListAdapter(var item:ArrayList<joinGetBody>):RecyclerView.Adapte
     fun addItem(item : joinGetBody) {items.add(item)}
 
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
+
 
         fun setItem(item:joinGetBody){
             itemView.member_title.text = item.userId

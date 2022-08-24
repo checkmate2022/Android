@@ -14,7 +14,6 @@ import com.example.avatwin.Auth.*
 import com.example.avatwin.Converter.LocalDateTimeConverter
 import com.example.avatwin.R
 import com.example.avatwin.DataClass.boardTeamGetBody
-import com.example.avatwin.DataClass.channelBody
 import com.example.avatwin.Service.BoardService
 import com.google.gson.*
 import kotlinx.android.synthetic.main.fragment_board_list.view.*
@@ -26,21 +25,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDateTime
 
-class BoardMainFragment(): Fragment() {
-    var channelSeq:Long=0
+class BoardEntireFragment: Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_board_list, container, false)
-
-
-        //listadapter, mutablelist, 메뉴
-
-        //게시판 명
-        arguments?.let{
-            root.board_name.text=it.getString("channelName")
-            //channelSeq=it.getLong("channelSeq")
-        }
 
 
         root.btn_write.setOnClickListener {
@@ -72,7 +61,7 @@ class BoardMainFragment(): Fragment() {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
         var apiService = retrofit.create(BoardService::class.java)
-        var tests = apiService.get_channelBoard(App.prefs.channelId!!.toLong())
+        var tests = apiService.get_Board(App.prefs.teamSeq!!.toLong())
         tests.enqueue(object : Callback<boardTeamGetBody> {
             override fun onResponse(call: Call<boardTeamGetBody>, response: Response<boardTeamGetBody>) {
                 if (response.isSuccessful) {

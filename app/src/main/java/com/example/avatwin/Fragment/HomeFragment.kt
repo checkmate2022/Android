@@ -71,6 +71,7 @@ class HomeFragment: Fragment() {
                             Log.e("teamSq",App.prefs.teamSeq.toString())
                             val fragmentA = TeamMainFragment()
                             val bundle = Bundle()
+                            bundle.putString("teamName",teamaBody.teamName.toString())
                             fragmentA.arguments=bundle
                             val transaction = requireActivity().supportFragmentManager.beginTransaction()
                             transaction.add(R.id.container,fragmentA)
