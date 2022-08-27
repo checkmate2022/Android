@@ -33,15 +33,13 @@ class teamSearchListAdapter :RecyclerView.Adapter<teamSearchListAdapter.ViewHold
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item=items[position]
         holder.setItem(item)
-
+        //holder.setData(item,position)
         holder.itemView.setOnClickListener {
             itemClickListner.onClick(it, position)
+           // Log.e("clck","clk")
 
         }
 
-        holder.itemView.member_delete.setOnClickListener{
-            Log.e("deleteTest","Test")
-        }
     }
     fun clearItem() = items.clear()
     override fun getItemCount()=items.size
@@ -49,7 +47,18 @@ class teamSearchListAdapter :RecyclerView.Adapter<teamSearchListAdapter.ViewHold
     fun addItem(item : joinGetBody) {items.add(item)}
 
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
+        /*var po:Int?=null
 
+        init{
+            itemView.member_delete.setOnClickListener {
+                Log.e("clsk","ss")
+            }
+        }
+
+        fun setData(item:joinGetBody,position: Int){
+            itemView.member_title.text = item.userId
+            this.po=position
+        }*/
 
         fun setItem(item:joinGetBody){
             itemView.member_title.text = item.userId

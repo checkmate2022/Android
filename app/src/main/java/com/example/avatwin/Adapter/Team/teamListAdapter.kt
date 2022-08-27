@@ -1,5 +1,6 @@
 package com.example.avatwin.Adapter.Team
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,8 +33,11 @@ class teamListAdapter():RecyclerView.Adapter<teamListAdapter.ViewHolder>(){
         val item=items[position]
         holder.setItem(item)
 
-        holder.itemView.setOnClickListener {
-            itemClickListner.onClick(it, position)
+        holder.itemView.member_delete_button.setOnClickListener {
+            //itemClickListner.onClick(it, position)
+            Log.e("dd","Ss")
+            //items.remove(item)
+        //연결 fragment에 함수 작성하고 adapter notify -> edittext글 내용바꾸기
 
         }
     }

@@ -33,7 +33,7 @@
            android:layout_width="100dp"/>
 
         <ImageView
-            android:id="@+id/member_delete"
+            android:id="@+id/member_delete_button"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:layout_marginStart="85dp"

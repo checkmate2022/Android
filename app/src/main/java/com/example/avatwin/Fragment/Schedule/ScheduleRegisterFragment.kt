@@ -51,9 +51,6 @@ class ScheduleRegisterFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_schedule_register, container, false)
-
-
-
         return root
     }
 
@@ -66,18 +63,38 @@ class ScheduleRegisterFragment: Fragment() {
         var endTimeString = ""
         var start =""
         var end=""
+        var smonth = ""
+        var sday = ""
+        var emonth = ""
+        var eday = ""
+        var shour =""
+        var smin=""
+        var ehour =""
+        var emin=""
         val items: ArrayList<String> = arrayListOf()
+        var dateforMain =""
         //시작 날짜
         register_start_day.setOnClickListener {
 
             val cal = Calendar.getInstance()
-            val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                startDateString = "${year}-${month + 1}-${dayOfMonth}"
+            val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, day ->
 
+                if ((month+1) / 10 < 1) {
+                    smonth = "0${month + 1}"
+                } else {
+                    smonth = "${month + 1 }"
+                }
+
+                if (day / 10 < 1) {
+                    sday = "0$day"
+                } else {
+                    sday = day.toString()
+                }
+
+                dateforMain = "${year}-${month+1}-${day}"
+                startDateString = "${year}-${smonth}-${sday}"
                 register_start_day.text = startDateString
-                //val strDatewithTime = "2015-08-04T10:11:30"
-               // val aLDT = LocalDateTime.parse(strDatewithTime)
-               //Log.e("Date",aLDT.toString())
+
             }
             DatePickerDialog(requireContext(), dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
 
@@ -86,11 +103,23 @@ class ScheduleRegisterFragment: Fragment() {
         //시작 시간
         register_start_time.setOnClickListener {
             val cal = Calendar.getInstance()
-            val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-                startTimeString = "${hourOfDay}:${minute}"
+            val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hour, minute ->
+
+                if ((hour) / 10 < 1) {
+                    shour = "0${hour}"
+                } else {
+                    shour = "${hour}"
+                }
+
+                if ((minute) / 10 < 1) {
+                    smin = "0${minute}"
+                } else {
+                    smin = "${minute}"
+                }
+
+                startTimeString = "${shour}:${smin}"
                 register_start_time.text = startTimeString
-                start
-                start = startDateString+"T"+startTimeString+":01"
+                start = startDateString+"T"+startTimeString+":00"
             }
             TimePickerDialog(requireContext(), timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
         }
@@ -99,8 +128,21 @@ class ScheduleRegisterFragment: Fragment() {
         register_end_day.setOnClickListener {
 
             val cal = Calendar.getInstance()
-            val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                endDateString = "${year}-${month + 1}-${dayOfMonth}"
+            val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, day ->
+
+                if ((month+1) / 10 < 1) {
+                    emonth = "0${month + 1}"
+                } else {
+                    emonth = "${month + 1 }"
+                }
+
+                if (day / 10 < 1) {
+                    eday = "0$day"
+                } else {
+                    eday = day.toString()
+                }
+
+                endDateString = "${year}-${emonth}-${eday}"
                 register_end_day.text = endDateString
             }
             DatePickerDialog(requireContext(), dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
@@ -109,10 +151,23 @@ class ScheduleRegisterFragment: Fragment() {
         //종료 시간
         register_end_time.setOnClickListener {
             val cal = Calendar.getInstance()
-            val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-                endTimeString = "${hourOfDay}:${minute}"
+            val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hour, minute ->
+
+                if ((hour) / 10 < 1) {
+                    ehour = "0${hour}"
+                } else {
+                    ehour = "${hour}"
+                }
+
+                if ((minute) / 10 < 1) {
+                    emin = "0${minute}"
+                } else {
+                    emin = "${minute}"
+                }
+
+                endTimeString = "${ehour}:${emin}"
                 register_end_time.text = endTimeString
-                end = endDateString+"T"+endTimeString+":01"
+                end = endDateString+"T"+endTimeString+":00"
             }
             TimePickerDialog(requireContext(), timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
         }
@@ -127,13 +182,6 @@ class ScheduleRegisterFragment: Fragment() {
 
             }
         }
-
-
-
-        //Log.e("Start",start)
-        //val startdate= LocalDateTime.parse(start, dateFormatter)
-
-        //enddate= LocalDateTime.parse(end, dateFormatter)}
 
 
         //스케쥴 참여자
@@ -164,9 +212,9 @@ class ScheduleRegisterFragment: Fragment() {
 
 
             val aLDT = LocalDateTime.parse(start)
-            Log.e("Date",aLDT.toString())
+            //Log.e("Date",aLDT.toString())
             val aLDT2 = LocalDateTime.parse(end)
-            Log.e("Date",aLDT2.toString())
+            //Log.e("Date",aLDT2.toString())
 
             var data = scheduleReqBody(register_id.text.toString(), register_description.text.toString(), scheduleType, aLDT, aLDT2, items, App.prefs.teamSeq!!.toLong())
             apiService.post_schedule(data).enqueue(object : Callback<scheduleGetBody> {
@@ -176,6 +224,7 @@ class ScheduleRegisterFragment: Fragment() {
 
                     val fragmentA = TeamMainFragment()
                     val bundle = Bundle()
+                    bundle.putString("startDate",dateforMain)
                     fragmentA.arguments=bundle
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
                     transaction.add(R.id.container,fragmentA)

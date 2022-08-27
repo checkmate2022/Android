@@ -18,11 +18,12 @@ import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.Converter.LocalDateTimeConverter
 import com.example.avatwin.DataClass.*
 import com.example.avatwin.Decorator.EventDecorator
+import com.example.avatwin.Decorator.OneDayDecorator
 import com.example.avatwin.Decorator.TodayDecorator
+import com.example.avatwin.Decorator.TodayDecorator2
 import com.example.avatwin.Fragment.Board.BoardEntireFragment
 import com.example.avatwin.Fragment.Board.BoardMainFragment
 import com.example.avatwin.Fragment.Schedule.ScheduleDetailFragment
-import com.example.avatwin.Fragment.Schedule.ScheduleDialogFragment
 import com.example.avatwin.Fragment.Schedule.ScheduleRegisterFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.ChannelService
@@ -37,9 +38,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import kotlinx.android.synthetic.main.dialog_channel_register.view.*
-import kotlinx.android.synthetic.main.dialog_schedule_detail.*
 import kotlinx.android.synthetic.main.dialog_schedule_list.*
-import kotlinx.android.synthetic.main.fragment_board_list.view.*
 import kotlinx.android.synthetic.main.fragment_team_main.view.*
 import kotlinx.android.synthetic.main.menubar_team.*
 import kotlinx.android.synthetic.main.menubar_team.view.*
@@ -53,6 +52,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.lang.reflect.Type
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TeamMainFragment() : Fragment() {
     //채널 adapter
@@ -75,6 +76,8 @@ class TeamMainFragment() : Fragment() {
         arguments?.let{
             root.channel_teamName.text=it.getString("teamName")
         }
+
+
 
 
         //일정추가 페이지로 이동
@@ -229,12 +232,26 @@ class TeamMainFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
         calendar = view.calendar
-        calendar.setSelectedDate(CalendarDay.today())
-        calendar.addDecorator(TodayDecorator())
-        val dd : Collection<CalendarDay> = mutableListOf(CalendarDay.from(2022,10,10),CalendarDay.from(2022,10,11))
-        calendar.addDecorator(EventDecorator())
-        EventDecorator().date=dd
+        //calendar.setSelectedDate(CalendarDay.today())
+        //calendar.addDecorator(TodayDecorator())
+        calendar.addDecorator(OneDayDecorator(CalendarDay.today()))
+       // var datE:CalendarDay = CalendarDay.from(2022,8,25)
+        //calendar.addDecorator(OneDayDecorator(datE))
+
+        //일정등록 후
+        if(requireArguments().getString("startDate")!=null){
+
+            val startdate = requireArguments().getString("startDate")
+            val list = startdate!!.split("-")
+            var datE:CalendarDay = CalendarDay.from(list[0].toInt(),list[1].toInt()-1,list[2].toInt())
+            //Log.e("startdate2",datE.toString())
+            calendar.addDecorator(OneDayDecorator(datE))
+        }
+
         val tnrBottomSheetView = layoutInflater.inflate(R.layout.dialog_schedule_list, null)
 
         tnrBottomSheetDialog = BottomSheetDialog(requireContext(), R.style.DialogCustomTheme) // dialog에 sytle 추가
@@ -247,10 +264,9 @@ class TeamMainFragment() : Fragment() {
             override fun onDateSelected(widget: MaterialCalendarView, date: CalendarDay, selected: Boolean) {
                 //여기에 가져온 일정 apater추가
                 //선택 날짜를 전달,   등록 성공하면 bundle값에 따라
-//https://dpdpwl.tistory.com/3
-                EventDecorator().addDate(date)
-                Log.e("cal",CalendarDay.from(2022,5,6).toString())
-                Log.e("cal",date.toString())
+                //https://dpdpwl.tistory.com/3
+
+
                 tnrBottomSheetDialog.show()
                 var str_sub = date.toString().substring(12)
                 val r = str_sub.replace("}", "")
