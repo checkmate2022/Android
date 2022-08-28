@@ -37,10 +37,11 @@ class BoardMainFragment(): Fragment() {
         //listadapter, mutablelist, 메뉴
 
         //게시판 명
-        arguments?.let{
+        root.board_name.text=App.prefs.channelName
+        /*arguments?.let{
             root.board_name.text=it.getString("channelName")
             //channelSeq=it.getLong("channelSeq")
-        }
+        }*/
 
 
         root.btn_write.setOnClickListener {
@@ -77,7 +78,7 @@ class BoardMainFragment(): Fragment() {
             override fun onResponse(call: Call<boardTeamGetBody>, response: Response<boardTeamGetBody>) {
                 if (response.isSuccessful) {
                     var mList = response.body()!!
-                    Log.e("board-date",mList.list.toString())
+                    //Log.e("board-date",mList.list.toString())
                     adapter = boardAdapter()
                     adapter.items=mList.list
                     root.recyclerView_board_more.adapter= adapter

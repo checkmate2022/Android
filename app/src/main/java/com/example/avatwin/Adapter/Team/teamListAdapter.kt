@@ -1,9 +1,11 @@
 package com.example.avatwin.Adapter.Team
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.avatwin.Fragment.Team.TeamRegisterFragment
 import com.example.avatwin.R
 import kotlinx.android.synthetic.main.item_team_member_list.view.*
 
@@ -31,9 +33,12 @@ class teamListAdapter():RecyclerView.Adapter<teamListAdapter.ViewHolder>(){
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item=items[position]
         holder.setItem(item)
+        val TeamRegisterFragment = TeamRegisterFragment.getInstance()
 
-        holder.itemView.setOnClickListener {
-            itemClickListner.onClick(it, position)
+        holder.itemView.member_delete_button.setOnClickListener {
+            items.remove(item)
+            TeamRegisterFragment!!.deleteMember(position)
+        //연결 fragment에 함수 작성하고 adapter notify -> edittext글 내용바꾸기
 
         }
     }

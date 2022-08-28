@@ -17,12 +17,11 @@ import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.Converter.LocalDateTimeConverter
 import com.example.avatwin.DataClass.*
-import com.example.avatwin.Decorator.EventDecorator
+import com.example.avatwin.Decorator.OneDayDecorator
 import com.example.avatwin.Decorator.TodayDecorator
 import com.example.avatwin.Fragment.Board.BoardEntireFragment
 import com.example.avatwin.Fragment.Board.BoardMainFragment
 import com.example.avatwin.Fragment.Schedule.ScheduleDetailFragment
-import com.example.avatwin.Fragment.Schedule.ScheduleDialogFragment
 import com.example.avatwin.Fragment.Schedule.ScheduleRegisterFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.ChannelService
@@ -37,9 +36,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import kotlinx.android.synthetic.main.dialog_channel_register.view.*
-import kotlinx.android.synthetic.main.dialog_schedule_detail.*
 import kotlinx.android.synthetic.main.dialog_schedule_list.*
-import kotlinx.android.synthetic.main.fragment_board_list.view.*
 import kotlinx.android.synthetic.main.fragment_team_main.view.*
 import kotlinx.android.synthetic.main.menubar_team.*
 import kotlinx.android.synthetic.main.menubar_team.view.*
@@ -53,13 +50,13 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.lang.reflect.Type
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.collections.ArrayList
 
 class TeamMainFragment() : Fragment() {
     //채널 adapter
     val layoutManager1 = LinearLayoutManager(activity)
     val layoutManager2 = LinearLayoutManager(activity)
     lateinit var tnrBottomSheetDialog: BottomSheetDialog
-    lateinit var tnrBottomSheetDialog2: BottomSheetDialog
     lateinit var adapter: teamMenuAdapter
     lateinit var scheduleAdapter: scheduleAdapter
     lateinit var calendar: MaterialCalendarView
@@ -75,6 +72,8 @@ class TeamMainFragment() : Fragment() {
         arguments?.let{
             root.channel_teamName.text=it.getString("teamName")
         }
+
+
 
 
         //일정추가 페이지로 이동
@@ -115,6 +114,7 @@ class TeamMainFragment() : Fragment() {
                     override fun onClick(view: View, position: Int) {
 
                         App.prefs.channelId = result.list[position].channelSeq.toString()
+                        App.prefs.channelName = result.list[position].channelName.toString()
 
                         val fragmentA = BoardMainFragment()
                         val bundle = Bundle()
@@ -227,14 +227,17 @@ class TeamMainFragment() : Fragment() {
         ft.detach(fragment).attach(fragment).commit()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        getTeamSchedule()
+
         calendar = view.calendar
-        calendar.setSelectedDate(CalendarDay.today())
+        //calendar.setSelectedDate(CalendarDay.today())
         calendar.addDecorator(TodayDecorator())
-        val dd : Collection<CalendarDay> = mutableListOf(CalendarDay.from(2022,10,10),CalendarDay.from(2022,10,11))
-        calendar.addDecorator(EventDecorator())
-        EventDecorator().date=dd
+        //calendar.addDecorator(OneDayDecorator(CalendarDay.today()))
+
         val tnrBottomSheetView = layoutInflater.inflate(R.layout.dialog_schedule_list, null)
 
         tnrBottomSheetDialog = BottomSheetDialog(requireContext(), R.style.DialogCustomTheme) // dialog에 sytle 추가
@@ -247,10 +250,9 @@ class TeamMainFragment() : Fragment() {
             override fun onDateSelected(widget: MaterialCalendarView, date: CalendarDay, selected: Boolean) {
                 //여기에 가져온 일정 apater추가
                 //선택 날짜를 전달,   등록 성공하면 bundle값에 따라
-//https://dpdpwl.tistory.com/3
-                EventDecorator().addDate(date)
-                Log.e("cal",CalendarDay.from(2022,5,6).toString())
-                Log.e("cal",date.toString())
+                //https://dpdpwl.tistory.com/3
+
+
                 tnrBottomSheetDialog.show()
                 var str_sub = date.toString().substring(12)
                 val r = str_sub.replace("}", "")
@@ -287,7 +289,7 @@ class TeamMainFragment() : Fragment() {
 
                 scheduleAdapter = scheduleAdapter()
                 scheduleAdapter.clearItem()
-                getTeamSchedule(rselect)
+                getTeamDetailSchedule(rselect)
                 tnrBottomSheetDialog.btn_write.setOnClickListener {
                     tnrBottomSheetDialog.dismiss()
                     val fragmentA = ScheduleRegisterFragment()
@@ -305,11 +307,66 @@ class TeamMainFragment() : Fragment() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getTeamSchedule() {
 
+        val gson = GsonBuilder()
+            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter())
+            .registerTypeAdapter(LocalDateTime::class.java, object : JsonDeserializer<LocalDateTime> {
+                override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): LocalDateTime {
+                    return LocalDateTime.parse(json!!.asString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                }
+            }).create()
+
+        val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
+        var retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(ScheduleService.API_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(ScalarsConverterFactory.create()).build()
+
+        var apiService = retrofit.create(ScheduleService::class.java)
+
+
+        apiService.get_teamSchedule(App.prefs.teamSeq!!.toLong()).enqueue(object : Callback<scheduleTeamGetBody> {
+            override fun onResponse(call: Call<scheduleTeamGetBody>, response: Response<scheduleTeamGetBody>) {
+                val result = response.body()
+                var scheduleList=ArrayList<scheduleBody>()
+
+
+                for (i: scheduleBody in result!!.list) {
+                    var dateString = i.scheduleStartDate.toString()
+                    var year=dateString.substring(0,4)
+                    var month=""
+                    var day=""
+                    //월
+                    if(dateString.substring(5,6)=="0"){
+                        month = dateString.substring(6,7)
+                    }else{
+                        month = dateString.substring(5,7)
+                    }
+                    //일
+                    if(dateString.substring(8,9)=="0"){
+                        day = dateString.substring(9,10)
+                    }else{
+                        day = dateString.substring(8,10)
+                    }
+                    var datE:CalendarDay = CalendarDay.from(year.toInt(),month.toInt()-1,day.toInt())
+                    //Log.e("startdate2",datE.toString())
+                    calendar.addDecorator(OneDayDecorator(datE))
+                }
+
+            }
+
+            override fun onFailure(call: Call<scheduleTeamGetBody>, t: Throwable) {
+                Log.e("schedule", "OnFailuer+${t.message}")
+            }
+        })
+    }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getTeamSchedule(rselect: String) {
+    fun getTeamDetailSchedule(rselect: String) {
 
         val gson = GsonBuilder()
                 .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter())

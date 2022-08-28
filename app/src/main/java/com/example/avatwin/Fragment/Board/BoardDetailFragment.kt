@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.avatwin.Adapter.boardAdapter
@@ -16,10 +17,18 @@ import com.example.avatwin.Converter.LocalDateTimeConverter
 import com.example.avatwin.DataClass.*
 import com.example.avatwin.R
 import com.example.avatwin.Fragment.MyPageFragment
+import com.example.avatwin.Fragment.Schedule.ScheduleRegisterFragment
+import com.example.avatwin.Fragment.Team.TeamMainFragment
+import com.example.avatwin.Fragment.Team.TeamRegisterFragment
 import com.example.avatwin.Service.AvatarService
 import com.example.avatwin.Service.BoardService
 import com.example.avatwin.Service.CommentService
+import com.example.avatwin.Service.ScheduleService
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.*
+import kotlinx.android.synthetic.main.dialog_comment_menu.*
+import kotlinx.android.synthetic.main.dialog_schedule_list.*
 import kotlinx.android.synthetic.main.fragment_board.*
 import kotlinx.android.synthetic.main.fragment_board.view.*
 import kotlinx.android.synthetic.main.fragment_board_list.view.*
@@ -34,13 +43,21 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.time.LocalDateTime
 
 class BoardDetailFragment(): Fragment() {
+
+    init{ instance = this }
+
+    companion object{
+        private var instance: BoardDetailFragment? = null
+        fun getInstance(): BoardDetailFragment?
+        { return instance  }}
+
     lateinit var adapter: commentAdapter
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_board, container, false)
         val layoutManager = LinearLayoutManager(requireActivity())
-        root.recyclerView_board_detail.layoutManager = layoutManager
+        root.recyclerview_comment.layoutManager = layoutManager
 
         //init
         initBoard()
@@ -68,10 +85,9 @@ class BoardDetailFragment(): Fragment() {
 
         return root
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun initBoard(){
-
-
 
         val gson = GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
@@ -105,7 +121,7 @@ class BoardDetailFragment(): Fragment() {
                     //댓글 리스트
                     adapter = commentAdapter()
                     adapter.items=mList.data.comments
-                    recyclerView_board_detail.adapter= adapter
+                    recyclerview_comment.adapter= adapter
                 } }
 
             override fun onFailure(call: Call<boardGetBodyById>, t: Throwable) {
@@ -158,15 +174,73 @@ class BoardDetailFragment(): Fragment() {
         apiService.post_comment(App.prefs.boardSeq!!.toLong(),content).enqueue(object : Callback<commentGetBody> {
             override fun onResponse(call: Call<commentGetBody>, response: Response<commentGetBody>) {
                 val result = response.body()
-                Log.e("성공",result.toString())
+                //Log.e("성공",result.toString())
                 adapter.addItem(result!!.data)
+                comment_text.setText("")
             }
 
             override fun onFailure(call: Call<commentGetBody>, t: Throwable) {
-                Log.e("team_put", "OnFailuer+${t.message}")
+                Log.e("COMMENT", "OnFailuer+${t.message}")
             }
         })
 
+    }
+    //댓글 메뉴클릭
+    fun clickMenu(item: commentBody){
+        lateinit var tnrBottomSheetDialog: BottomSheetDialog
+        val layoutManager = LinearLayoutManager(activity)
+        val tnrBottomSheetView = layoutInflater.inflate(R.layout.dialog_comment_menu, null)
+
+        tnrBottomSheetDialog = BottomSheetDialog(requireContext(), R.style.DialogCustomTheme) // dialog에 sytle 추가
+        tnrBottomSheetDialog.setContentView(tnrBottomSheetView)
+        tnrBottomSheetDialog.show()
+
+        //수정 버튼 눌렀을 때
+        tnrBottomSheetDialog.dialog_update.setOnClickListener {
+            tnrBottomSheetDialog.dismiss()
+            val fragmentA = CommentUpdateFragment(item)
+            val bundle = Bundle()
+            fragmentA.arguments = bundle
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.add(R.id.container, fragmentA)
+            transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
+            transaction.commit()
+        }
+
+        //삭제 버튼 눌렀을 떄
+        tnrBottomSheetDialog.dialog_delete.setOnClickListener {
+
+            var dlg = AlertDialog.Builder(requireContext())
+            var dialogView = View.inflate(context, R.layout.dialog_delete, null)
+            dlg.setView(dialogView)
+            dlg.setPositiveButton("확인") { dialog, which ->
+
+                tnrBottomSheetDialog.dismiss()
+                val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
+                var retrofit = Retrofit.Builder()
+                    .client(okHttpClient)
+                    .baseUrl(ScheduleService.API_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(ScalarsConverterFactory.create()).build()
+
+                var apiService = retrofit.create(CommentService::class.java)
+
+
+                apiService.delete_comment(item.commentSeq!!).enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                        val result = response.body()
+                        adapter.items.remove(item)
+                        recyclerview_comment.adapter!!.notifyDataSetChanged()
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Log.e("schedule", "OnFailuer+${t.message}")
+                    }
+                })
+            }
+            dlg.setNegativeButton("취소"){dialog,which ->}
+            dlg.show()
+        }
     }
 }
 

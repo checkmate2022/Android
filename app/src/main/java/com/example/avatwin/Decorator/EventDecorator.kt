@@ -6,9 +6,9 @@ import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
 
-class EventDecorator(): DayViewDecorator {
+class EventDecorator(var date : Collection<CalendarDay>): DayViewDecorator {
 
-    var date : Collection<CalendarDay> = mutableListOf()
+    //var date : Collection<CalendarDay> = mutableListOf()
     var dates: HashSet<CalendarDay> = HashSet(date)
     fun addDate(day : CalendarDay){
         dates.add(day)

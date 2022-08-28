@@ -106,7 +106,13 @@ class ScheduleDetailFragment(var item: scheduleBody): Fragment() {
                     apiService.delete_schedule(seq!!).enqueue(object : Callback<ResponseBody> {
                         override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                             val result = response.body()
-
+                            val fragmentA = TeamMainFragment()
+                            val bundle = Bundle()
+                            fragmentA.arguments = bundle
+                            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                            transaction.add(R.id.container, fragmentA)
+                            transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
+                            transaction.commit()
                         }
 
                         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

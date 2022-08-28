@@ -34,13 +34,30 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class TeamRegisterFragment: Fragment() {
 
+    init{ instance = this }
+
+    companion object{
+        private var instance:TeamRegisterFragment? = null
+        fun getInstance(): TeamRegisterFragment?
+        { return instance  }}
+
+    val items: ArrayList<String> = arrayListOf()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_team_register, container, false)
 
 
-
         return root
+    }
+
+    fun deleteMember(position:Int){
+
+        register_team_list.adapter!!.notifyDataSetChanged()
+        items.remove(items[position])
+        register_nickname.setText("")
+        for(i:String in items){
+            register_nickname.setText(register_nickname.getText().toString()+" " +i)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,7 +67,7 @@ class TeamRegisterFragment: Fragment() {
         lateinit var listAdapter: teamListAdapter
         listAdapter = teamListAdapter()
 
-        val items: ArrayList<String> = arrayListOf()
+
 
  //팀등록
         register_team_button.setOnClickListener {
@@ -135,8 +152,8 @@ class TeamRegisterFragment: Fragment() {
 
                             adapter.setItemClickListener(object : teamSearchListAdapter.ItemClickListener {
                                 override fun onClick(view: View, position: Int) {
-                                    Log.e("ddd", "Ss")
-                                    register_nickname.setText(register_nickname.getText().toString() +mList.list[position].userId.toString())
+
+                                    register_nickname.setText(register_nickname.getText().toString()+" " +mList.list[position].userId.toString())
                                     items.add(mList.list[position].userId.toString())
                                     listAdapter.addItem(mList.list[position].userId.toString())
                                     register_team_list.adapter = listAdapter
@@ -154,21 +171,7 @@ class TeamRegisterFragment: Fragment() {
                 })
             }
 
-
-
-
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
