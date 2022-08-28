@@ -17,10 +17,8 @@ import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.Converter.LocalDateTimeConverter
 import com.example.avatwin.DataClass.*
-import com.example.avatwin.Decorator.EventDecorator
 import com.example.avatwin.Decorator.OneDayDecorator
 import com.example.avatwin.Decorator.TodayDecorator
-import com.example.avatwin.Decorator.TodayDecorator2
 import com.example.avatwin.Fragment.Board.BoardEntireFragment
 import com.example.avatwin.Fragment.Board.BoardMainFragment
 import com.example.avatwin.Fragment.Schedule.ScheduleDetailFragment
@@ -52,7 +50,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.lang.reflect.Type
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 import kotlin.collections.ArrayList
 
 class TeamMainFragment() : Fragment() {
@@ -60,7 +57,6 @@ class TeamMainFragment() : Fragment() {
     val layoutManager1 = LinearLayoutManager(activity)
     val layoutManager2 = LinearLayoutManager(activity)
     lateinit var tnrBottomSheetDialog: BottomSheetDialog
-    lateinit var tnrBottomSheetDialog2: BottomSheetDialog
     lateinit var adapter: teamMenuAdapter
     lateinit var scheduleAdapter: scheduleAdapter
     lateinit var calendar: MaterialCalendarView
@@ -118,6 +114,7 @@ class TeamMainFragment() : Fragment() {
                     override fun onClick(view: View, position: Int) {
 
                         App.prefs.channelId = result.list[position].channelSeq.toString()
+                        App.prefs.channelName = result.list[position].channelName.toString()
 
                         val fragmentA = BoardMainFragment()
                         val bundle = Bundle()
@@ -230,27 +227,16 @@ class TeamMainFragment() : Fragment() {
         ft.detach(fragment).attach(fragment).commit()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        getTeamSchedule()
 
         calendar = view.calendar
         //calendar.setSelectedDate(CalendarDay.today())
-        //calendar.addDecorator(TodayDecorator())
-        calendar.addDecorator(OneDayDecorator(CalendarDay.today()))
-       // var datE:CalendarDay = CalendarDay.from(2022,8,25)
-        //calendar.addDecorator(OneDayDecorator(datE))
-
-        //일정등록 후
-        if(requireArguments().getString("startDate")!=null){
-
-            val startdate = requireArguments().getString("startDate")
-            val list = startdate!!.split("-")
-            var datE:CalendarDay = CalendarDay.from(list[0].toInt(),list[1].toInt()-1,list[2].toInt())
-            //Log.e("startdate2",datE.toString())
-            calendar.addDecorator(OneDayDecorator(datE))
-        }
+        calendar.addDecorator(TodayDecorator())
+        //calendar.addDecorator(OneDayDecorator(CalendarDay.today()))
 
         val tnrBottomSheetView = layoutInflater.inflate(R.layout.dialog_schedule_list, null)
 
@@ -303,7 +289,7 @@ class TeamMainFragment() : Fragment() {
 
                 scheduleAdapter = scheduleAdapter()
                 scheduleAdapter.clearItem()
-                getTeamSchedule(rselect)
+                getTeamDetailSchedule(rselect)
                 tnrBottomSheetDialog.btn_write.setOnClickListener {
                     tnrBottomSheetDialog.dismiss()
                     val fragmentA = ScheduleRegisterFragment()
@@ -321,11 +307,66 @@ class TeamMainFragment() : Fragment() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getTeamSchedule() {
 
+        val gson = GsonBuilder()
+            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter())
+            .registerTypeAdapter(LocalDateTime::class.java, object : JsonDeserializer<LocalDateTime> {
+                override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): LocalDateTime {
+                    return LocalDateTime.parse(json!!.asString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                }
+            }).create()
+
+        val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
+        var retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(ScheduleService.API_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(ScalarsConverterFactory.create()).build()
+
+        var apiService = retrofit.create(ScheduleService::class.java)
+
+
+        apiService.get_teamSchedule(App.prefs.teamSeq!!.toLong()).enqueue(object : Callback<scheduleTeamGetBody> {
+            override fun onResponse(call: Call<scheduleTeamGetBody>, response: Response<scheduleTeamGetBody>) {
+                val result = response.body()
+                var scheduleList=ArrayList<scheduleBody>()
+
+
+                for (i: scheduleBody in result!!.list) {
+                    var dateString = i.scheduleStartDate.toString()
+                    var year=dateString.substring(0,4)
+                    var month=""
+                    var day=""
+                    //월
+                    if(dateString.substring(5,6)=="0"){
+                        month = dateString.substring(6,7)
+                    }else{
+                        month = dateString.substring(5,7)
+                    }
+                    //일
+                    if(dateString.substring(8,9)=="0"){
+                        day = dateString.substring(9,10)
+                    }else{
+                        day = dateString.substring(8,10)
+                    }
+                    var datE:CalendarDay = CalendarDay.from(year.toInt(),month.toInt()-1,day.toInt())
+                    //Log.e("startdate2",datE.toString())
+                    calendar.addDecorator(OneDayDecorator(datE))
+                }
+
+            }
+
+            override fun onFailure(call: Call<scheduleTeamGetBody>, t: Throwable) {
+                Log.e("schedule", "OnFailuer+${t.message}")
+            }
+        })
+    }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getTeamSchedule(rselect: String) {
+    fun getTeamDetailSchedule(rselect: String) {
 
         val gson = GsonBuilder()
                 .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter())

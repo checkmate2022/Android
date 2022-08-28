@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.avatwin.DataClass.*
+import com.example.avatwin.Fragment.Board.BoardDetailFragment
+import com.example.avatwin.Fragment.Team.TeamRegisterFragment
 import com.example.avatwin.R
 import kotlinx.android.synthetic.main.item_board_list.view.*
 import kotlinx.android.synthetic.main.item_board_list.view.board_title
@@ -35,8 +37,10 @@ class commentAdapter():RecyclerView.Adapter<commentAdapter.ViewHolder>(){
         val item=items[position]
         holder.setItem(item)
 
-        holder.itemView.setOnClickListener {
-            itemClickListner.onClick(it, position)
+        val BoardDetailFragment = BoardDetailFragment.getInstance()
+
+        holder.itemView.commnet_more.setOnClickListener {
+            BoardDetailFragment!!.clickMenu(item)
 
         }
     }

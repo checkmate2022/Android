@@ -16,6 +16,12 @@ interface CommentService {
     fun post_comment(@Query("boardId") boardId:Long,
                      @Query("content") content: String):Call<commentGetBody>
 
-
+    //댓글 수정
+    @PUT("comment")
+    fun put_comment(@Query("commentSeq") boardId:Long,
+                     @Query("content") content: String):Call<commentGetBody>
+    //댓글 삭제
+    @DELETE("comment")
+    fun delete_comment(@Query("commentSeq") commentSeq:Long):Call<ResponseBody>
 }
 
