@@ -27,11 +27,19 @@ class LoginRegisterActivity : AppCompatActivity() {
 
         //아이디, 비밀번호 확인, 닉네임 중복검사
 
+        //아이디 확인
+
+        //닉네임 확인
+
+        //비밀번호 확인 같은지
+
 
 
 
         //회원가입
         resup.setOnClickListener {
+
+            //아이디 확인
             var joinData = joinReqBody(register_id.text.toString(),register_nickname.text.toString(),register_pwd.text.toString())
             var join = apiService.post_join(joinData)
 
