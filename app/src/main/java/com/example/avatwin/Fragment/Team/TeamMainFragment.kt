@@ -21,6 +21,7 @@ import com.example.avatwin.Decorator.OneDayDecorator
 import com.example.avatwin.Decorator.TodayDecorator
 import com.example.avatwin.Fragment.Board.BoardEntireFragment
 import com.example.avatwin.Fragment.Board.BoardMainFragment
+import com.example.avatwin.Fragment.ChannelUpdateFragment
 import com.example.avatwin.Fragment.Schedule.ScheduleDetailFragment
 import com.example.avatwin.Fragment.Schedule.ScheduleRegisterFragment
 import com.example.avatwin.R
@@ -209,6 +210,16 @@ class TeamMainFragment() : Fragment() {
             transaction.commit()
         }
 
+        //채널 관리페이지로 이동
+        root.team_update_button.setOnClickListener {
+            val fragmentA = ChannelUpdateFragment()
+            val bundle = Bundle()
+            fragmentA.arguments = bundle
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.add(R.id.container, fragmentA)
+            transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
+            transaction.commit()
+        }
 
         //팀 참여자페이지로 이동
         root.team_member_button.setOnClickListener {

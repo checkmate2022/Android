@@ -1,6 +1,7 @@
 package com.example.avatwin.Service
 
 import com.example.avatwin.DataClass.*
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -19,7 +20,13 @@ interface ChannelService {
     @GET("channel/team/{teamId}")
     fun get_teamChannel(@Path("teamId") teamId:Long):Call<channelTeamGetBody>
 
-
+    //채널 수정
+    @PUT("channel/{channelId}")
+    fun put_channel(@Path("channelId") channelId:Long,
+                  @Query("channelName") channelName: String):Call<channelGetBody>
+    //채널 삭제
+    @DELETE("channel/{channelId}")
+    fun delete_channel(@Path("channelId") channelId:Long):Call<ResponseBody>
 
 }
 

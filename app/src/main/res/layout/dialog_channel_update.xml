@@ -14,13 +14,13 @@
         android:padding="20dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="게시판명을 입력해주세요"
+            android:text="수정하고 싶은 채널명을 입력해주세요."
             android:textColor="@color/black" />
 
         <EditText
-            android:id="@+id/channel_name"
+            android:id="@+id/channel_title"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="15dp"
