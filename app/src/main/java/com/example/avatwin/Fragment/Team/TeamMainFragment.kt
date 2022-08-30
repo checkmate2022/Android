@@ -7,6 +7,7 @@ import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -68,13 +69,16 @@ class TeamMainFragment() : Fragment() {
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.menubar_team, container, false)
 
-
+        var teamMaker=""
         //메뉴바 팀명
         arguments?.let{
             root.channel_teamName.text=it.getString("teamName")
+            teamMaker= it.getString("teamMaker").toString()
         }
 
-
+        if(teamMaker==App.prefs.userId){
+            root.team_update_button.isVisible=true
+        }
 
 
         //일정추가 페이지로 이동
@@ -200,6 +204,8 @@ class TeamMainFragment() : Fragment() {
         }
 
         //팀 관리페이지로 이동
+        //팀장만 보이게
+
         root.team_update_button.setOnClickListener {
             val fragmentA = TeamUpdateFragment()
             val bundle = Bundle()
@@ -211,7 +217,7 @@ class TeamMainFragment() : Fragment() {
         }
 
         //채널 관리페이지로 이동
-        root.team_update_button.setOnClickListener {
+        root.channel_update_button.setOnClickListener {
             val fragmentA = ChannelUpdateFragment()
             val bundle = Bundle()
             fragmentA.arguments = bundle

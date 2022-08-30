@@ -42,7 +42,7 @@ class channelAdapter():RecyclerView.Adapter<channelAdapter.ViewHolder>(){
         val ChannelUpdateFragment = ChannelUpdateFragment.getInstance()
 
         holder.itemView.update_button.setOnClickListener {
-            ChannelUpdateFragment!!.updateChannel(item)
+            ChannelUpdateFragment!!.updateChannel(item,position)
 
         }
 

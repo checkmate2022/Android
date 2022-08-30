@@ -23,6 +23,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
+import com.example.avatwin.Adapter.avatarExampleAdapter
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.myAvatarRes
 import com.example.avatwin.Fragment.MyPageFragment
@@ -52,7 +54,6 @@ class AvatarRegisterFragment  : Fragment(){
     var m_imageFile: File? = null
     var creadImageFile: InputStream? = null
     var c_imageFile: File? = null
-
     var requestBodyProfile2:RequestBody?=null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -83,9 +84,12 @@ class AvatarRegisterFragment  : Fragment(){
 
         //캐릭터 sytle
         var avatar_style = ""
+        cartoon.isSelected=true
         register_avatar_style.setOnCheckedChangeListener{ group, checkedId ->
             when(checkedId){
-                R.id.cartoon -> avatar_style = "cartoon"
+                R.id.cartoon -> {
+                    avatar_style = "cartoon"
+                }
 
                 R.id.arcane -> avatar_style = "arcane"
 
@@ -95,8 +99,23 @@ class AvatarRegisterFragment  : Fragment(){
             }
         }
 
+        //스타일 번호도 달라지게 ㅇ
+        viewPager_image.adapter = avatarExampleAdapter(getCaricutures()) // 어댑터 생성
+        viewPager_image.orientation = ViewPager2.ORIENTATION_HORIZONTAL // 방향을 가로로
+        var styleId=0
+        viewPager_image.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+
+            // Paging 완료되면 호출
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                //Log.d("ViewPagerFragment", "Page ${position}")
+                styleId=position
+            }
+        })
+
+
         avatar_created_button.setOnClickListener{
-         makeAvatar(register_avatar_name.getText().toString(), avatar_style, register_avatar_styleid.getText().toString().toLong())
+         makeAvatar(register_avatar_name.getText().toString(), avatar_style, styleId.toLong())
         }
 
         register_avatar_button.setOnClickListener{
@@ -387,6 +406,15 @@ class AvatarRegisterFragment  : Fragment(){
                 == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
 
+    }
+
+    //이미지 리스트
+    private fun getCaricutures(): ArrayList<Int> {
+        return arrayListOf<Int>(
+            R.drawable.caricuture0,
+            R.drawable.caricuture1,
+            R.drawable.caricuture2,
+            R.drawable.caricuture3)
     }
 }
 

@@ -14,6 +14,7 @@
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/dialog_member_search.xml" value="0.2536231884057971" />
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/dialog_schedule_detail.xml" value="0.1" />
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/dialog_schedule_list.xml" value="0.1263184329482672" />
+        <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/fragment_avatar_register.xml" value="0.14490205926670016" />
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/fragment_board.xml" value="0.14490205926670016" />
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/fragment_board_list.xml" value="0.12682069311903565" />
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/fragment_board_register.xml" value="0.2536231884057971" />
@@ -21,7 +22,10 @@
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/fragment_channel_update.xml" value="0.2536231884057971" />
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/fragment_comment_update.xml" value="0.2536231884057971" />
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/fragment_fcm_list.xml" value="0.1" />
+        <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/fragment_mypage.xml" value="0.14490205926670016" />
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/fragment_schedule_register.xml" value="0.14490205926670016" />
+        <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/item_avatar.xml" value="0.14490205926670016" />
+        <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/item_avatar_example.xml" value="0.14490205926670016" />
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/item_board_list.xml" value="0.2536231884057971" />
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/item_channel.xml" value="0.2536231884057971" />
         <entry key="..\:/Users/user/Desktop/AvatwinAndroid/second/app/src/main/res/layout/item_chat_list.xml" value="0.2536231884057971" />

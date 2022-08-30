@@ -72,6 +72,7 @@ class HomeFragment: Fragment() {
                             val fragmentA = TeamMainFragment()
                             val bundle = Bundle()
                             bundle.putString("teamName",teamaBody.teamName.toString())
+                            bundle.putString("teamMaker",teamaBody.user.userId)
                             fragmentA.arguments=bundle
                             val transaction = requireActivity().supportFragmentManager.beginTransaction()
                             transaction.add(R.id.container,fragmentA)
