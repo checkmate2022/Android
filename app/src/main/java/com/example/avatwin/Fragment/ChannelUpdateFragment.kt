@@ -17,18 +17,12 @@ import com.example.avatwin.Adapter.boardAdapter
 import com.example.avatwin.Adapter.channelAdapter
 import com.example.avatwin.Auth.*
 import com.example.avatwin.Converter.LocalDateTimeConverter
+import com.example.avatwin.DataClass.*
 import com.example.avatwin.R
-import com.example.avatwin.DataClass.boardTeamGetBody
-import com.example.avatwin.DataClass.channelBody
-import com.example.avatwin.DataClass.channelGetBody
-import com.example.avatwin.DataClass.channelTeamGetBody
 import com.example.avatwin.Fragment.Board.BoardMainFragment
 import com.example.avatwin.Fragment.Team.TeamMainFragment
 import com.example.avatwin.Fragment.Team.TeamRegisterFragment
-import com.example.avatwin.Service.BoardService
-import com.example.avatwin.Service.ChannelService
-import com.example.avatwin.Service.CommentService
-import com.example.avatwin.Service.ScheduleService
+import com.example.avatwin.Service.*
 import com.google.gson.*
 import kotlinx.android.synthetic.main.dialog_channel_update.view.*
 import kotlinx.android.synthetic.main.fragment_board.*
@@ -85,7 +79,9 @@ class ChannelUpdateFragment() : Fragment() {
 
         //채널 초기화
         adapter = channelAdapter()
-        adapter.clearItem()
+        val layoutManager1 = LinearLayoutManager(activity)
+
+        root.recyclerview_channel.layoutManager = layoutManager1
         val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
         var retrofit = Retrofit.Builder()
             .client(okHttpClient)
@@ -103,10 +99,10 @@ class ChannelUpdateFragment() : Fragment() {
                     response: Response<channelTeamGetBody>
                 ) {
                     val result = response.body()!!
-                    Log.e("성공", result.toString())
-                    for (i in 0..result.list.size - 1) {
+                    //Log.e("성공", result.toString())
+                   // for (i in 0..result.list.size - 1) {
                         adapter.items = result.list
-                    }
+
                     root.recyclerview_channel.adapter = adapter
 
                 }
@@ -124,8 +120,8 @@ class ChannelUpdateFragment() : Fragment() {
         var dlg = AlertDialog.Builder(requireContext())
         var dialogView = View.inflate(context, R.layout.dialog_delete, null)
         dlg.setView(dialogView)
-        dlg.setPositiveButton("확인") { dialog, which ->
 
+        dlg.setPositiveButton("확인") { dialog, which ->
 
             val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
             var retrofit = Retrofit.Builder()
@@ -136,18 +132,16 @@ class ChannelUpdateFragment() : Fragment() {
 
             var apiService = retrofit.create(ChannelService::class.java)
 
-            apiService.delete_channel(item.channelSeq!!).enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
+            apiService.delete_channel(item.channelSeq!!).enqueue(object : Callback<channelRes> {
+                override fun onResponse(call: Call<channelRes>, response: Response<channelRes>) {
                     val result = response.body()
-                    adapter.items.remove(item)
+                    Log.e("성공",result.toString())
+                   // adapter.items[position].channelName= dialogView.channel_title.text.toString()
                     recyclerview_channel.adapter!!.notifyDataSetChanged()
                 }
 
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Log.e("schedule", "OnFailuer+${t.message}")
+                override fun onFailure(call: Call<channelRes>, t: Throwable) {
+                    Log.e("team_put", "OnFailuer+${t.message}")
                 }
             })
         }
@@ -155,7 +149,7 @@ class ChannelUpdateFragment() : Fragment() {
         dlg.show()
     }
 
-    fun updateChannel(item: channelBody) {
+    fun updateChannel(item: channelBody, position:Int) {
 
         var dlg = AlertDialog.Builder(requireContext())
         var dialogView = View.inflate(context, R.layout.dialog_channel_update, null)
@@ -176,8 +170,8 @@ class ChannelUpdateFragment() : Fragment() {
             apiService.put_channel(item.channelSeq!!, dialogView.channel_title.text.toString()).enqueue(object : Callback<channelGetBody> {
                 override fun onResponse(call: Call<channelGetBody>, response: Response<channelGetBody>) {
                     val result = response.body()
-                    //수정된거 adapter에 반영되는지 확인
-                   // adapter.items[].channelName=
+
+                    adapter.items[position].channelName= dialogView.channel_title.text.toString()
                     recyclerview_channel.adapter!!.notifyDataSetChanged()
                 }
 

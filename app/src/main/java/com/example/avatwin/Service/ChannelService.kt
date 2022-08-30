@@ -26,7 +26,7 @@ interface ChannelService {
                   @Query("channelName") channelName: String):Call<channelGetBody>
     //채널 삭제
     @DELETE("channel/{channelId}")
-    fun delete_channel(@Path("channelId") channelId:Long):Call<ResponseBody>
+    fun delete_channel(@Path("channelId") channelId:Long):Call<channelRes>
 
 }
 

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.avatwin.Adapter.Team.teamListAdapter
 import com.example.avatwin.Adapter.Team.teamSearchListAdapter
+import com.example.avatwin.Adapter.Team.teamUpdateMemberAdapter
 import com.example.avatwin.Auth.App
 import com.example.avatwin.R
 import com.example.avatwin.Auth.AuthInterceptor
@@ -34,8 +35,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class TeamUpdateFragment(): Fragment() {
+
+    init{ instance = this }
+
+    companion object{
+        private var instance:TeamUpdateFragment? = null
+        fun getInstance(): TeamUpdateFragment?
+        { return instance  }}
+
     val layoutManager = LinearLayoutManager(activity)
-    lateinit var listAdapter: teamListAdapter
+    val items: ArrayList<String> = arrayListOf()
+    lateinit var listAdapter: teamUpdateMemberAdapter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_team_update, container, false)
@@ -44,7 +55,7 @@ class TeamUpdateFragment(): Fragment() {
         //팀조회
 
         root.register_team_list.layoutManager = layoutManager
-        listAdapter = teamListAdapter()
+        listAdapter = teamUpdateMemberAdapter()
         val items: ArrayList<String> = arrayListOf()
         //이름, 설명 조회
         val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
@@ -79,6 +90,8 @@ class TeamUpdateFragment(): Fragment() {
                 for(i in 0..len-1){
                     if(result!!.list[i].userId.toString()!=App.prefs.userId){
                     listAdapter.addItem(result!!.list[i].userId.toString())
+                        //왜 안되는지 모르겠따
+                        items.add(result.list[i].userId.toString())
                     root.register_nickname.setText(register_nickname.getText().toString()+" "+result!!.list[i].userId.toString())}
                 }
 
@@ -91,10 +104,6 @@ class TeamUpdateFragment(): Fragment() {
         })
 
 
-
-
-
-//팀수정
         //팀삭제
         root.delete_team_button.setOnClickListener {
         deleteTeam()}
@@ -105,9 +114,7 @@ class TeamUpdateFragment(): Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val items: ArrayList<String> = arrayListOf()
-
- //팀수정
+        //팀수정
         update_team_button.setOnClickListener {
             val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
             var retrofit = Retrofit.Builder()
@@ -133,8 +140,7 @@ class TeamUpdateFragment(): Fragment() {
             })
 
         }
-
-//검색
+        //검색
         register_nickname_check_btn.setOnClickListener {
 
 
@@ -173,8 +179,6 @@ class TeamUpdateFragment(): Fragment() {
                                 }
                             }
                             dialogView.recyclerView_search.adapter = adapter
-
-
                             adapter.setItemClickListener(object : teamSearchListAdapter.ItemClickListener {
                                 override fun onClick(view: View, position: Int) {
                                     Log.e("ddd", "Ss")
@@ -183,24 +187,10 @@ class TeamUpdateFragment(): Fragment() {
                                     listAdapter.addItem(mList.list[position].userId.toString())
                                     register_team_list.adapter = listAdapter
 
-                                }
-                            })
-                        }
-
-
-                    }
-
+                                } }) } }
                     override fun onFailure(call: Call<userGetBody2>, t: Throwable) {
-                        Log.e("teamDialog", "OnFailuer+${t.message}")
-                    }
-                })
-            }
-
-
-        }
-
-
-
+                        Log.e("teamDialog", "OnFailuer+${t.message}") }
+                }) } }
     }
 
     fun deleteTeam(){
@@ -232,6 +222,15 @@ class TeamUpdateFragment(): Fragment() {
                 }
             })
 
+    }
+    //확인ㅇ
+    fun deleteMember(position:Int){
+        items.remove(items[position])
+        register_team_list.adapter!!.notifyDataSetChanged()
 
+        register_nickname.setText("")
+        for(i:String in items){
+            register_nickname.setText(register_nickname.getText().toString()+" " +i)
+        }
     }
 }

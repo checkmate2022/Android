@@ -210,7 +210,10 @@
                       android:text="anime"></RadioButton>
 
               </RadioGroup>
-
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPager_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!--스타일 아이디-->

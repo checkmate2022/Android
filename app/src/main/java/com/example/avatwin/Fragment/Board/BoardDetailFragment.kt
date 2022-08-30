@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.avatwin.Adapter.boardAdapter
@@ -32,6 +33,7 @@ import kotlinx.android.synthetic.main.dialog_schedule_list.*
 import kotlinx.android.synthetic.main.fragment_board.*
 import kotlinx.android.synthetic.main.fragment_board.view.*
 import kotlinx.android.synthetic.main.fragment_board_list.view.*
+import kotlinx.android.synthetic.main.item_comment.*
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -120,6 +122,13 @@ class BoardDetailFragment(): Fragment() {
                     board_detail_content.setText(mList.data.content)
                     //댓글 리스트
                     adapter = commentAdapter()
+
+                    for(i:commentBody in mList.data.comments){
+                        if(i.username==App.prefs.userId){
+                            commnet_more.isVisible=true
+                        }
+                    }
+
                     adapter.items=mList.data.comments
                     recyclerview_comment.adapter= adapter
                 } }
