@@ -20,6 +20,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService()
     override fun onMessageReceived(remoteMessage: RemoteMessage)
     {
         super.onMessageReceived(remoteMessage)
+        Log.e("dd", remoteMessage.notification.toString());
         if (remoteMessage.notification != null)
         {
             sendNotification(remoteMessage.notification?.title, remoteMessage.notification!!.body!!)
