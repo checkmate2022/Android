@@ -2,26 +2,15 @@ package com.example.avatwin.Fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v4.app.INotificationSideChannel
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import com.example.avatwin.Adapter.Team.teamAdapter
-import com.example.avatwin.Adapter.chatbotAdapter
+import com.example.avatwin.Adapter.Chatbot.chatbotAdapter
 import com.example.avatwin.Auth.App
-import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.*
-import com.example.avatwin.Fragment.Team.TeamMainFragment
-import com.example.avatwin.Fragment.Team.TeamRegisterFragment
 import com.example.avatwin.R
-import com.example.avatwin.Service.ApiService
-import com.example.avatwin.Service.FcmService
-import com.example.avatwin.Service.TeamService
-import com.google.api.Advice.newBuilder
-import com.google.api.Advice.parseFrom
 import com.google.api.gax.core.FixedCredentialsProvider
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.auth.oauth2.ServiceAccountCredentials
@@ -30,26 +19,22 @@ import com.google.protobuf.Struct
 import com.google.protobuf.Value
 import kotlinx.android.synthetic.main.fragment_chatbot.*
 import kotlinx.android.synthetic.main.fragment_chatbot.view.*
-import kotlinx.android.synthetic.main.fragment_fcm_list.view.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.fragment_team_register.*
 import kotlinx.coroutines.Dispatchers.Default
-
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
-
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class ChatbotFragment:Fragment() {
+
+    init{ instance = this }
+
+    companion object{
+        private var instance: ChatbotFragment? = null
+        fun getInstance(): ChatbotFragment?
+        { return instance  }}
+
     private var messageList: ArrayList<Message> = ArrayList()
 
     //dialogFlow
@@ -64,6 +49,7 @@ class ChatbotFragment:Fragment() {
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_chatbot, container, false)
         chatAdapter = chatbotAdapter(requireActivity(), messageList)
+
         root.chatView.adapter = chatAdapter
 
         //onclick listener to update the list and call dialogflow
@@ -83,6 +69,7 @@ class ChatbotFragment:Fragment() {
         return root
     }
 
+    //ui 에 메시지 업로드
     @SuppressLint("NotifyDataSetChanged")
     private fun addMessageToList(message: String, isReceived: Boolean) {
         messageList.add(Message(message, isReceived))
@@ -91,6 +78,7 @@ class ChatbotFragment:Fragment() {
         chatView.layoutManager?.scrollToPosition(messageList.size - 1)
     }
 
+    //dialogflow 연동
     private fun setUpBot() {
         try {
             val stream = this.resources.openRawResource(R.raw.credential)
@@ -108,41 +96,52 @@ class ChatbotFragment:Fragment() {
             Log.e(TAG, "setUpBot: " + e.message)
         }
     }
-/*
- .setEvent(EventInput.newBuilder()
-                .setLanguageCode("en-US")
-                .setParameters(
-                    Struct.newBuilder().putFields("userId",
-                        Value.newBuilder().setStringValue(App.prefs.userId).build())
-                        .build())
-                .build())
 
-                  .setEvent(EventInput.newBuilder()
-                    .setName("REVISION")
-                    .setParameters(
-                        Struct.newBuilder()
-                            .putFields("username",
-                                Value.newBuilder()
-                                    .setStringValue("jihye")
-                                    .build())
-                            .build())
-                    .setLanguageCode("eu-US"))
- */
     private fun sendMessageToBot(message: String) {
-        val queryInput = QueryInput.newBuilder()
+       /*   val s = QueryParameters.newBuilder().setPayload(Struct.newBuilder().putFields("userId",
+        Value.newBuilder().setStringValue(App.prefs.userId).build())
+        .build()).build()*/
+     val queryInput = QueryInput.newBuilder()
             .setText(TextInput.newBuilder().setText(message).setLanguageCode("ko"))
             .build()
-    val s = QueryParameters.newBuilder().setPayload(Struct.newBuilder().putFields("userId",
-        Value.newBuilder().setStringValue(App.prefs.userId).build())
-        .build()).build()
-      //  val input = QueryInput.newBuilder()
-        //    .setText(TextInput.newBuilder().setText(message).setLanguageCode("en-US")).build()
+    val payloadBuilder = Struct.newBuilder()
+   // val googleBuilder = Struct.newBuilder()
+    //googleBuilder.putFields("richResponse", Value.newBuilder().setStringValue(App.prefs.userId).build())
+    //payloadBuilder.putFields("google", Value.newBuilder().setStructValue(googleBuilder).build())
 
+
+          val s = QueryParameters.newBuilder().setPayload(Struct.newBuilder().putFields("userId",
+              Value.newBuilder().setStringValue(App.prefs.userId).build()).putFields("www",
+              Value.newBuilder().setStringValue("ww").build())
+              .build()).build()
+
+    /*
+    val payloadBuilder = Struct.newBuilder()
+    val googleBuilder = Struct.newBuilder()
+    val messageList = ListValue.newBuilder()
+    products.forEach { product ->
+        val message = Intent.Message.newBuilder()
+        val basicCard = Intent.Message.BasicCard.newBuilder()
+        basicCard.formattedText = product.getShortDescr()
+        basicCard.title = product.getName()
+        val image = Intent.Message.Image.newBuilder()
+        image.imageUri = product.getMediaURLMedium()
+        basicCard.setImage(image)
+        message.setBasicCard(basicCard)
+        messageList.addValuesBuilder().setField(
+            Intent.getDescriptor().findFieldByNumber(Intent.MESSAGES_FIELD_NUMBER),
+            message.build()
+        )
+    }
+    googleBuilder.putFields("richResponse", Value.newBuilder().setListValue(messageList).build())
+    payloadBuilder.putFields("google", Value.newBuilder().setStructValue(googleBuilder).build())
+    responseBuilder.setPayload(payloadBuilder)*/
         GlobalScope.launch {
             sendMessageInBg(queryInput,s)
         }
     }
 
+    //전송 버튼을 누르면 dialogflow에 메시지 전송
     private suspend fun sendMessageInBg(queryInput: QueryInput,s:QueryParameters) {
       withContext(Default) {
             try {
@@ -166,12 +165,18 @@ class ChatbotFragment:Fragment() {
         }
     }
 
+    //ui 업데이트 함수
     private fun updateUI(response: DetectIntentResponse) {
         val botReply: String = response.queryResult.fulfillmentText
         if (botReply.isNotEmpty()) {
+
             addMessageToList(botReply, true)
         } else {
             //Toast.makeText(this, "something went wrong", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun clickTeamName(team: teamaBody){
+        editMessage.setText("팀이름 "+team.teamName)
     }
 }

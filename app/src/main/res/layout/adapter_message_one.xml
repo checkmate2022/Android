@@ -35,4 +35,11 @@
 
     </TextView>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_chatbot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
+        android:overScrollMode="never" />
+
 </LinearLayout>

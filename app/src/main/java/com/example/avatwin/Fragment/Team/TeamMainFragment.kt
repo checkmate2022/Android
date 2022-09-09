@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.avatwin.Adapter.Team.teamMenuAdapter
-import com.example.avatwin.Adapter.scheduleAdapter
+import com.example.avatwin.Adapter.Schedule.scheduleAdapter
 import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.Converter.LocalDateTimeConverter
@@ -114,6 +114,7 @@ class TeamMainFragment() : Fragment() {
                     adapter.addItem(result.list[i].channelName.toString())
                 }
                 root.recyclerView_team_menu.adapter = adapter
+
 
                 adapter.setItemClickListener(object : teamMenuAdapter.ItemClickListener {
                     override fun onClick(view: View, position: Int) {

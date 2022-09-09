@@ -7,7 +7,7 @@ import kotlin.collections.ArrayList
 //일정 생성
 data class scheduleReqBody(val scheduleName:String?,val scheduleDescription:String?,val scheduleType:String?,
                            val scheduleStartDate: LocalDateTime,val scheduleEndDate: LocalDateTime,
-                           val participantName: ArrayList<String>,val teamId: Long )
+                           val participantName: ArrayList<String>,val teamId: Long,val notificationTime: Int )
 
 //일정 생성
 data class scheduleBody(val scheduleSeq:Long?,val scheduleName:String?,val scheduleDescription:String?,val scheduleType:String?,
