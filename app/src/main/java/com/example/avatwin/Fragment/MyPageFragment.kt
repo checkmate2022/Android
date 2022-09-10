@@ -8,14 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.avatwin.Adapter.avatarAdapter
+import com.example.avatwin.Adapter.Avatar.avatarAdapter
 import com.example.avatwin.R
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.myAvatarRes
 import com.example.avatwin.DataClass.userGetBody
 import com.example.avatwin.Fragment.Avatar.AvatarRegisterFragment
 import com.example.avatwin.Fragment.Avatar.AvatarUpdateFragment
-import com.example.avatwin.Fragment.Team.TeamMainFragment
 import com.example.avatwin.Service.AvatarService
 import com.example.avatwin.Service.UserService
 import kotlinx.android.synthetic.main.fragment_mypage.*

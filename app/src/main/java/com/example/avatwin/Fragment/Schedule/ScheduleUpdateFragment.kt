@@ -168,7 +168,7 @@ class ScheduleUpdateFragment: Fragment() {
             val aLDT2 = LocalDateTime.parse(end)
             Log.e("Date",aLDT2.toString())
 
-            var data = scheduleReqBody(register_id.text.toString(), register_description.text.toString(), scheduleType, aLDT, aLDT2, items, App.prefs.teamSeq!!.toLong())
+            var data = scheduleReqBody(register_id.text.toString(), register_description.text.toString(), scheduleType, aLDT, aLDT2, items, App.prefs.teamSeq!!.toLong(),5)
             apiService.post_schedule(data).enqueue(object : Callback<scheduleGetBody> {
                 override fun onResponse(call: Call<scheduleGetBody>, response: Response<scheduleGetBody>) {
                     val result = response.body()

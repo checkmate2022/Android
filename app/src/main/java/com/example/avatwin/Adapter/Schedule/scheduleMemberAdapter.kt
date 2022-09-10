@@ -1,4 +1,4 @@
-package com.example.avatwin.Adapter
+package com.example.avatwin.Adapter.Schedule
 
 import android.view.LayoutInflater
 import android.view.View

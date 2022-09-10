@@ -11,6 +11,7 @@ import com.example.avatwin.DataClass.fcmResBody
 import com.example.avatwin.DataClass.teamPostGetBody
 import com.example.avatwin.DataClass.teamReqBody
 import com.example.avatwin.Fragment.Chat.ChatListFragment
+import com.example.avatwin.Fragment.ChatbotFragment
 import com.example.avatwin.Fragment.FcmFragment
 import com.example.avatwin.Fragment.HomeFragment
 import com.example.avatwin.Fragment.MyPageFragment
@@ -19,6 +20,7 @@ import com.example.avatwin.Service.FcmService
 import com.example.avatwin.Service.TeamService
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import com.kakao.sdk.common.util.Utility
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_team_register.*
 import okhttp3.OkHttpClient
@@ -34,6 +36,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val keyHash = Utility.getKeyHash(this)//onCreate 안에 입력해주자
+        Log.d("Hash", keyHash)
+
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w("FCM", "Fetching FCM registration token failed", task.exception)
@@ -47,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             msg = token.toString()
             registerFcmToken(msg);
             Log.e("FCM", msg)
+            App.prefs.fcmToken=msg
             Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
         })
 
@@ -94,7 +100,14 @@ class MainActivity : AppCompatActivity() {
                     }
                     return@setOnNavigationItemSelectedListener true
                 }
-
+                R.id.tab5 -> {
+                    with(supportFragmentManager.beginTransaction()) {
+                        val fragment4 = ChatbotFragment()
+                        replace(R.id.container, fragment4)
+                        commit()
+                    }
+                    return@setOnNavigationItemSelectedListener true
+                }
 
             }
             return@setOnNavigationItemSelectedListener false

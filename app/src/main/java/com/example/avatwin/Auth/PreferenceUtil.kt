@@ -13,6 +13,12 @@ class PreferenceUtil(context: Context) {
             prefs.edit().putString("token",value).apply()
         }
 
+    var fcmToken:String?
+        get() = prefs.getString("fcmToken",null)
+        set(value){
+            prefs.edit().putString("fcmToken",value).apply()
+        }
+
     var userId:String?
         get() = prefs.getString("userId",null)
         set(value){

@@ -21,5 +21,13 @@ interface UserService {
     @GET("users/search")
     fun get_user_search(@Query("query") query:String):Call<userGetBody2>
 
+    //아이디 중복확인
+    @POST("users/check/userId")
+    fun check_userId(@Query("userId") userId:String):Call<userCheckBody>
+
+    //닉네임 중복확인
+    @POST("users/check/name")
+    fun check_userName(@Query("username") username:String):Call<userCheckBody>
+
 }
 

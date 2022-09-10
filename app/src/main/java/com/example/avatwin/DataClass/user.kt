@@ -14,3 +14,6 @@ data class userGetBody(val success:String?,val code:Long?, val msg:String?,val d
 
 //유저정보조회
 data class userGetBody2(val success:String?,val code:Long?, val msg:String?,val list:ArrayList<joinGetBody>)
+
+//아이디, 닉네임 중복확인
+data class userCheckBody(val success:String?,val code:Long?, val msg:String?,val data:Long)

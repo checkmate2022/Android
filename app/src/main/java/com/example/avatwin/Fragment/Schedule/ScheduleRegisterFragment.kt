@@ -15,7 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.avatwin.Adapter.Team.teamSearchListAdapter
-import com.example.avatwin.Adapter.scheduleMemberAdapter
+import com.example.avatwin.Adapter.Schedule.scheduleMemberAdapter
 import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.Converter.LocalDateTimeConverter
@@ -281,7 +281,7 @@ class ScheduleRegisterFragment : Fragment() {
                 aLDT,
                 aLDT2,
                 items,
-                App.prefs.teamSeq!!.toLong()
+                App.prefs.teamSeq!!.toLong(),5
             )
             apiService.post_schedule(data).enqueue(object : Callback<scheduleGetBody> {
                 override fun onResponse(

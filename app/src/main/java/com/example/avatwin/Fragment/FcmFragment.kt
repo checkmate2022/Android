@@ -34,6 +34,8 @@ class FcmFragment:Fragment() {
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_fcm_list, container, false)
 
+        //val input = QueryInput.newBuilder()
+
         root.test_fcm.setOnClickListener {
             val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
             var retrofit = Retrofit.Builder()
@@ -44,7 +46,7 @@ class FcmFragment:Fragment() {
 
             var apiService = retrofit.create(FcmService::class.java)
 
-            var data = fcmReqBody("d","제목","내용")
+            var data = fcmReqBody(App.prefs.userId,"제목","내용")
             apiService.post_fcm(data).enqueue(object : Callback<fcmResBody> {
                 override fun onResponse(call: Call<fcmResBody>, response: Response<fcmResBody>) {
                     val result = response.body()

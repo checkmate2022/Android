@@ -31,6 +31,12 @@
         app:showAsAction="ifRoom"
         android:layout_marginLeft="10dp"
         android:title="마이페이지"/>
-
+    <item
+        android:id="@+id/tab5"
+        android:enabled="true"
+        android:icon="@drawable/ic_profile"
+        app:showAsAction="ifRoom"
+        android:layout_marginLeft="10dp"
+        android:title="chatbot"/>
 
 </menu>

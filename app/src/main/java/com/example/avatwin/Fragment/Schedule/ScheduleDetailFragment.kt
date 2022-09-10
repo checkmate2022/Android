@@ -1,7 +1,5 @@
 package com.example.avatwin.Fragment.Schedule
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -9,31 +7,12 @@ import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.avatwin.Adapter.Team.teamListAdapter
-import com.example.avatwin.Adapter.Team.teamSearchListAdapter
-import com.example.avatwin.Adapter.scheduleAdapter
-import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
-import com.example.avatwin.Converter.LocalDateTimeConverter
 import com.example.avatwin.DataClass.*
 import com.example.avatwin.Fragment.Team.TeamMainFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.ScheduleService
-import com.example.avatwin.Service.UserService
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import kotlinx.android.synthetic.main.dialog_member_search.view.*
-import kotlinx.android.synthetic.main.dialog_schedule_detail.*
 import kotlinx.android.synthetic.main.dialog_schedule_detail.view.*
-import kotlinx.android.synthetic.main.dialog_schedule_list.*
-import kotlinx.android.synthetic.main.fragment_schedule_register.*
-import kotlinx.android.synthetic.main.fragment_team_register.register_id
-import kotlinx.android.synthetic.main.fragment_team_register.register_nickname
-import kotlinx.android.synthetic.main.fragment_team_register.register_nickname_check_btn
-import kotlinx.android.synthetic.main.fragment_team_register.register_team_list
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -42,10 +21,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.lang.reflect.Type
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 class ScheduleDetailFragment(var item: scheduleBody): Fragment() {
     var seq = item.scheduleSeq

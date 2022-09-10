@@ -24,7 +24,7 @@ import androidx.core.content.FileProvider
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.example.avatwin.Adapter.avatarExampleAdapter
+import com.example.avatwin.Adapter.Avatar.avatarExampleAdapter
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.myAvatarRes
 import com.example.avatwin.Fragment.MyPageFragment

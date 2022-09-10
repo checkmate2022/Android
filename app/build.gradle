@@ -10,7 +10,16 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
-
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/ASL2.0'
+        exclude 'build.xml'
+    }
     defaultConfig {
         applicationId "com.example.avatwin"
         minSdkVersion 23
@@ -91,4 +100,12 @@ dependencies {
     //viewpager
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
+    //dialogFlow
+    implementation 'com.google.cloud:google-cloud-dialogflow:2.1.0'
+    implementation 'io.grpc:grpc-okhttp:1.30.0'
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
+
+    //kakao
+    implementation "com.kakao.sdk:v2-user:2.0.1"
 }
