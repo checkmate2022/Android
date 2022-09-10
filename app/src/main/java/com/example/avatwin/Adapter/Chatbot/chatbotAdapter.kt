@@ -1,11 +1,14 @@
 package com.example.avatwin.Adapter.Chatbot
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.avatwin.Auth.AuthInterceptor
@@ -15,6 +18,7 @@ import com.example.avatwin.DataClass.teamaBody
 import com.example.avatwin.Fragment.ChatbotFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.ApiService
+import kotlinx.android.synthetic.main.fragment_chatbot.view.*
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,19 +36,20 @@ class chatbotAdapter(private var context:Context, private var messageList: List<
         return ChatViewHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val ChatbotFragment = ChatbotFragment.getInstance()
 
         val message: String = messageList[position].message
         val isReceived: Boolean = messageList[position].isReceived
         if (isReceived) {
-            if(message.contains("싶은 팀")){
-                Log.e("chabot",message)
-
+            if(message.contains("팀")){
+                //Log.e("chabot",message)
+                holder.btnDate.visibility = View.GONE
                 holder.messageReceive.visibility = View.VISIBLE
                 holder.messageSend.visibility = View.GONE
                 holder.messageReceive.text = message
-                lateinit var adapter: chatbotItemListAdapter
+                lateinit var adapter: chatbotTeamNameAdapter
                 val layoutManager1 = LinearLayoutManager(context)
                 holder.recyclerView.layoutManager = layoutManager1
 
@@ -63,12 +68,12 @@ class chatbotAdapter(private var context:Context, private var messageList: List<
                             Log.e("mList",mList.list.toString())
                             //  var items = mList.list
                             items=mList.list
-                            adapter = chatbotItemListAdapter(items,context)
+                            adapter = chatbotTeamNameAdapter(items,context)
                             holder.recyclerView.adapter=adapter
                             holder.recyclerView.visibility=View.VISIBLE
 
                             adapter.setItemClickListener(object :
-                                chatbotItemListAdapter.ItemClickListener {
+                                chatbotTeamNameAdapter.ItemClickListener {
                                 override fun onClick(view: View, position: Int) {
                                     Log.e("team", items[position].toString())
                                     ChatbotFragment!!.clickTeamName(items[position])
@@ -82,18 +87,45 @@ class chatbotAdapter(private var context:Context, private var messageList: List<
                     } })
 
                } else if(message.contains("일정 종류")){
+                holder.btnDate.visibility = View.GONE
+                holder.messageReceive.visibility = View.VISIBLE
+                holder.messageSend.visibility = View.GONE
+                holder.messageReceive.text = message
+                lateinit var adapter: chatbotScheduleTypeAdapter
+                val layoutManager1 = LinearLayoutManager(context)
+                holder.recyclerView.layoutManager = layoutManager1
+                var items : ArrayList<String> = arrayListOf("basic","conference")
+                adapter = chatbotScheduleTypeAdapter(items,context)
+                holder.recyclerView.adapter=adapter
+                holder.recyclerView.visibility=View.VISIBLE
+                adapter.setItemClickListener(object :
+                    chatbotScheduleTypeAdapter.ItemClickListener {
+                    override fun onClick(view: View, position: Int) {
 
+                        ChatbotFragment!!.clickScheduleType(items[position])
 
+                    }
+                })
+            }else if(message.contains("날짜와 시간")){
+                holder.btnDate.visibility = View.VISIBLE
+                holder.messageReceive.visibility = View.VISIBLE
+                holder.messageSend.visibility = View.GONE
+                holder.recyclerView.visibility=View.GONE
+                holder.messageReceive.text = message
+                holder.btnDate.setOnClickListener {
+                    ChatbotFragment!!.clickScheduleDate()
+                }
             }
             else
             {
-
-                 holder.messageReceive.visibility = View.VISIBLE
-               holder.messageSend.visibility = View.GONE
-               holder.recyclerView.visibility=View.GONE
-              holder.messageReceive.text = message
+                holder.btnDate.visibility = View.GONE
+                holder.messageReceive.visibility = View.VISIBLE
+                holder.messageSend.visibility = View.GONE
+                holder.recyclerView.visibility = View.GONE
+                holder.messageReceive.text = message
             }
         } else {
+            holder.btnDate.visibility = View.GONE
             holder.recyclerView.visibility=View.GONE
             holder.messageSend.visibility = View.VISIBLE
             holder.messageReceive.visibility = View.GONE
@@ -111,6 +143,7 @@ class chatbotAdapter(private var context:Context, private var messageList: List<
         var messageSend: TextView = itemView.findViewById(R.id.message_send)
         var recyclerView:RecyclerView = itemView.findViewById(R.id.recyclerview_chatbot)
 
+        var btnDate:Button = itemView.findViewById(R.id.btn_date)
     }
 
 }

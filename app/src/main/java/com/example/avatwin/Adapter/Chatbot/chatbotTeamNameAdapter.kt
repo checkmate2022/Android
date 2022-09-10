@@ -10,7 +10,7 @@ import com.example.avatwin.R
 import kotlinx.android.synthetic.main.item_chatbot_list.view.*
 
 
-class chatbotItemListAdapter(var item:ArrayList<teamaBody>, val context: Context):RecyclerView.Adapter<chatbotItemListAdapter.ViewHolder>(){
+class chatbotTeamNameAdapter(var item:ArrayList<teamaBody>, val context: Context):RecyclerView.Adapter<chatbotTeamNameAdapter.ViewHolder>(){
 
     var items=item
 
