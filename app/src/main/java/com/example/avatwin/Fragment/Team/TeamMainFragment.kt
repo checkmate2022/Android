@@ -433,6 +433,7 @@ class TeamMainFragment() : Fragment() {
 */
                         tnrBottomSheetDialog.dismiss()
                         val fragmentA = ScheduleDetailFragment( scheduleList[position])
+                        Log.e("scheduleList",scheduleList[position].toString())
                         val bundle = Bundle()
                         fragmentA.arguments = bundle
                         val transaction = requireActivity().supportFragmentManager.beginTransaction()

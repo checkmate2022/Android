@@ -27,24 +27,24 @@
             android:textSize="20sp"
             android:textStyle="bold"
            android:layout_marginBottom="20dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="20dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <ImageView
-            android:paddingTop="20dp"
-            android:id="@+id/edit_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="15dp"
-            android:src="@drawable/ic_write"
-            app:tint="@color/colorPrimary"
+
+        <TextView
+            android:id="@+id/logout"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:text="로그아웃"
+            android:textSize="14dp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/black"
+            android:letterSpacing="-0.05"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--프로필탭 구분선-->
@@ -189,37 +189,6 @@
                             <EditText
                                 android:enabled="false"
                                 android:id="@+id/pf_nickname"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:letterSpacing="-0.05"
-                                android:text=""
-                                android:background="@null"
-                                android:textColor="@color/white"
-                                android:textSize="14dp" />
-
-                        </LinearLayout>
-
-                        <!--이메일-->
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="60dp"
-                                android:layout_height="30dp"
-                                android:layout_marginRight="15dp"
-                                android:background="@drawable/btn_white"
-                                android:gravity="center"
-                                android:text="이메일"
-                                android:textSize="14dp"
-                                android:textStyle="bold"
-                                android:textColor="@color/colorPrimaryDark"
-                                android:letterSpacing="-0.05"/>
-
-                            <EditText
-                                android:enabled="false"
-                                android:id="@+id/pf_email"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:letterSpacing="-0.05"

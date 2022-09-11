@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="list">
+        <item>없음</item>
         <item>10분전</item>
         <item>30분전</item>
         <item>1시간전</item>

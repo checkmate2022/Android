@@ -1,5 +1,6 @@
 package com.example.avatwin.Fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.avatwin.Activities.Login.LoginActivity
+import com.example.avatwin.Activities.Login.LoginRegisterActivity
 import com.example.avatwin.Adapter.Avatar.avatarAdapter
 import com.example.avatwin.R
 import com.example.avatwin.Auth.AuthInterceptor
@@ -101,9 +104,6 @@ class MyPageFragment  : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-
         //아바타 생성페이지로 이동
         av_add.setOnClickListener {
             val fragmentA = AvatarRegisterFragment()
@@ -113,6 +113,12 @@ class MyPageFragment  : Fragment(){
             transaction.add(R.id.container,fragmentA)
             transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
             transaction.commit()
+        }
+
+        //로그아웃, 로그인 페이지로 이동
+        logout.setOnClickListener {
+            var intent = Intent(requireContext(), LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 

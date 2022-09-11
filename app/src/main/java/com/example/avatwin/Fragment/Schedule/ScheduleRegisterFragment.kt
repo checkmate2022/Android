@@ -83,7 +83,7 @@ class ScheduleRegisterFragment : Fragment() {
         var smin = ""
         var ehour = ""
         var emin = ""
-
+        var notificationTime=0
         var dateforMain = ""
 
         //알람 스피너 구현
@@ -93,8 +93,16 @@ class ScheduleRegisterFragment : Fragment() {
         //spinner.adapter = adapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-               // if (position != 0)
-                    //Toast.makeText(this@MainActivity, itemList[position], Toast.LENGTH_SHORT).show()
+                if (position == 0){
+                    notificationTime=0
+                }else if(position == 1){
+                    notificationTime=10
+                }else if(position == 2){
+                    notificationTime=30
+                }else{
+                    notificationTime=60
+                }
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -260,6 +268,7 @@ class ScheduleRegisterFragment : Fragment() {
                 }).create()
 
         register_schedule_button.setOnClickListener {
+
             val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
             var retrofit = Retrofit.Builder()
                 .client(okHttpClient)
@@ -281,7 +290,7 @@ class ScheduleRegisterFragment : Fragment() {
                 aLDT,
                 aLDT2,
                 items,
-                App.prefs.teamSeq!!.toLong(),5
+                App.prefs.teamSeq!!.toLong(),notificationTime
             )
             apiService.post_schedule(data).enqueue(object : Callback<scheduleGetBody> {
                 override fun onResponse(
