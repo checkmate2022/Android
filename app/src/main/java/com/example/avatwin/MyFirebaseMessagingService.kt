@@ -10,8 +10,10 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.avatwin.Activities.MainActivity
+import com.example.avatwin.Fragment.Schedule.ScheduleRegisterFragment
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import kotlinx.android.synthetic.main.item_team_member_list.view.*
 
 class MyFirebaseMessagingService: FirebaseMessagingService()
 {
@@ -20,9 +22,10 @@ class MyFirebaseMessagingService: FirebaseMessagingService()
     override fun onMessageReceived(remoteMessage: RemoteMessage)
     {
         super.onMessageReceived(remoteMessage)
-        Log.e("dd", remoteMessage.notification.toString());
+       // Log.e("dd", remoteMessage.notification.toString());
         if (remoteMessage.notification != null)
         {
+
             sendNotification(remoteMessage.notification?.title, remoteMessage.notification!!.body!!)
         }
     }
@@ -36,8 +39,8 @@ class MyFirebaseMessagingService: FirebaseMessagingService()
     // 받은 알림을 기기에 표시하는 메서드
     private fun sendNotification(title: String?, body: String)
     {
-        Log.e("FCM",title.toString())
-        Log.e("FCM",body.toString())
+       // Log.e("FCM",title.toString())
+       // Log.e("FCM",body.toString())
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,

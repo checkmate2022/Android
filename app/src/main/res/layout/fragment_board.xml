@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".Fragment.Board.BoardDetailFragment">
 
@@ -24,20 +24,20 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="20dp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/board_retouch"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:gravity="right"
             android:layout_marginRight="20dp"
+            android:gravity="right"
             android:src="@null"
-            app:tint="@color/colorPrimary"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/colorPrimary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -88,67 +88,67 @@
                     android:text="오늘 공지"
                     android:textColor="@color/black"
                     android:textSize="19dp" />
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-                <!--작성자 정보-->
+
                 <LinearLayout
-                    android:id="@+id/writer_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center"
                     android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/board_detail_image"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/profile_none" />
-
-                    <TextView
-                        android:id="@+id/board_detail_name"
+                    <!--작성자 정보-->
+                    <LinearLayout
+                        android:id="@+id/writer_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:letterSpacing="-0.05"
-                        android:text="시미즈"
-                        android:textColor="@color/black"
-                        android:textSize="12dp" />
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/board_detail_image"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/profile_none" />
+
+                        <TextView
+                            android:id="@+id/board_detail_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:letterSpacing="-0.05"
+                            android:text="시미즈"
+                            android:textColor="@color/black"
+                            android:textSize="12dp" />
+                    </LinearLayout>
+
+                    <!--작성자 정보-->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:orientation="horizontal">
+
+
+                        <TextView
+                            android:id="@+id/board_update"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="220dp"
+                            android:letterSpacing="-0.05"
+                            android:text="수정"
+                            android:textColor="@color/black"
+                            android:textSize="12dp" />
+
+                        <TextView
+                            android:id="@+id/board_delete"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:letterSpacing="-0.05"
+                            android:text="삭제"
+                            android:textColor="@color/black"
+                            android:textSize="12dp" />
+                    </LinearLayout>
                 </LinearLayout>
-
-    <!--작성자 정보-->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal">
-
-
-
-        <TextView
-            android:id="@+id/board_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:letterSpacing="-0.05"
-            android:layout_marginLeft="220dp"
-            android:text="수정"
-            android:textColor="@color/black"
-            android:textSize="12dp" />
-
-        <TextView
-            android:id="@+id/board_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:letterSpacing="-0.05"
-            android:layout_marginLeft="20dp"
-            android:text="삭제"
-            android:textColor="@color/black"
-            android:textSize="12dp" />
-    </LinearLayout>
-</LinearLayout>
             </LinearLayout>
 
             <!--구분선-->
@@ -161,9 +161,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:orientation="vertical">
-
+                android:orientation="vertical"
+                android:padding="20dp">
 
 
                 <LinearLayout
@@ -199,41 +198,42 @@
                 android:nestedScrollingEnabled="false"
                 android:overScrollMode="never"
                 android:paddingLeft="20dp"
+                android:layout_marginTop="5dp"
                 android:paddingRight="20dp" />
 
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/comment_text"
-        android:layout_width="330dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorPrimary"
-        android:letterSpacing="-0.05"
-        android:textColor="@color/black"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/send"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+                <EditText
+                    android:id="@+id/comment_text"
+                    android:layout_width="330dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:letterSpacing="-0.05"
+                    android:textColor="@color/black"
+                    android:textSize="14dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/send"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/comment_button"
-        android:layout_width="60dp"
-        android:layout_height="35dp"
-        android:layout_marginLeft="10dp"
-        android:background="@drawable/btn_teal"
-        android:letterSpacing="-0.05"
-        android:text="완료"
-        android:textColor="@color/white"
-        android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/message"
-        app:layout_constraintTop_toTopOf="parent" />
-</LinearLayout>
+                <Button
+                    android:id="@+id/comment_button"
+                    android:layout_width="60dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/btn_teal"
+                    android:letterSpacing="-0.05"
+                    android:text="완료"
+                    android:textColor="@color/white"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/message"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

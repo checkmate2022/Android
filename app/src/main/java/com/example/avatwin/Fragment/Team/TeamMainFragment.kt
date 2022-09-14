@@ -68,7 +68,7 @@ class TeamMainFragment() : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.menubar_team, container, false)
-
+        Log.e("성공", App.prefs.teamSeq.toString())
         var teamMaker=""
         //메뉴바 팀명
         arguments?.let{
@@ -109,7 +109,7 @@ class TeamMainFragment() : Fragment() {
         apiService.get_teamChannel(App.prefs.teamSeq!!.toLong()).enqueue(object : Callback<channelTeamGetBody> {
             override fun onResponse(call: Call<channelTeamGetBody>, response: Response<channelTeamGetBody>) {
                 val result = response.body()!!
-                Log.e("성공", result.toString())
+                //Log.e("성공", result.toString())
                 for (i in 0..result.list.size - 1) {
                     adapter.addItem(result.list[i].channelName.toString())
                 }
@@ -330,11 +330,20 @@ class TeamMainFragment() : Fragment() {
 
         val gson = GsonBuilder()
             .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter())
-            .registerTypeAdapter(LocalDateTime::class.java, object : JsonDeserializer<LocalDateTime> {
-                override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): LocalDateTime {
-                    return LocalDateTime.parse(json!!.asString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                }
-            }).create()
+            .registerTypeAdapter(
+                LocalDateTime::class.java,
+                object : JsonDeserializer<LocalDateTime> {
+                    override fun deserialize(
+                        json: JsonElement?,
+                        typeOfT: Type?,
+                        context: JsonDeserializationContext?
+                    ): LocalDateTime {
+                        return LocalDateTime.parse(
+                            json!!.asString,
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                        )
+                    }
+                }).create()
 
         val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
         var retrofit = Retrofit.Builder()
@@ -346,40 +355,48 @@ class TeamMainFragment() : Fragment() {
         var apiService = retrofit.create(ScheduleService::class.java)
 
 
-        apiService.get_teamSchedule(App.prefs.teamSeq!!.toLong()).enqueue(object : Callback<scheduleTeamGetBody> {
-            override fun onResponse(call: Call<scheduleTeamGetBody>, response: Response<scheduleTeamGetBody>) {
-                val result = response.body()
-                var scheduleList=ArrayList<scheduleBody>()
+        apiService.get_teamSchedule(App.prefs.teamSeq!!.toLong())
+            .enqueue(object : Callback<scheduleTeamGetBody> {
+                override fun onResponse(
+                    call: Call<scheduleTeamGetBody>,
+                    response: Response<scheduleTeamGetBody>
+                ) {
+                    val result = response.body()
+
+                    var scheduleList = ArrayList<scheduleBody>()
+
+                 Log.e("ScheduleList",result!!.toString())
+                        for (i: scheduleBody in result!!.list) {
+                            var dateString = i.scheduleStartDate.toString()
+                            var year = dateString.substring(0, 4)
+                            var month = ""
+                            var day = ""
+                            //월
+                            if (dateString.substring(5, 6) == "0") {
+                                month = dateString.substring(6, 7)
+                            } else {
+                                month = dateString.substring(5, 7)
+                            }
+                            //일
+                            if (dateString.substring(8, 9) == "0") {
+                                day = dateString.substring(9, 10)
+                            } else {
+                                day = dateString.substring(8, 10)
+                            }
+                            var datE: CalendarDay =
+                                CalendarDay.from(year.toInt(), month.toInt() - 1, day.toInt())
+                            //Log.e("startdate2",datE.toString())
+                            calendar.addDecorator(OneDayDecorator(datE))
+                        }}
 
 
-                for (i: scheduleBody in result!!.list) {
-                    var dateString = i.scheduleStartDate.toString()
-                    var year=dateString.substring(0,4)
-                    var month=""
-                    var day=""
-                    //월
-                    if(dateString.substring(5,6)=="0"){
-                        month = dateString.substring(6,7)
-                    }else{
-                        month = dateString.substring(5,7)
-                    }
-                    //일
-                    if(dateString.substring(8,9)=="0"){
-                        day = dateString.substring(9,10)
-                    }else{
-                        day = dateString.substring(8,10)
-                    }
-                    var datE:CalendarDay = CalendarDay.from(year.toInt(),month.toInt()-1,day.toInt())
-                    //Log.e("startdate2",datE.toString())
-                    calendar.addDecorator(OneDayDecorator(datE))
+
+                override fun onFailure(call: Call<scheduleTeamGetBody>, t: Throwable) {
+                    Log.e("schedule", "OnFailuer+${t.message}")
                 }
+            })
 
-            }
 
-            override fun onFailure(call: Call<scheduleTeamGetBody>, t: Throwable) {
-                Log.e("schedule", "OnFailuer+${t.message}")
-            }
-        })
     }
 
 
@@ -433,6 +450,7 @@ class TeamMainFragment() : Fragment() {
 */
                         tnrBottomSheetDialog.dismiss()
                         val fragmentA = ScheduleDetailFragment( scheduleList[position])
+                        Log.e("scheduleList",scheduleList[position].toString())
                         val bundle = Bundle()
                         fragmentA.arguments = bundle
                         val transaction = requireActivity().supportFragmentManager.beginTransaction()

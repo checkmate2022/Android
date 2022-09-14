@@ -24,6 +24,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class ScheduleDetailFragment(var item: scheduleBody): Fragment() {
     var seq = item.scheduleSeq
+    var scheduleBody =item
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.dialog_schedule_detail, container, false)
@@ -36,8 +37,8 @@ class ScheduleDetailFragment(var item: scheduleBody): Fragment() {
         root.detail_enddate.text = item.scheduleEndDate.toString().substring(0,10)
         root.detail_endtime.text = item.scheduleEndDate.toString().substring(11)
         var participantName:String=""
-        if(item.participantName!=null){
-        for (i :String in item.participantName){
+        if(item.participants!=null){
+        for (i :String in item.participants){
             participantName = participantName+ " "+i}
         root.detail_participant.text = participantName}
 
@@ -60,7 +61,13 @@ class ScheduleDetailFragment(var item: scheduleBody): Fragment() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.update -> {
-
+                val fragmentA = ScheduleUpdateFragment(scheduleBody)
+                val bundle = Bundle()
+                fragmentA.arguments = bundle
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                transaction.add(R.id.container, fragmentA)
+                transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
+                transaction.commit()
             }
             R.id.delete -> {
                 var dlg = AlertDialog.Builder(requireContext())

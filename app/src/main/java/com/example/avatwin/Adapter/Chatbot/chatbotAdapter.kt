@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,6 +47,7 @@ class chatbotAdapter(private var context:Context, private var messageList: List<
             if(message.contains("팀")){
                 //Log.e("chabot",message)
                 holder.btnDate.visibility = View.GONE
+                holder.robotImage.visibility = View.VISIBLE
                 holder.messageReceive.visibility = View.VISIBLE
                 holder.messageSend.visibility = View.GONE
                 holder.messageReceive.text = message
@@ -90,6 +92,7 @@ class chatbotAdapter(private var context:Context, private var messageList: List<
                 holder.btnDate.visibility = View.GONE
                 holder.messageReceive.visibility = View.VISIBLE
                 holder.messageSend.visibility = View.GONE
+                holder.robotImage.visibility = View.VISIBLE
                 holder.messageReceive.text = message
                 lateinit var adapter: chatbotScheduleTypeAdapter
                 val layoutManager1 = LinearLayoutManager(context)
@@ -112,12 +115,13 @@ class chatbotAdapter(private var context:Context, private var messageList: List<
                 holder.messageSend.visibility = View.GONE
                 holder.recyclerView.visibility=View.GONE
                 holder.messageReceive.text = message
+                holder.robotImage.visibility = View.VISIBLE
                 holder.btnDate.setOnClickListener {
                     ChatbotFragment!!.clickScheduleDate()
                 }
             }
             else
-            {
+            {   holder.robotImage.visibility = View.VISIBLE
                 holder.btnDate.visibility = View.GONE
                 holder.messageReceive.visibility = View.VISIBLE
                 holder.messageSend.visibility = View.GONE
@@ -125,6 +129,7 @@ class chatbotAdapter(private var context:Context, private var messageList: List<
                 holder.messageReceive.text = message
             }
         } else {
+            holder.robotImage.visibility = View.GONE
             holder.btnDate.visibility = View.GONE
             holder.recyclerView.visibility=View.GONE
             holder.messageSend.visibility = View.VISIBLE
@@ -142,6 +147,7 @@ class chatbotAdapter(private var context:Context, private var messageList: List<
         var messageReceive: TextView = itemView.findViewById(R.id.message_receive)
         var messageSend: TextView = itemView.findViewById(R.id.message_send)
         var recyclerView:RecyclerView = itemView.findViewById(R.id.recyclerview_chatbot)
+        var robotImage:ImageView = itemView.findViewById(R.id.robot_image)
 
         var btnDate:Button = itemView.findViewById(R.id.btn_date)
     }

@@ -41,7 +41,8 @@ import java.time.LocalDateTime
 class ChatListFragment: Fragment() {
     val bundle: Bundle = Bundle()
     lateinit var adapter: roomAdapter
-    var sender:String=""
+    var receiver:String=""
+    var receiverImage=""
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -74,13 +75,17 @@ class ChatListFragment: Fragment() {
                 adapter.setItemClickListener(object : roomAdapter.ItemClickListener {
                     override fun onClick(view: View, position: Int) {
                         if(App.prefs.userId==result.list[position].username1){
-                            sender = result.list[position].username2.toString()
+                            receiver = result.list[position].username2.toString()
+                            receiverImage = result.list[position].userImage2.toString()
                         }
                         else{
-                            sender = result.list[position].username1.toString()
+                            receiver = result.list[position].username1.toString()
+                            receiverImage = result.list[position].userImage1.toString()
                         }
-                        Log.e("Sender",sender)
-                        bundle.putString("sender", sender)
+                        Log.e("receiver",receiver)
+                        bundle.putString("receiver", receiver)
+                        //상대방 이미지주소 보내기 bundle
+                        bundle.putString("receiverImage", receiverImage)
                         bundle.putString("roomId",  result.list[position].id)
 
                         val fragmentA = ChatFragment()

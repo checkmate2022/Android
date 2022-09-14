@@ -122,12 +122,14 @@ class BoardDetailFragment(): Fragment() {
                     board_detail_content.setText(mList.data.content)
                     //댓글 리스트
                     adapter = commentAdapter()
-
+/*
                     for(i:commentBody in mList.data.comments){
                         if(i.username==App.prefs.userId){
-                            commnet_more.isVisible=true
+                            comment_mores.visibility=View.VISIBLE
+                        }else{
+                            comment_mores.visibility=View.GONE
                         }
-                    }
+                    }*/
 
                     adapter.items=mList.data.comments
                     recyclerview_comment.adapter= adapter

@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -17,10 +19,7 @@ import com.example.avatwin.Adapter.Team.teamSearchListAdapter
 import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.Converter.LocalDateTimeConverter
-import com.example.avatwin.DataClass.joinGetBody
-import com.example.avatwin.DataClass.scheduleGetBody
-import com.example.avatwin.DataClass.scheduleReqBody
-import com.example.avatwin.DataClass.userGetBody2
+import com.example.avatwin.DataClass.*
 import com.example.avatwin.Fragment.Team.TeamMainFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.ScheduleService
@@ -30,7 +29,9 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import kotlinx.android.synthetic.main.dialog_member_search.view.*
+import kotlinx.android.synthetic.main.dialog_schedule_detail.view.*
 import kotlinx.android.synthetic.main.fragment_schedule_register.*
+import kotlinx.android.synthetic.main.fragment_schedule_update.view.*
 import kotlinx.android.synthetic.main.fragment_team_register.register_id
 import kotlinx.android.synthetic.main.fragment_team_register.register_nickname
 import kotlinx.android.synthetic.main.fragment_team_register.register_nickname_check_btn
@@ -46,14 +47,32 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class ScheduleUpdateFragment: Fragment() {
+class ScheduleUpdateFragment(var item: scheduleBody): Fragment() {
+    init{ instance = this }
 
+    companion object{
+        private var instance: ScheduleUpdateFragment? = null
+        fun getInstance(): ScheduleUpdateFragment?
+        { return instance  }}
+    val items: ArrayList<String> = arrayListOf()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_schedule_register, container, false)
 
         //기존 정보 가져오기
 
+        root.register_id.setText(item.scheduleName)
+        root.register_description.setText(item.scheduleDescription)
+
+        //일정타입
+        //참여자
+        //시작날짜
+        //끝날짜
+        var participantName:String=""
+        if(item.participants!=null){
+            for (i :String in item.participants){
+                participantName = participantName+ " "+i}
+            root.detail_participant.text = participantName}
         return root
     }
 
@@ -67,6 +86,26 @@ class ScheduleUpdateFragment: Fragment() {
         var start =""
         var end=""
         val items: ArrayList<String> = arrayListOf()
+        var notificationTime=0
+
+
+        //알람 스피너 구현
+        spinner.adapter = ArrayAdapter.createFromResource(requireContext(), R.array.list, android.R.layout.simple_spinner_item)
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == 0){
+                    notificationTime=0
+                }else if(position == 1){
+                    notificationTime=10
+                }else if(position == 2){
+                    notificationTime=30
+                }else{
+                    notificationTime=60
+                } }
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            } }
+
         //시작 날짜
         register_start_day.setOnClickListener {
 
@@ -128,14 +167,6 @@ class ScheduleUpdateFragment: Fragment() {
             }
         }
 
-
-
-        //Log.e("Start",start)
-        //val startdate= LocalDateTime.parse(start, dateFormatter)
-
-        //enddate= LocalDateTime.parse(end, dateFormatter)}
-
-
         //스케쥴 참여자
         val layoutManager = LinearLayoutManager(activity)
         register_team_list.layoutManager = layoutManager
@@ -143,8 +174,6 @@ class ScheduleUpdateFragment: Fragment() {
         listAdapter = teamListAdapter()
 
 
-
- //스케쥴등록
         val gson = GsonBuilder()
                 .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter())
                 .registerTypeAdapter(LocalDateTime::class.java, object: JsonDeserializer<LocalDateTime> {
@@ -153,6 +182,7 @@ class ScheduleUpdateFragment: Fragment() {
             }
         }).create()
 
+        //스케쥴등록
         register_schedule_button.setOnClickListener {
             val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
             var retrofit = Retrofit.Builder()
@@ -168,7 +198,7 @@ class ScheduleUpdateFragment: Fragment() {
             val aLDT2 = LocalDateTime.parse(end)
             Log.e("Date",aLDT2.toString())
 
-            var data = scheduleReqBody(register_id.text.toString(), register_description.text.toString(), scheduleType, aLDT, aLDT2, items, App.prefs.teamSeq!!.toLong(),5)
+            var data = scheduleReqBody(register_id.text.toString(), register_description.text.toString(), scheduleType, aLDT, aLDT2, items, App.prefs.teamSeq!!.toLong(),notificationTime)
             apiService.post_schedule(data).enqueue(object : Callback<scheduleGetBody> {
                 override fun onResponse(call: Call<scheduleGetBody>, response: Response<scheduleGetBody>) {
                     val result = response.body()
@@ -181,28 +211,20 @@ class ScheduleUpdateFragment: Fragment() {
                     transaction.add(R.id.container,fragmentA)
                     transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
                     transaction.commit()
-
                 }
-
                 override fun onFailure(call: Call<scheduleGetBody>, t: Throwable) {
                     Log.e("schedule", "OnFailuer+${t.message}")
-                }
-            })
-
+                } })
         }
-
-
 
     //참여자
         register_nickname_check_btn.setOnClickListener {
-
 
             var dlg = AlertDialog.Builder(requireContext())
             var dialogView = View.inflate(context, R.layout.dialog_member_search, null)
             dlg.setView(dialogView)
             dlg.show()
             var seachtext = dialogView.search_edittext.getText()
-
 
             val layoutManager1 = LinearLayoutManager(activity)
             dialogView.recyclerView_search.layoutManager = layoutManager1
@@ -211,7 +233,6 @@ class ScheduleUpdateFragment: Fragment() {
 
             dialogView.search_btn.setOnClickListener {
 
-                Log.e("Dd", "ss")
                 val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
                 var retrofit = Retrofit.Builder()
                         .client(okHttpClient)
@@ -242,35 +263,19 @@ class ScheduleUpdateFragment: Fragment() {
                                     listAdapter.addItem(mList.list[position].userId.toString())
                                     register_team_list.adapter = listAdapter
 
-                                }
-                            })
-                        }
-
-
-                    }
-
+                                } }) } }
                     override fun onFailure(call: Call<userGetBody2>, t: Throwable) {
                         Log.e("teamDialog", "OnFailuer+${t.message}")
-                    }
-                })
-            }
+                    } }) }
+        } }
 
+    fun deleteMember(position:Int){
 
+        register_team_list.adapter!!.notifyDataSetChanged()
+        items.remove(items[position])
+        register_nickname.setText("")
+        for(i:String in items){
+            register_nickname.setText(register_nickname.getText().toString()+" " +i)
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
-
 }

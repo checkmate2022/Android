@@ -47,7 +47,7 @@ class channelAdapter():RecyclerView.Adapter<channelAdapter.ViewHolder>(){
         }
 
         holder.itemView.delete_button.setOnClickListener {
-            //items.remove(item)
+            items.remove(item)
             ChannelUpdateFragment!!.deleteChannel(item)
 
         }

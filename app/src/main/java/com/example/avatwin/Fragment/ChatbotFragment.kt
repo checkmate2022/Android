@@ -147,33 +147,10 @@ class ChatbotFragment:Fragment() {
             Struct.newBuilder().putFields(
                 "userId",
                 Value.newBuilder().setStringValue(App.prefs.userId).build()
-            ).putFields(
-                "ww",
-                Value.newBuilder().setStringValue("www").build()
             ).build()
         ).build()
 
-    /*
-    val payloadBuilder = Struct.newBuilder()
-    val googleBuilder = Struct.newBuilder()
-    val messageList = ListValue.newBuilder()
-    products.forEach { product ->
-        val message = Intent.Message.newBuilder()
-        val basicCard = Intent.Message.BasicCard.newBuilder()
-        basicCard.formattedText = product.getShortDescr()
-        basicCard.title = product.getName()
-        val image = Intent.Message.Image.newBuilder()
-        image.imageUri = product.getMediaURLMedium()
-        basicCard.setImage(image)
-        message.setBasicCard(basicCard)
-        messageList.addValuesBuilder().setField(
-            Intent.getDescriptor().findFieldByNumber(Intent.MESSAGES_FIELD_NUMBER),
-            message.build()
-        )
-    }
-    googleBuilder.putFields("richResponse", Value.newBuilder().setListValue(messageList).build())
-    payloadBuilder.putFields("google", Value.newBuilder().setStructValue(googleBuilder).build())
-    responseBuilder.setPayload(payloadBuilder)*/
+
         GlobalScope.launch {
             sendMessageInBg(queryInput,s)
         }
@@ -183,8 +160,7 @@ class ChatbotFragment:Fragment() {
         val queryInput = QueryInput.newBuilder()
             .setText(TextInput.newBuilder().setText(message).setLanguageCode("ko"))
             .build()
-        Log.e("bot","총일정 "+start+" "+end+" "+scheduleType)
-        //팀seq,일정명,  시작날짜 type 끝날짜
+
         val s = QueryParameters.newBuilder().setPayload(
             Struct.newBuilder().putFields(
                 "userId",
