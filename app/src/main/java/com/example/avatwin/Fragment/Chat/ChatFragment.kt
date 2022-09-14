@@ -53,6 +53,7 @@ class ChatFragment: Fragment() {
     val constant: Constant = Constant
     lateinit var stompConnection: Disposable
     lateinit var topic: Disposable
+    var receiverImage=""
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +65,8 @@ class ChatFragment: Fragment() {
 
         if(bundle != null) {
             constant.set(App.prefs.userId.toString(), bundle.getString("roomId")!!)
-            root.chat_sender.text=bundle.getString("sender")
+            root.chat_sender.text=bundle.getString("receiver")
+            receiverImage = bundle.getString("receiverImage")!!
             Log.e("chatIntent",bundle.getString("roomId")!!)
         }
 
@@ -105,7 +107,8 @@ class ChatFragment: Fragment() {
                             .parse<Chat>(stompMessage)
                             requireActivity().runOnUiThread {
                             if (result != null) {
-                                cAdapter.addItem(result)
+                                //imgae
+                                cAdapter.addItem(result,receiverImage)
                                 root.recycler_chat.smoothScrollToPosition(cAdapter.itemCount)
                             }
                         }

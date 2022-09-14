@@ -24,6 +24,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class ScheduleDetailFragment(var item: scheduleBody): Fragment() {
     var seq = item.scheduleSeq
+    var scheduleBody =item
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.dialog_schedule_detail, container, false)
@@ -60,7 +61,7 @@ class ScheduleDetailFragment(var item: scheduleBody): Fragment() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.update -> {
-                val fragmentA = ScheduleUpdateFragment(item)
+                val fragmentA = ScheduleUpdateFragment(scheduleBody)
                 val bundle = Bundle()
                 fragmentA.arguments = bundle
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()

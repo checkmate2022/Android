@@ -71,6 +71,7 @@ class FcmFragment:Fragment() {
             override fun onResponse(call: Call<fcmResBody>, response: Response<fcmResBody>) {
                 if (response.isSuccessful) {
                     var mList = response.body()!!
+                    Log.e("fcm",mList.list.toString())
                     for (i: fcmBody in mList.list) {
                             adapter.addItem(i)
                     }

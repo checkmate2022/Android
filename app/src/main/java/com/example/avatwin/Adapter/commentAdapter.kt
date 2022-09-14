@@ -39,7 +39,7 @@ class commentAdapter():RecyclerView.Adapter<commentAdapter.ViewHolder>(){
 
         val BoardDetailFragment = BoardDetailFragment.getInstance()
 
-        holder.itemView.commnet_more.setOnClickListener {
+        holder.itemView.comment_mores.setOnClickListener {
             BoardDetailFragment!!.clickMenu(item)
 
         }

@@ -4,9 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.avatwin.Constant
 import com.example.avatwin.DataClass.Chat
 import com.example.avatwin.R
@@ -20,11 +22,12 @@ class ChatAdapter(val context: Context)
     val ENTER_VIEW = 3
 
     val constant = Constant
-
+    var receiverImage=""
     var chatDatas = ArrayList<Chat>()
 
-    fun addItem(item: Chat){
+    fun addItem(item: Chat,image:String){
         chatDatas.add(item)
+        receiverImage=image
         notifyDataSetChanged()
     }
 
@@ -32,13 +35,18 @@ class ChatAdapter(val context: Context)
 
         val mid = itemView.findViewById<TextView>(R.id.mid)
         val chatItem = itemView.findViewById<TextView>(R.id.messageTextView)
-
+        val senderImage = itemView.findViewById<ImageView>(R.id.sender_img)
         fun bind(chatData: Chat, context: Context){
             val viewType = itemViewType
 
             when(viewType){
                 ENTER_VIEW -> chatItem.text = chatData.message
+                MY_VIEW -> {
+                    //mid.text = chatData.sender
+                    chatItem.text = chatData.message}
                 else -> {
+                    //senderImage
+                    Glide.with(itemView).load(receiverImage).into(senderImage)
                     mid.text = chatData.sender
                     chatItem.text = chatData.message
                 }

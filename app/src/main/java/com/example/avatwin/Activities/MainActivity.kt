@@ -6,7 +6,6 @@ import android.util.Log
 import android.widget.Toast
 import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
-import com.example.avatwin.DataClass.fcmReqBody
 import com.example.avatwin.DataClass.fcmResBody
 import com.example.avatwin.DataClass.teamPostGetBody
 import com.example.avatwin.DataClass.teamReqBody
@@ -51,9 +50,9 @@ class MainActivity : AppCompatActivity() {
             // Log and toast
             msg = token.toString()
             registerFcmToken(msg);
-            Log.e("FCM", msg)
+           // Log.e("FCM", msg)
             App.prefs.fcmToken=msg
-            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            //Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
         })
 
 
@@ -86,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.tab3 -> {
                     with(supportFragmentManager.beginTransaction()) {
-                        val fragment5 = FcmFragment()
+                        val fragment5 = ChatbotFragment()
                         replace(R.id.container, fragment5)
                         commit()
                     }
@@ -94,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.tab4 -> {
                     with(supportFragmentManager.beginTransaction()) {
-                        val fragment4 = MyPageFragment()
+                        val fragment4 = FcmFragment()
                         replace(R.id.container, fragment4)
                         commit()
                     }
@@ -102,7 +101,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.tab5 -> {
                     with(supportFragmentManager.beginTransaction()) {
-                        val fragment4 = ChatbotFragment()
+                        val fragment4 = MyPageFragment()
                         replace(R.id.container, fragment4)
                         commit()
                     }
