@@ -2,6 +2,7 @@ package com.example.avatwin.DataClass
 
 import java.time.LocalDateTime
 
-//알람보내기
-data class fcmReqBody(val userName:String?,val title:String?,val body:String?)
-data class fcmResBody(val success:String)
+
+//알람 목록 조회
+data class fcmResBody(val list:ArrayList<fcmBody>)
+data class fcmBody(val body:String,val title:String, val notificationDate:LocalDateTime, val userId:String)

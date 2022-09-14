@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,44 +11,43 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:gravity="center_vertical"
+        android:letterSpacing="-0.05"
+        android:paddingLeft="20dp"
         android:text="알람"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:letterSpacing="-0.05"
-        android:paddingLeft="20dp"/>
+        android:textStyle="bold" />
 
     <!--채팅탭 구분선-->
     <View
         android:layout_width="match_parent"
         android:layout_height="0.8dp"
-        android:background="@color/gray"/>
-    <Button
-        android:id="@+id/test_fcm"
-        style="@style/registerEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="49dp"
-        android:layout_marginTop="36dp"
-        android:layout_gravity="right"
-        android:layout_marginRight="30dp"
-        android:background="@drawable/btn_pup"
-        android:letterSpacing="-0.05"
-        android:text="생성"
-        android:textColor="@color/white"
-        android:textSize="14dp" />
-    <!--스크롤뷰-->
+        android:background="@color/gray" />
+
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:background="@color/gray">
+        android:background="@color/gray"
+        android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
+            <!--게시글 목록-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_fcm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never"
+                android:paddingLeft="20dp"
+                android:paddingTop="15dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="15dp" />
 
             <!--Footer-->
             <LinearLayout
@@ -63,18 +61,18 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/at_logo"
-                    android:layout_marginBottom="20dp" />
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/at_logo" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:letterSpacing="-0.02"
                     android:lineSpacingMultiplier="1.2"
                     android:text="상호명: Avatwin\n대표자: 체크메이트\n이메일: checkmate@gmail.com"
-                    android:textSize="8dp"
                     android:textColor="#ff191919"
-                    android:letterSpacing="-0.02"
-                    android:layout_marginBottom="20dp" />
+                    android:textSize="8dp" />
 
             </LinearLayout>
         </LinearLayout>

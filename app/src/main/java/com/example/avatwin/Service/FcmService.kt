@@ -14,8 +14,12 @@ interface FcmService {
     @POST("fcm/register")
     fun post_fcmToken(@Query("deviceToken") deviceToken:String):Call<fcmResBody>
 
-    //알림보내기
+    //알람 목록 조회
+    @GET("fcm")
+    fun get_fcm():Call<fcmResBody>
+
+    /*//알림보내기
     @POST("fcm")
-    fun post_fcm(@Body requestDTO: fcmReqBody):Call<fcmResBody>
+    fun post_fcm(@Body requestDTO: fcmReqBody):Call<fcmResBody>*/
 }
 

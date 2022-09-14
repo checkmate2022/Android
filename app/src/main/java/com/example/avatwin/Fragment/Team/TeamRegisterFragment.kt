@@ -104,10 +104,7 @@ class TeamRegisterFragment: Fragment() {
         }
 
 
-
-
         register_nickname_check_btn.setOnClickListener {
-
 
             var dlg = AlertDialog.Builder(requireContext())
             var dialogView = View.inflate(context, R.layout.dialog_member_search, null)
@@ -159,22 +156,11 @@ class TeamRegisterFragment: Fragment() {
                                     register_team_list.adapter = listAdapter
 
                                 }
-                            })
-                        }
-
-
+                            }) }
                     }
-
                     override fun onFailure(call: Call<userGetBody2>, t: Throwable) {
                         Log.e("teamDialog", "OnFailuer+${t.message}")
                     }
                 })
-            }
-
-        }
-
-
-
-    }
-
+            } } }
 }

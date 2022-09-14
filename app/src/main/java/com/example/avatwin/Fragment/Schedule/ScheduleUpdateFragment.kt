@@ -19,10 +19,7 @@ import com.example.avatwin.Adapter.Team.teamSearchListAdapter
 import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.Converter.LocalDateTimeConverter
-import com.example.avatwin.DataClass.joinGetBody
-import com.example.avatwin.DataClass.scheduleGetBody
-import com.example.avatwin.DataClass.scheduleReqBody
-import com.example.avatwin.DataClass.userGetBody2
+import com.example.avatwin.DataClass.*
 import com.example.avatwin.Fragment.Team.TeamMainFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.ScheduleService
@@ -32,7 +29,9 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import kotlinx.android.synthetic.main.dialog_member_search.view.*
+import kotlinx.android.synthetic.main.dialog_schedule_detail.view.*
 import kotlinx.android.synthetic.main.fragment_schedule_register.*
+import kotlinx.android.synthetic.main.fragment_schedule_update.view.*
 import kotlinx.android.synthetic.main.fragment_team_register.register_id
 import kotlinx.android.synthetic.main.fragment_team_register.register_nickname
 import kotlinx.android.synthetic.main.fragment_team_register.register_nickname_check_btn
@@ -48,7 +47,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class ScheduleUpdateFragment: Fragment() {
+class ScheduleUpdateFragment(var item: scheduleBody): Fragment() {
     init{ instance = this }
 
     companion object{
@@ -62,6 +61,18 @@ class ScheduleUpdateFragment: Fragment() {
 
         //기존 정보 가져오기
 
+        root.register_id.setText(item.scheduleName)
+        root.register_description.setText(item.scheduleDescription)
+
+        //일정타입
+        //참여자
+        //시작날짜
+        //끝날짜
+        var participantName:String=""
+        if(item.participants!=null){
+            for (i :String in item.participants){
+                participantName = participantName+ " "+i}
+            root.detail_participant.text = participantName}
         return root
     }
 

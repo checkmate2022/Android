@@ -60,7 +60,7 @@ class ScheduleDetailFragment(var item: scheduleBody): Fragment() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.update -> {
-                val fragmentA = ScheduleUpdateFragment()
+                val fragmentA = ScheduleUpdateFragment(item)
                 val bundle = Bundle()
                 fragmentA.arguments = bundle
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
