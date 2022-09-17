@@ -27,7 +27,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.avatwin.Adapter.Avatar.avatarExampleAdapter
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.myAvatarRes
-import com.example.avatwin.Fragment.MyPageFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.AvatarService
 import com.google.gson.GsonBuilder
@@ -123,6 +122,9 @@ class AvatarRegisterFragment  : Fragment(){
           }
 
     }
+    //apiService.make_avatar(
+//    multipartBodyProfile,"webtoon", 13,"ww"
+//).en
     fun makeAvatar(avatarName: String, avatarStyle: String, avatarStyleId: Long){
         try {
             val gson = GsonBuilder()
@@ -232,21 +234,24 @@ class AvatarRegisterFragment  : Fragment(){
                     "originfile", m_imageFile!!.name, requestBodyProfile
             )
             val multipartBodyProfile2 = MultipartBody.Part.createFormData(
-                    "createdfile", m_imageFile!!.name, requestBodyProfile2
+                    "createdfile", c_imageFile!!.name, requestBodyProfile2
             )
+            val nameBody = RequestBody.create(MediaType.parse("text/plain"), "cartoon")
             apiService.post_avatar(
                     multipartBodyProfile,
-                    multipartBodyProfile2, avatarName, avatarDescription, avatarStyle, avatarStyleId
+                    multipartBodyProfile2, avatarName, avatarDescription,"cartoon", avatarStyleId,"d",
+                "D","d","d"
             ).enqueue(object : Callback<myAvatarRes> {
                 override fun onResponse(call: Call<myAvatarRes>, response: Response<myAvatarRes>) {
                     val newProfileUpdataResult = response.body()
-                    val fragmentA = MyPageFragment()
+                    Log.e("avatar",newProfileUpdataResult.toString())
+                   /* val fragmentA = MyPageFragment()
                     val bundle = Bundle()
                     fragmentA.arguments = bundle
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
                     transaction.add(R.id.container, fragmentA)
                     transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
-                    transaction.commit()
+                    transaction.commit()*/
                 }
 
                 override fun onFailure(call: Call<myAvatarRes>, t: Throwable) {

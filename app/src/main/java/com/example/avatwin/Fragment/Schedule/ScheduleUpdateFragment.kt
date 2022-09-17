@@ -14,8 +14,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.avatwin.Adapter.Schedule.scheduleUpdateMemberAdapter
 import com.example.avatwin.Adapter.Team.teamListAdapter
 import com.example.avatwin.Adapter.Team.teamSearchListAdapter
+import com.example.avatwin.Adapter.Team.teamUpdateMemberAdapter
 import com.example.avatwin.Auth.App
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.Converter.LocalDateTimeConverter
@@ -31,11 +33,23 @@ import com.google.gson.JsonElement
 import kotlinx.android.synthetic.main.dialog_member_search.view.*
 import kotlinx.android.synthetic.main.dialog_schedule_detail.view.*
 import kotlinx.android.synthetic.main.fragment_schedule_register.*
+import kotlinx.android.synthetic.main.fragment_schedule_register.register_description
+import kotlinx.android.synthetic.main.fragment_schedule_register.register_end_day
+import kotlinx.android.synthetic.main.fragment_schedule_register.register_end_time
+import kotlinx.android.synthetic.main.fragment_schedule_register.register_schedule_button
+import kotlinx.android.synthetic.main.fragment_schedule_register.register_schedule_type
+import kotlinx.android.synthetic.main.fragment_schedule_register.register_start_day
+import kotlinx.android.synthetic.main.fragment_schedule_register.register_start_time
+import kotlinx.android.synthetic.main.fragment_schedule_register.spinner
+import kotlinx.android.synthetic.main.fragment_schedule_update.*
 import kotlinx.android.synthetic.main.fragment_schedule_update.view.*
+import kotlinx.android.synthetic.main.fragment_schedule_update.view.register_id
+import kotlinx.android.synthetic.main.fragment_schedule_update.view.register_team_list
 import kotlinx.android.synthetic.main.fragment_team_register.register_id
 import kotlinx.android.synthetic.main.fragment_team_register.register_nickname
 import kotlinx.android.synthetic.main.fragment_team_register.register_nickname_check_btn
 import kotlinx.android.synthetic.main.fragment_team_register.register_team_list
+import kotlinx.android.synthetic.main.fragment_team_update.view.*
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -55,9 +69,19 @@ class ScheduleUpdateFragment(var item: scheduleBody): Fragment() {
         fun getInstance(): ScheduleUpdateFragment?
         { return instance  }}
     val items: ArrayList<String> = arrayListOf()
+    val layoutManager = LinearLayoutManager(activity)
+    lateinit var listAdapter: scheduleUpdateMemberAdapter
+    var startDateString = ""
+    var startTimeString = ""
+    var endDateString = ""
+    var endTimeString = ""
+    var start =""
+    var end=""
+
+    var notificationTime=0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        var root = inflater.inflate(R.layout.fragment_schedule_register, container, false)
+        var root = inflater.inflate(R.layout.fragment_schedule_update, container, false)
 
         //기존 정보 가져오기
 
@@ -65,29 +89,42 @@ class ScheduleUpdateFragment(var item: scheduleBody): Fragment() {
         root.register_description.setText(item.scheduleDescription)
 
         //일정타입
+        var typeString=""
+        if(item.scheduleType=="basic"){
+            root.basic.isChecked=true
+        }else if(item.scheduleType=="conference"){
+            root.conference.isChecked=true
+        }
+        //알람
+
         //참여자
+        root.register_team_list.layoutManager = layoutManager
+        listAdapter = scheduleUpdateMemberAdapter()
+        val len: Int = item.participants.size
+        for(i in 0..len-1){
+            if(item.participants[i]!=App.prefs.userId){
+                listAdapter.addItem(item.participants[i])
+                //items.add(result.list[i].userId.toString()
+                root.update_memberList.setText(update_memberList.getText().toString()+" "+item.participants[i])
+            }
+        }
+        root.register_team_list.adapter = listAdapter
         //시작날짜
+        root.register_start_day.text = item.scheduleStartDate.toString().substring(0,10)
+        //시작시간
+        root.register_start_time.text = item.scheduleStartDate.toString().substring(11,16)
+
         //끝날짜
-        var participantName:String=""
-        if(item.participants!=null){
-            for (i :String in item.participants){
-                participantName = participantName+ " "+i}
-            root.detail_participant.text = participantName}
+        root.register_end_day.text = item.scheduleEndDate.toString().substring(0,10)
+       //끝시간
+        root.register_end_time.text = item.scheduleEndDate.toString().substring(11,16)
         return root
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var startDateString = ""
-        var startTimeString = ""
-        var endDateString = ""
-        var endTimeString = ""
-        var start =""
-        var end=""
         val items: ArrayList<String> = arrayListOf()
-        var notificationTime=0
-
 
         //알람 스피너 구현
         spinner.adapter = ArrayAdapter.createFromResource(requireContext(), R.array.list, android.R.layout.simple_spinner_item)
@@ -128,7 +165,6 @@ class ScheduleUpdateFragment(var item: scheduleBody): Fragment() {
             val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
                 startTimeString = "${hourOfDay}:${minute}"
                 register_start_time.text = startTimeString
-                start
                 start = startDateString+"T"+startTimeString+":01"
             }
             TimePickerDialog(requireContext(), timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
@@ -258,7 +294,7 @@ class ScheduleUpdateFragment(var item: scheduleBody): Fragment() {
                             adapter.setItemClickListener(object : teamSearchListAdapter.ItemClickListener {
                                 override fun onClick(view: View, position: Int) {
                                     Log.e("ddd", "Ss")
-                                    register_nickname.setText(register_nickname.getText().toString() + mList.list[position].userId.toString())
+                                    update_memberList.setText(update_memberList.getText().toString() + mList.list[position].userId.toString())
                                     items.add(mList.list[position].userId.toString())
                                     listAdapter.addItem(mList.list[position].userId.toString())
                                     register_team_list.adapter = listAdapter
@@ -272,10 +308,9 @@ class ScheduleUpdateFragment(var item: scheduleBody): Fragment() {
     fun deleteMember(position:Int){
 
         register_team_list.adapter!!.notifyDataSetChanged()
-        items.remove(items[position])
         register_nickname.setText("")
         for(i:String in items){
-            register_nickname.setText(register_nickname.getText().toString()+" " +i)
+            update_memberList.setText(update_memberList.getText().toString()+" " +i)
         }
     }
 }

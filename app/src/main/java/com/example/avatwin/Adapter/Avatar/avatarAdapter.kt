@@ -3,10 +3,14 @@ package com.example.avatwin.Adapter.Avatar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.avatwin.DataClass.avatarBody
+import com.example.avatwin.Fragment.MyPageFragment
+import com.example.avatwin.Fragment.Team.TeamUpdateFragment
 import com.example.avatwin.R
 import kotlinx.android.synthetic.main.item_avatar.view.*
+import kotlinx.android.synthetic.main.item_team_member_list.view.*
 
 
 class avatarAdapter(var item:ArrayList<avatarBody>):RecyclerView.Adapter<avatarAdapter.ViewHolder>(){
@@ -31,11 +35,20 @@ class avatarAdapter(var item:ArrayList<avatarBody>):RecyclerView.Adapter<avatarA
         val item=items[position]
         holder.setItem(item)
 
-        holder.itemView.setOnClickListener {
-            itemClickListner.onClick(it, position)
+        val MyPageFragment = MyPageFragment.getInstance()
 
+        //기본설정
+        holder.itemView.basic_button.setOnClickListener {
+            holder.itemView.basic_button.visibility = View.GONE
+            MyPageFragment!!.basicAvatar(item.avatarSeq)
         }
-    }
+
+        //삭제
+        holder.itemView.delete_button.setOnClickListener {
+            items.remove(item)
+            MyPageFragment!!.deleteAvatar(item.avatarSeq)
+        }
+        }
 
     override fun getItemCount()=items.size
 

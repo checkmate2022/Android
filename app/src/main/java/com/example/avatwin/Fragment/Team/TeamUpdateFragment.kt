@@ -88,11 +88,11 @@ class TeamUpdateFragment(): Fragment() {
 
                 val len: Int = result!!.list.size
                 for(i in 0..len-1){
-                    if(result!!.list[i].userId.toString()!=App.prefs.userId){
-                    listAdapter.addItem(result!!.list[i].userId.toString())
-                        //왜 안되는지 모르겠따
+                    if (result!!.list[i].userId.toString() != App.prefs.userId) {
+                        listAdapter.addItem(result!!.list[i].userId.toString())
+
                         items.add(result.list[i].userId.toString())
-                    root.register_nickname.setText(register_nickname.getText().toString()+" "+result!!.list[i].userId.toString())}
+                        root.register_nickname.setText(register_nickname.getText().toString()+" "+result!!.list[i].userId.toString())}
                 }
 
                 root.register_team_list.adapter = listAdapter
@@ -130,8 +130,15 @@ class TeamUpdateFragment(): Fragment() {
             apiService.put_team(App.prefs.teamSeq!!.toLong(),data).enqueue(object : Callback<teamPostGetBody> {
                 override fun onResponse(call: Call<teamPostGetBody>, response: Response<teamPostGetBody>) {
                     val result = response.body()
-                    Log.e("성공",result.toString())
 
+                    Log.e("성공",result.toString())
+                    val fragmentA = HomeFragment()
+                    val bundle = Bundle()
+                    fragmentA.arguments=bundle
+                    val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                    transaction.add(R.id.container,fragmentA)
+                    transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
+                    transaction.commit()
                 }
 
                 override fun onFailure(call: Call<teamPostGetBody>, t: Throwable) {
@@ -225,9 +232,8 @@ class TeamUpdateFragment(): Fragment() {
     }
     //확인ㅇ
     fun deleteMember(position:Int){
-        items.remove(items[position])
-        register_team_list.adapter!!.notifyDataSetChanged()
 
+        register_team_list.adapter!!.notifyDataSetChanged()
         register_nickname.setText("")
         for(i:String in items){
             register_nickname.setText(register_nickname.getText().toString()+" " +i)
