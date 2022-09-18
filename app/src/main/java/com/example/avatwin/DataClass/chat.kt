@@ -23,10 +23,7 @@ data class Chat (
         val sender: String,
         @Json(name = "message")
         val message: String,
-        @Json(name = "receiver")
-        val message: String,
-        @Json(name = "receiver")
-        val message: String
+        val fileUrl: String
 )
 
 data class ChatRoom (

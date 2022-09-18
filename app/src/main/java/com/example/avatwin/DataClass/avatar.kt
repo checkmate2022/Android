@@ -4,7 +4,10 @@ package com.example.avatwin.DataClass
 data class myAvatarRes(val success:String?,val code:Long?, val msg:String?,val list:ArrayList<avatarBody>)
 data class avatarBody(val avatarSeq:Long?,val avatarName:String?,val avatarDescription:String?,val avatarStyle:String?,
                       val avatarOriginUrl:String?,val avatarCreatedUrl:String?,
-                      val avatarStyleId: Long?, val avatarDate: String?, val isBasic: Boolean)
+                      val avatarStyleId: Long?, val avatarDate: String?, val isBasic: Boolean,
+                        val emoticons:ArrayList<emoticonBody>)
+//이모티콘
+data class emoticonBody(val emoticonSeq:Long?,val emoticonUrl:String?,val emoticonType:String? )
 
 //단건 아바타 조회
 data class avatarGetIdRes(val success:String?,val code:Long?, val msg:String?,val data:avatarBody)

@@ -86,5 +86,13 @@ interface AvatarService {
     //아바타 기본설정
     @GET("avatar/isBasic/{avatarId}")
     fun basic_avatar(@Path("avatarId") avatarId:Long):Call<avatarDelRes>
+
+    //이모티콘생성
+    @Multipart
+    @POST("aa")
+    fun make_emoticon(
+        @Part file: MultipartBody.Part,
+
+        ): Call<ResponseBody>
 }
 

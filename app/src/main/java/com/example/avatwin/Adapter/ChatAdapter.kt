@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -37,7 +38,7 @@ class ChatAdapter(val context: Context)
         val mid = itemView.findViewById<TextView>(R.id.mid)
         val chatItem = itemView.findViewById<TextView>(R.id.messageTextView)
         val senderImage = itemView.findViewById<ImageView>(R.id.sender_img)
-        val imoticon = itemView.findViewById<ImageView>(R.id.imoticon)
+        val emoticon = itemView.findViewById<ImageView>(R.id.imoticon)
         fun bind(chatData: Chat, context: Context){
             val viewType = itemViewType
 
@@ -45,11 +46,15 @@ class ChatAdapter(val context: Context)
                 ENTER_VIEW -> chatItem.text = chatData.message
                 MY_VIEW -> {
                     //mid.text = chatData.sender
+                    if(chatData.fileUrl!=""){
+                        emoticon.visibility = View.VISIBLE
+                    Glide.with(itemView)
+                        .load(chatData.fileUrl) // 불러올 이미지 url
+                        .into(emoticon)}
                     chatItem.text = chatData.message}
                 else -> {
                     //senderImage
                     val defaultImage = R.drawable.profile_none
-
                     Glide.with(itemView)
                         .load(receiverImage) // 불러올 이미지 url
                         .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
@@ -57,9 +62,14 @@ class ChatAdapter(val context: Context)
                         .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
                         .circleCrop() // 동그랗게 자르기
                         .into(senderImage)
-                    //Glide.with(itemView).load(receiverImage).into(senderImage)
+
                     mid.text = chatData.sender
                     chatItem.text = chatData.message
+                   if(chatData.fileUrl!=""){
+                       emoticon.visibility = View.VISIBLE
+                        Glide.with(itemView)
+                            .load(chatData.fileUrl) // 불러올 이미지 url
+                            .into(emoticon)}
                 }
             }
         }

@@ -13,11 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.beust.klaxon.Klaxon
 import com.bumptech.glide.Glide
+import com.example.avatwin.Adapter.Avatar.avatarAdapter
 import com.example.avatwin.Auth.*
 import com.example.avatwin.Constant
 import com.example.avatwin.DataClass.Chat
+import com.example.avatwin.DataClass.avatarBody
 import com.example.avatwin.DataClass.chatMessageGetBody
+import com.example.avatwin.DataClass.myAvatarRes
 import com.example.avatwin.R
+import com.example.avatwin.Service.AvatarService
 import com.example.avatwin.Service.ChatService
 import com.example.testchat.adapter.ChatAdapter
 import com.gmail.bishoybasily.stomp.lib.Event
@@ -54,8 +58,11 @@ class ChatFragment: Fragment() {
     lateinit var topic: Disposable
     var receiverImage=""
     var receiver=""
-
-
+    var selectEmoticonUrl=""
+    var url1=""
+    var url2=""
+    var url3=""
+    var url4=""
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,7 +77,7 @@ class ChatFragment: Fragment() {
             root.chat_sender.text=bundle.getString("receiver")
             receiver= bundle.getString("receiver")!!
             receiverImage = bundle.getString("receiverImage")!!
-            Log.e("chatIntent",bundle.getString("roomId")!!)
+            //Log.e("chatIntent",bundle.getString("roomId")!!)
         }
 
 
@@ -82,18 +89,16 @@ class ChatFragment: Fragment() {
         root.emoticon_add_button.setOnClickListener{
             root.chat_emoticon_group.isVisible=true
             //기본 아바타 이모티콘 설정해주기
-            setImoticon()
-
+            setEmoticon()
             //이모티콘 클릭 시 채팅에
-            selectImoticon()
+            selectEmoticon()
         }
 
 
         //원래 채팅기록 가져오기
         init_chat()
 
-
-
+        //채팅
         //1. STOMP init
         // url: ws://[도메인]/[엔드포인트]/websocket
         val url = constant.URL
@@ -120,7 +125,7 @@ class ChatFragment: Fragment() {
                             requireActivity().runOnUiThread {
                             if (result != null) {
                                 //imgae
-                                cAdapter.addItem(result,"https://cdn.pixabay.com/photo/2021/08/03/07/03/orange-6518675_960_720.jpg")
+                                cAdapter.addItem(result,receiverImage)
                                 root.recycler_chat.smoothScrollToPosition(cAdapter.itemCount)
                             }
                         }
@@ -131,7 +136,7 @@ class ChatFragment: Fragment() {
                         jsonObject.put("type", "ENTER")
                         jsonObject.put("roomId", constant.CHATROOM_ID)
                         jsonObject.put("sender", constant.SENDER)
-                        jsonObject.put("receiver",receiver)
+                        jsonObject.put("fileUrl",selectEmoticonUrl)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
@@ -142,9 +147,8 @@ class ChatFragment: Fragment() {
                             jsonObject.put("type", "TALK")
                             jsonObject.put("roomId", constant.CHATROOM_ID)
                             jsonObject.put("sender", constant.SENDER)
-                            jsonObject.put("receiver", receiver)
                             jsonObject.put("message", root.message.text.toString())
-                           // jsonObject.put("fileUrl")
+                            jsonObject.put("fileUrl",selectEmoticonUrl)
                         } catch (e: JSONException) {
                             e.printStackTrace()
                         }
@@ -189,28 +193,83 @@ class ChatFragment: Fragment() {
                 Log.e("teamDialog", "OnFailuer+${t.message}") } })
     }
 
-    fun setImoticon(){
+    fun setEmoticon(){
         val defaultImage = R.drawable.profile_none
-        //dk
+        //기본아바타
         val url = "https://cdn.pixabay.com/photo/2021/08/03/07/03/orange-6518675_960_720.jpg"
 
-        Glide.with(this)
-            .load(url) // 불러올 이미지 url
-            .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-            .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-            .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-            .circleCrop() // 동그랗게 자르기
-            .into(iv1_image)
+
+        val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
+        var retrofit2 = Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(AvatarService.API_URL)
+            .addConverterFactory(GsonConverterFactory.create()).build()
+        var apiService2 = retrofit2.create(AvatarService::class.java)
+        var myavatar = apiService2.get_myAvatar()
+
+        myavatar.enqueue(object : Callback<myAvatarRes> {
+            override fun onResponse(call: Call<myAvatarRes>, response: Response<myAvatarRes>) {
+                if (response.isSuccessful) {
+                    var res = response.body()!!
+                    Log.e("avatar", res.toString())
+
+                    for(i: avatarBody in res.list){
+                        Log.e("avatar", i.isBasic.toString())
+                        if(i.isBasic==true) {
+                            Log.e("avatar", i.emoticons[0].emoticonUrl!!)
+                            url1= i.emoticons[0].emoticonUrl!!
+                            url2= i.emoticons[1].emoticonUrl!!
+                            url3= i.emoticons[2].emoticonUrl!!
+                            url4= i.emoticons[3].emoticonUrl!!
+                            Glide.with(requireContext())
+                                .load(url1) // 불러올 이미지 url
+                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                                .circleCrop() // 동그랗게 자르기
+                                .into(iv1_image)
+                            Glide.with(requireContext())
+                                .load(url2) // 불러올 이미지 url
+                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                                .circleCrop() // 동그랗게 자르기
+                                .into(iv2_image)
+
+                            Glide.with(requireContext())
+                                .load(url3) // 불러올 이미지 url
+                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                                .circleCrop() // 동그랗게 자르기
+                                .into(iv3_image)
+
+                            Glide.with(requireContext())
+                                .load(url4) // 불러올 이미지 url
+                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                                .circleCrop() // 동그랗게 자르기
+                                .into(iv4_image)
+                        }
+                    }
+                } }
+
+            override fun onFailure(call: Call<myAvatarRes>, t: Throwable) {
+                Log.e("avatar", "OnFailuer+${t.message}")
+            } })
+
+
     }
-/*
-    fun selectImoticon(){
+
+    fun selectEmoticon(){
         //이미지 선택
         iv1.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
             if (b) {
                 iv2.setChecked(false)
                 iv3.setChecked(false)
                 iv4.setChecked(false)
-                imageName = "profile_basic1"
+                selectEmoticonUrl = url1
             }
         })
         iv2.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
@@ -218,7 +277,7 @@ class ChatFragment: Fragment() {
                 iv1.setChecked(false)
                 iv3.setChecked(false)
                 iv4.setChecked(false)
-                imageName = "profile_basic2"
+                selectEmoticonUrl = url2
             }
         })
         iv3.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
@@ -226,7 +285,7 @@ class ChatFragment: Fragment() {
                 iv1.setChecked(false)
                 iv2.setChecked(false)
                 iv4.setChecked(false)
-                imageName = "profile_basic3"
+                selectEmoticonUrl = url3
             }
         })
         iv4.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
@@ -234,11 +293,11 @@ class ChatFragment: Fragment() {
                 iv1.setChecked(false)
                 iv2.setChecked(false)
                 iv3.setChecked(false)
-                imageName = "profile_basic4"
+                selectEmoticonUrl = url4
             }
 
         })
-    }*/
+    }
 
 }
 
