@@ -22,6 +22,10 @@ data class Chat (
         @Json(name = "sender")
         val sender: String,
         @Json(name = "message")
+        val message: String,
+        @Json(name = "receiver")
+        val message: String,
+        @Json(name = "receiver")
         val message: String
 )
 

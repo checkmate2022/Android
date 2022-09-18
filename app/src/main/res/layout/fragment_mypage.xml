@@ -78,21 +78,18 @@
                     android:topLeftRadius="30dp"
                     android:topRightRadius="30dp"
                     android:id="@+id/pf_img"
-                    android:src="@drawable/exampleimage"
                     android:layout_width="100dp"
                     android:layout_height="100dp" />
-
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-
-
-                </LinearLayout>
-
+                    android:layout_marginBottom="10dp"
+                    android:letterSpacing="-0.05"
+                    android:layout_marginTop="5dp"
+                    android:text="기본정보"
+                    android:id="@+id/pf_avatar_name"
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
 
 
             </LinearLayout>
@@ -115,7 +112,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"
                         android:letterSpacing="-0.05"
-                        android:text="기본정보"
+                        android:text="사용자 정보"
                         android:textColor="@color/white"
                         android:textSize="20dp" />
 

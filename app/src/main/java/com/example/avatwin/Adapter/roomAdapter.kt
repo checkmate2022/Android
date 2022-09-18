@@ -4,9 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.avatwin.Auth.App
 import com.example.avatwin.DataClass.chatBody
 import com.example.avatwin.R
+import kotlinx.android.synthetic.main.item_avatar.view.*
 import kotlinx.android.synthetic.main.item_chat_list.view.*
 
 
@@ -48,7 +50,16 @@ class roomAdapter(var item:ArrayList<chatBody>):RecyclerView.Adapter<roomAdapter
 
         fun setItem(item:chatBody){
 
-            itemView.sender_txt_nickname.text = item.name}
+            if(App.prefs.userId==item.username1){
+                Glide.with(itemView).load(item.userImage2).into(itemView.sender_img)
+                itemView.sender_txt_nickname.text = item.username2
+            }
+            else{
+                Glide.with(itemView).load(item.userImage1).into(itemView.sender_img)
+                itemView.sender_txt_nickname.text = item.username1
+            }
+
+            }
 
     }
 

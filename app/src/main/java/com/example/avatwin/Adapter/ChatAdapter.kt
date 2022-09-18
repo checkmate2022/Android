@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.avatwin.Constant
 import com.example.avatwin.DataClass.Chat
 import com.example.avatwin.R
+import kotlinx.android.synthetic.main.fragment_chat.*
 
 
 class ChatAdapter(val context: Context)
@@ -36,6 +37,7 @@ class ChatAdapter(val context: Context)
         val mid = itemView.findViewById<TextView>(R.id.mid)
         val chatItem = itemView.findViewById<TextView>(R.id.messageTextView)
         val senderImage = itemView.findViewById<ImageView>(R.id.sender_img)
+        val imoticon = itemView.findViewById<ImageView>(R.id.imoticon)
         fun bind(chatData: Chat, context: Context){
             val viewType = itemViewType
 
@@ -46,7 +48,16 @@ class ChatAdapter(val context: Context)
                     chatItem.text = chatData.message}
                 else -> {
                     //senderImage
-                    Glide.with(itemView).load(receiverImage).into(senderImage)
+                    val defaultImage = R.drawable.profile_none
+
+                    Glide.with(itemView)
+                        .load(receiverImage) // 불러올 이미지 url
+                        .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                        .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                        .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                        .circleCrop() // 동그랗게 자르기
+                        .into(senderImage)
+                    //Glide.with(itemView).load(receiverImage).into(senderImage)
                     mid.text = chatData.sender
                     chatItem.text = chatData.message
                 }

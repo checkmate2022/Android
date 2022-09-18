@@ -6,27 +6,34 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.beust.klaxon.Klaxon
-import com.example.avatwin.Adapter.Team.teamSearchListAdapter
+import com.bumptech.glide.Glide
 import com.example.avatwin.Auth.*
 import com.example.avatwin.Constant
 import com.example.avatwin.DataClass.Chat
 import com.example.avatwin.DataClass.chatMessageGetBody
-import com.example.avatwin.DataClass.chatUserGetBody
-import com.example.avatwin.DataClass.userGetBody2
 import com.example.avatwin.R
 import com.example.avatwin.Service.ChatService
-import com.example.avatwin.Service.UserService
 import com.example.testchat.adapter.ChatAdapter
-import com.example.testchat.adapter.roomAdapter
+import com.gmail.bishoybasily.stomp.lib.Event
+import com.gmail.bishoybasily.stomp.lib.StompClient
 import com.google.gson.*
+import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.dialog_member_search.view.*
+import kotlinx.android.synthetic.main.fragment_avatar_register.view.*
 import kotlinx.android.synthetic.main.fragment_board_list.view.*
+import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.fragment_chat.view.*
 import kotlinx.android.synthetic.main.fragment_chat_list.*
 import kotlinx.android.synthetic.main.fragment_chat_list.view.*
+import kotlinx.android.synthetic.main.fragment_mypage.view.*
+import kotlinx.android.synthetic.main.fragment_team_register.*
+import kotlinx.android.synthetic.main.item_chat_list.view.*
 import okhttp3.OkHttpClient
 import org.json.JSONException
 import org.json.JSONObject
@@ -34,16 +41,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import com.gmail.bishoybasily.stomp.lib.Event
-import com.gmail.bishoybasily.stomp.lib.StompClient
-import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.dialog_member_search.view.*
-import kotlinx.android.synthetic.main.fragment_chat.*
-import kotlinx.android.synthetic.main.fragment_team_register.*
-import kotlinx.android.synthetic.main.item_chat_list.view.*
 
 class ChatFragment: Fragment() {
 
@@ -54,6 +53,9 @@ class ChatFragment: Fragment() {
     lateinit var stompConnection: Disposable
     lateinit var topic: Disposable
     var receiverImage=""
+    var receiver=""
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +68,7 @@ class ChatFragment: Fragment() {
         if(bundle != null) {
             constant.set(App.prefs.userId.toString(), bundle.getString("roomId")!!)
             root.chat_sender.text=bundle.getString("receiver")
+            receiver= bundle.getString("receiver")!!
             receiverImage = bundle.getString("receiverImage")!!
             Log.e("chatIntent",bundle.getString("roomId")!!)
         }
@@ -76,10 +79,19 @@ class ChatFragment: Fragment() {
         root.recycler_chat.layoutManager = LinearLayoutManager(requireContext())
         root.recycler_chat.setHasFixedSize(true)
 
+        root.emoticon_add_button.setOnClickListener{
+            root.chat_emoticon_group.isVisible=true
+            //기본 아바타 이모티콘 설정해주기
+            setImoticon()
+
+            //이모티콘 클릭 시 채팅에
+            selectImoticon()
+        }
+
 
         //원래 채팅기록 가져오기
-
         init_chat()
+
 
 
         //1. STOMP init
@@ -108,7 +120,7 @@ class ChatFragment: Fragment() {
                             requireActivity().runOnUiThread {
                             if (result != null) {
                                 //imgae
-                                cAdapter.addItem(result,receiverImage)
+                                cAdapter.addItem(result,"https://cdn.pixabay.com/photo/2021/08/03/07/03/orange-6518675_960_720.jpg")
                                 root.recycler_chat.smoothScrollToPosition(cAdapter.itemCount)
                             }
                         }
@@ -119,6 +131,7 @@ class ChatFragment: Fragment() {
                         jsonObject.put("type", "ENTER")
                         jsonObject.put("roomId", constant.CHATROOM_ID)
                         jsonObject.put("sender", constant.SENDER)
+                        jsonObject.put("receiver",receiver)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
@@ -129,7 +142,9 @@ class ChatFragment: Fragment() {
                             jsonObject.put("type", "TALK")
                             jsonObject.put("roomId", constant.CHATROOM_ID)
                             jsonObject.put("sender", constant.SENDER)
+                            jsonObject.put("receiver", receiver)
                             jsonObject.put("message", root.message.text.toString())
+                           // jsonObject.put("fileUrl")
                         } catch (e: JSONException) {
                             e.printStackTrace()
                         }
@@ -165,19 +180,65 @@ class ChatFragment: Fragment() {
                 if (response.isSuccessful) {
                     var mList = response.body()!!
 
-                    for( i: Int in 0..mList.list.size-1){
-                        if(mList.list[i].type!="ENTER"){
-                            cAdapter.chatDatas.add(mList.list[i])}
-                    }
-
-                }
-            }
+                    for( i: Int in 0..mList.list.size-1) {
+                        if (mList.list[i].type != "ENTER") {
+                            cAdapter.chatDatas.add(mList.list[i])
+                        } } } }
 
             override fun onFailure(call: Call<chatMessageGetBody>, t: Throwable) {
-                Log.e("teamDialog", "OnFailuer+${t.message}")
+                Log.e("teamDialog", "OnFailuer+${t.message}") } })
+    }
+
+    fun setImoticon(){
+        val defaultImage = R.drawable.profile_none
+        //dk
+        val url = "https://cdn.pixabay.com/photo/2021/08/03/07/03/orange-6518675_960_720.jpg"
+
+        Glide.with(this)
+            .load(url) // 불러올 이미지 url
+            .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+            .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+            .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+            .circleCrop() // 동그랗게 자르기
+            .into(iv1_image)
+    }
+/*
+    fun selectImoticon(){
+        //이미지 선택
+        iv1.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                iv2.setChecked(false)
+                iv3.setChecked(false)
+                iv4.setChecked(false)
+                imageName = "profile_basic1"
             }
         })
-    }
+        iv2.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                iv1.setChecked(false)
+                iv3.setChecked(false)
+                iv4.setChecked(false)
+                imageName = "profile_basic2"
+            }
+        })
+        iv3.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                iv1.setChecked(false)
+                iv2.setChecked(false)
+                iv4.setChecked(false)
+                imageName = "profile_basic3"
+            }
+        })
+        iv4.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                iv1.setChecked(false)
+                iv2.setChecked(false)
+                iv3.setChecked(false)
+                imageName = "profile_basic4"
+            }
+
+        })
+    }*/
 
 }
 
