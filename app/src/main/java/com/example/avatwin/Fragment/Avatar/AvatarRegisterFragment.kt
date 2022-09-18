@@ -27,7 +27,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.avatwin.Adapter.Avatar.avatarExampleAdapter
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.myAvatarRes
-import com.example.avatwin.Fragment.MyPageFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.AvatarService
 import com.google.gson.GsonBuilder
@@ -55,6 +54,10 @@ class AvatarRegisterFragment  : Fragment(){
     var creadImageFile: InputStream? = null
     var c_imageFile: File? = null
     var requestBodyProfile2:RequestBody?=null
+    var sadUrl=""
+    var happyUrl=""
+    var winkUrl=""
+    var angryUrl=""
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_avatar_register, container, false)
@@ -123,6 +126,9 @@ class AvatarRegisterFragment  : Fragment(){
           }
 
     }
+    //apiService.make_avatar(
+//    multipartBodyProfile,"webtoon", 13,"ww"
+//).en
     fun makeAvatar(avatarName: String, avatarStyle: String, avatarStyleId: Long){
         try {
             val gson = GsonBuilder()
@@ -232,21 +238,24 @@ class AvatarRegisterFragment  : Fragment(){
                     "originfile", m_imageFile!!.name, requestBodyProfile
             )
             val multipartBodyProfile2 = MultipartBody.Part.createFormData(
-                    "createdfile", m_imageFile!!.name, requestBodyProfile2
+                    "createdfile", c_imageFile!!.name, requestBodyProfile2
             )
+            val nameBody = RequestBody.create(MediaType.parse("text/plain"), "cartoon")
             apiService.post_avatar(
                     multipartBodyProfile,
-                    multipartBodyProfile2, avatarName, avatarDescription, avatarStyle, avatarStyleId
+                    multipartBodyProfile2, avatarName, avatarDescription,"cartoon", avatarStyleId,"d",
+                "D","d","d"
             ).enqueue(object : Callback<myAvatarRes> {
                 override fun onResponse(call: Call<myAvatarRes>, response: Response<myAvatarRes>) {
                     val newProfileUpdataResult = response.body()
-                    val fragmentA = MyPageFragment()
+                    Log.e("avatar",newProfileUpdataResult.toString())
+                   /* val fragmentA = MyPageFragment()
                     val bundle = Bundle()
                     fragmentA.arguments = bundle
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
                     transaction.add(R.id.container, fragmentA)
                     transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
-                    transaction.commit()
+                    transaction.commit()*/
                 }
 
                 override fun onFailure(call: Call<myAvatarRes>, t: Throwable) {
@@ -415,6 +424,76 @@ class AvatarRegisterFragment  : Fragment(){
             R.drawable.caricuture1,
             R.drawable.caricuture2,
             R.drawable.caricuture3)
+    }
+
+    fun makeEmotiron(){
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+        val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
+        var retrofit = Retrofit.Builder()
+            .baseUrl(AvatarService.API_URL2)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(ScalarsConverterFactory.create()).build()
+
+        var apiService = retrofit.create(AvatarService::class.java)
+
+
+        val requestBodyProfile = RequestBody.create(
+            MediaType.parse("image/jpeg"), c_imageFile
+        )
+
+        val multipartBodyProfile = MultipartBody.Part.createFormData(
+            "file", c_imageFile!!.name, requestBodyProfile
+        )
+
+        apiService.make_emoticon(
+            multipartBodyProfile
+        ).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+//  var sadUrl=""
+//    var happyUrl=""
+//    var winkUrl=""
+//    var angryUrl=""
+                //서버에서 아바타등록시" 이거 제거해야함
+                /*
+                  Glide.with(requireContext())
+                                .load(url1) // 불러올 이미지 url
+                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                                .circleCrop() // 동그랗게 자르기
+                                .into(iv1_image)
+                            Glide.with(requireContext())
+                                .load(url2) // 불러올 이미지 url
+                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                                .circleCrop() // 동그랗게 자르기
+                                .into(iv2_image)
+
+                            Glide.with(requireContext())
+                                .load(url3) // 불러올 이미지 url
+                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                                .circleCrop() // 동그랗게 자르기
+                                .into(iv3_image)
+
+                            Glide.with(requireContext())
+                                .load(url4) // 불러올 이미지 url
+                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
+                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
+                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
+                                .circleCrop() // 동그랗게 자르기
+                                .into(iv4_image)
+                 */
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.e("avatar_create", "OnFailuer+${t.message}")
+            }
+        })
     }
 }
 

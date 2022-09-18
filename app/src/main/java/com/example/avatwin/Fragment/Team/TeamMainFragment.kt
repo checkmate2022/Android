@@ -76,9 +76,9 @@ class TeamMainFragment() : Fragment() {
             teamMaker= it.getString("teamMaker").toString()
         }
 
-        if(teamMaker==App.prefs.userId){
+       /* if(teamMaker==App.prefs.userId){
             root.team_update_button.isVisible=true
-        }
+        }*/
 
 
         //일정추가 페이지로 이동

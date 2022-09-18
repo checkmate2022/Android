@@ -22,9 +22,13 @@ interface AvatarService {
         @Part originfile: MultipartBody.Part,
         @Part createdfile: MultipartBody.Part,
         @Part("avatarName") avatarName: String,
-        @Part("avatarDescription") avatarDescription: String,
+        @Part("avatarDescription") avatarDescription:String ,
         @Part("avatarStyle") avatarStyle: String,
         @Part("avatarStyleId") avatarStyleId: Long,
+        @Part("sadEmoticon") sadEmoticon: String,
+        @Part("happyEmoticon") happyEmoticon: String,
+        @Part("winkEmoticon") winkEmoticon: String,
+        @Part("angryEmoticon") angryEmoticon: String,
     ): Call<myAvatarRes>
 
     //캐릭터 수정
@@ -64,8 +68,31 @@ interface AvatarService {
         @Part("user_id") id: Long,
     ): Call<ResponseBody>
 
+    //아바타 변형
+    @Multipart
+    @POST("aa")
+    fun make_avatar(
+        @Part file: MultipartBody.Part,
+        @Part("style")style: String,
+        @Part("id")id: Long,
+        @Part("name")name: String,
+
+        ): Call<ResponseBody>
+
     //아바타삭제
     @DELETE("avatar/{avatarId}")
     fun delete_avatar(@Path("avatarId") avatarId:Long):Call<avatarDelRes>
+
+    //아바타 기본설정
+    @GET("avatar/isBasic/{avatarId}")
+    fun basic_avatar(@Path("avatarId") avatarId:Long):Call<avatarDelRes>
+
+    //이모티콘생성
+    @Multipart
+    @POST("aa")
+    fun make_emoticon(
+        @Part file: MultipartBody.Part,
+
+        ): Call<ResponseBody>
 }
 

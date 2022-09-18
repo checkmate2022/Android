@@ -129,7 +129,7 @@ class ChatListFragment: Fragment() {
                   Callback<chatGetBody> {
               override fun onResponse(call: Call<chatGetBody>, response: Response<chatGetBody>) {
                   val result = response.body()
-                    //data update해야함, fragment에서 할까.
+
                   adapter.addItem(result!!.data)
                   adapter.notifyDataSetChanged()
               }

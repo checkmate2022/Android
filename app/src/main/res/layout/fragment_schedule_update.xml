@@ -270,14 +270,14 @@
                     android:letterSpacing="-0.05"
                     android:textColor="@color/black"
                     android:textSize="12dp"
-                    app:layout_constraintBottom_toTopOf="@+id/register_nickname"
+                    app:layout_constraintBottom_toTopOf="@+id/update_memberList"
                     app:layout_constraintStart_toEndOf="@+id/register_nickname_title"
                     app:layout_constraintTop_toTopOf="parent"
 
                     />
 
                 <EditText
-                    android:id="@+id/register_nickname"
+                    android:id="@+id/update_memberList"
                     android:layout_width="0dp"
                     android:layout_marginRight="10dp"
                     android:hint=""
