@@ -41,7 +41,10 @@ class ScheduleDetailFragment(var item: scheduleBody): Fragment() {
         for (i :String in item.participants){
             participantName = participantName+ " "+i}
         root.detail_participant.text = participantName}
-        root.detail_notice.text=item.notificationTime.toString()+"분 전"
+        if(item.notificationTime==0){
+            root.detail_notice.text="알람 없음"
+        }else{
+        root.detail_notice.text=item.notificationTime.toString()+"분 전"}
         registerForContextMenu(root.btn_mores)
         return root
     }

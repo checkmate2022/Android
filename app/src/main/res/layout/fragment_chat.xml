@@ -41,7 +41,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_chat"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="550dp"
             android:clipToPadding="false"
             android:overScrollMode="never"
             android:padding="15dp"
@@ -51,7 +51,136 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <LinearLayout
+            android:id="@+id/chat_emoticon_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:visibility="invisible"
+            android:orientation="vertical"
+            >
 
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:text="이모티콘"
+                        android:textColor="@color/grayDark"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="-0.05"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!--윗줄-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/iv1"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp" />
+
+                                <ImageView
+                                    android:id="@+id/iv1_image"
+                                    android:layout_width="50dp"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/iv2"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp" />
+
+                                <ImageView
+                                    android:id="@+id/iv2_image"
+                                    android:layout_width="50dp"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/iv3"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp" />
+
+                                <ImageView
+                                    android:id="@+id/iv3_image"
+                                    android:layout_width="50dp"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!--아랫줄-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/iv4"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp" />
+
+                                <ImageView
+                                    android:id="@+id/iv4_image"
+                                    android:layout_width="100dp"
+                                    android:layout_height="80dp" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
     <!--입력창-->
     <View
         android:id="@+id/chat_underline2"
@@ -101,130 +230,21 @@
             android:textSize="12dp" />
 
     </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/chat_emoticon_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:visibility="gone"
-            android:orientation="vertical"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:gravity="center_vertical"
-                android:text="이모티콘"
-                android:textColor="@color/grayDark"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:letterSpacing="-0.05"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <!--윗줄-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <CheckBox
-                            android:id="@+id/iv1"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp" />
-
-                        <ImageView
-                            android:id="@+id/iv1_image"
-                            android:layout_width="50dp"
-                            android:layout_height="80dp"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <CheckBox
-                            android:id="@+id/iv2"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp" />
-
-                        <ImageView
-                            android:id="@+id/iv2_image"
-                            android:layout_width="50dp"
-                            android:layout_height="80dp"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <CheckBox
-                            android:id="@+id/iv3"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp" />
-
-                        <ImageView
-                            android:id="@+id/iv3_image"
-                            android:layout_width="50dp"
-                            android:layout_height="80dp"
-                            android:layout_weight="1"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!--아랫줄-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <CheckBox
-                            android:id="@+id/iv4"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp" />
-
-                        <ImageView
-                            android:id="@+id/iv4_image"
-                            android:layout_width="50dp"
-                            android:layout_height="80dp"
-                            android:layout_weight="1"/>
-                    </LinearLayout>
-
-
-                </LinearLayout>
-            </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:letterSpacing="-0.05"/>
 
 
 
         </LinearLayout>
 
+</ScrollView>
     </LinearLayout>
 
 
-
-</ScrollView>
-</LinearLayout>

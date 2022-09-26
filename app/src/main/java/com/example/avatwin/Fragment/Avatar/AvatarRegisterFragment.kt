@@ -24,13 +24,16 @@ import androidx.core.content.FileProvider
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.example.avatwin.Adapter.Avatar.avatarExampleAdapter
 import com.example.avatwin.Auth.AuthInterceptor
 import com.example.avatwin.DataClass.myAvatarRes
+import com.example.avatwin.Fragment.MyPageFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.AvatarService
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.fragment_avatar_register.*
+import kotlinx.android.synthetic.main.fragment_chat.*
 import okhttp3.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -112,15 +115,22 @@ class AvatarRegisterFragment  : Fragment(){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 //Log.d("ViewPagerFragment", "Page ${position}")
-                styleId=position
+                styleId=10
+                register_avatar_styleid.setText("10")
             }
         })
 
-
+        //아바타 변형
         avatar_created_button.setOnClickListener{
          makeAvatar(register_avatar_name.getText().toString(), avatar_style, styleId.toLong())
         }
 
+        //이모티콘 생성
+        avatar_imo_button.setOnClickListener{
+           melonEmotikon()
+        }
+
+        //아바타 등록
         register_avatar_button.setOnClickListener{
             registerAvatar(register_avatar_name.getText().toString(), register_avatar_description.getText().toString(), avatar_style, register_avatar_styleid.getText().toString().toLong())
           }
@@ -152,7 +162,7 @@ class AvatarRegisterFragment  : Fragment(){
             )
 
             apiService.make_avatar(
-                    multipartBodyProfile, avatarStyleId
+                    multipartBodyProfile, 10
             ).enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     //미리보기
@@ -249,13 +259,13 @@ class AvatarRegisterFragment  : Fragment(){
                 override fun onResponse(call: Call<myAvatarRes>, response: Response<myAvatarRes>) {
                     val newProfileUpdataResult = response.body()
                     Log.e("avatar",newProfileUpdataResult.toString())
-                   /* val fragmentA = MyPageFragment()
+                    val fragmentA = MyPageFragment()
                     val bundle = Bundle()
                     fragmentA.arguments = bundle
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
                     transaction.add(R.id.container, fragmentA)
                     transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
-                    transaction.commit()*/
+                    transaction.commit()
                 }
 
                 override fun onFailure(call: Call<myAvatarRes>, t: Throwable) {
@@ -422,8 +432,27 @@ class AvatarRegisterFragment  : Fragment(){
         return arrayListOf<Int>(
             R.drawable.caricuture0,
             R.drawable.caricuture1,
+            R.drawable.caricuture4,
             R.drawable.caricuture2,
-            R.drawable.caricuture3)
+            R.drawable.caricuture3
+            )
+    }
+
+    fun melonEmotikon(){
+        Glide.with(requireContext())
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/angry_melon.png") // 불러올 이미지 url
+            .into(re_i1)
+        Glide.with(requireContext())
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/happy_melon.png") // 불러올 이미지 url
+            .into(re_i2)
+
+        Glide.with(requireContext())
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/sad_melon.png") // 불러올 이미지 url
+            .into(re_i3)
+
+        Glide.with(requireContext())
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/wink_melon.png") // 불러올 이미지 url
+            .into(re_i4)
     }
 
     fun makeEmotiron(){
