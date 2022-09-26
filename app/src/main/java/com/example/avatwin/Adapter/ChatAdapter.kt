@@ -64,7 +64,9 @@ class ChatAdapter(val context: Context)
                         .into(senderImage)
 
                     mid.text = chatData.sender
-                    chatItem.text = chatData.message
+
+                        chatItem.text = chatData.message
+
                    if(chatData.fileUrl!=""){
                        emoticon.visibility = View.VISIBLE
                         Glide.with(itemView)

@@ -16,7 +16,7 @@
         android:background="@drawable/btn_teal_off"
         android:text="로그인"
         android:textSize="14dp"
-        android:textColor="@color/purple_700"
+        android:textColor="@color/purple_500"
         android:letterSpacing="-0.05"/>
 
 </androidx.cardview.widget.CardView>

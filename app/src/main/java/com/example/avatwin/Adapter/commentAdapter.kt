@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.avatwin.DataClass.*
 import com.example.avatwin.Fragment.Board.BoardDetailFragment
 import com.example.avatwin.Fragment.Team.TeamRegisterFragment
@@ -55,7 +56,7 @@ class commentAdapter():RecyclerView.Adapter<commentAdapter.ViewHolder>(){
             itemView.comment_username.text = item.username
             itemView.comment_content.text = item.content
            // var a= URLDecoder.decode(item.image!!.substring(ApiService.API_URL.length+1), "utf-8");
-            //Glide.with(itemView).load(item.image!!).into(itemView.limg)
+            Glide.with(itemView).load(item.userImage).into(itemView.comment_userimage)
 
         }
     }

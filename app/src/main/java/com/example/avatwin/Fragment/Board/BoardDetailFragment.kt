@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.avatwin.Adapter.boardAdapter
 import com.example.avatwin.Adapter.commentAdapter
 import com.example.avatwin.Auth.*
@@ -33,7 +34,9 @@ import kotlinx.android.synthetic.main.dialog_schedule_list.*
 import kotlinx.android.synthetic.main.fragment_board.*
 import kotlinx.android.synthetic.main.fragment_board.view.*
 import kotlinx.android.synthetic.main.fragment_board_list.view.*
+import kotlinx.android.synthetic.main.fragment_mypage.view.*
 import kotlinx.android.synthetic.main.item_comment.*
+import kotlinx.android.synthetic.main.item_comment.view.*
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -109,6 +112,7 @@ class BoardDetailFragment(): Fragment() {
             override fun onResponse(call: Call<boardGetBodyById>, response: Response<boardGetBodyById>) {
                 if (response.isSuccessful) {
                     var mList = response.body()!!
+
                     //날짜
                     var date = mList.data.createDate.toString().substring(0,10)+" "+mList.data.createDate.toString().substring(11,16)
                     board_detail_date.setText(date)
@@ -116,6 +120,7 @@ class BoardDetailFragment(): Fragment() {
                     board_detail_title.setText(mList.data.title)
                     //이미지
                     //board_detail_image
+                    Glide.with(view!!).load(mList.data.userImage).into(board_detail_image)
                     //별명
                     board_detail_name.setText(mList.data.username)
                     //내용

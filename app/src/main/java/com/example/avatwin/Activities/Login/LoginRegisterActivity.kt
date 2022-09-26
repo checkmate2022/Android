@@ -146,6 +146,7 @@ class LoginRegisterActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<userCheckBody>, t: Throwable) {
                 register_id_check_txt.setText("이미 아이디가 존재합니다.")
+                Log.e("fail",t.message.toString())
                 idValidation = false
             }
         })

@@ -6,7 +6,7 @@ import retrofit2.http.*
 
 interface TeamService {
     companion object{
-        public val API_URL = " http://10.0.2.2:8080/api/v1/"
+        public val API_URL = "http://172.20.31.3:8080/api/v1/"
     }
 
     //나의 팀 조회
