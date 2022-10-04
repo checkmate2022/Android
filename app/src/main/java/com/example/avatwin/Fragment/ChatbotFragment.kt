@@ -53,6 +53,9 @@ class ChatbotFragment:Fragment() {
     var CHECK_TYPE =false
     var CHECK_TITLE =false
     var CHECK_DATE=false
+    var CHECK_NOTIFICATION=false
+    var CHECK_NOTIFICATION_TIME=false
+    var war=false
     var startDateString = ""
     var startTimeString = ""
     var endDateString = ""
@@ -61,6 +64,8 @@ class ChatbotFragment:Fragment() {
     var end = ""
     var scheduleType=""
     var scheduleTitle=""
+    var notificationTime=""
+    var notificationDate=""
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -89,13 +94,25 @@ class ChatbotFragment:Fragment() {
                 }else if(CHECK_DATE) {
                     Log.e("bot","총일정")
                     addMessageToList(message, false)
-                    Log.e("bot","o")
+                    //Log.e("bot","o")
                     //sendFianlMessageToBot("총일정 "+scheduleType)
-                    sendFianlMessageToBot("총일정 "+start+" "+end+" "+scheduleType)
+                    sendRegisterMessageToBot("총일정 "+start+" "+end+" "+scheduleType)
                     CHECK_DATE=false
+                }else if(CHECK_NOTIFICATION) {
+                    Log.e("bot","알람")
+                    addMessageToList(message, false)
+                    notificationDate = message
+                    sendMessageToBot("지정일 "+message)
+                    CHECK_NOTIFICATION=false
+                    Log.e("bot",CHECK_NOTIFICATION.toString())
+                }else if(CHECK_NOTIFICATION_TIME) {
+                    Log.e("bot","알람시간")
+                    addMessageToList(message, false)
+                    CHECK_NOTIFICATION_TIME=false
+                    sendNotificationMessageToBot("알람 "+message+"분전")
                 }else {
-                    Log.e("Check_Date",CHECK_DATE.toString())
-                    Log.e("bot","그냥보내기")
+                    //Log.e("Check_Date",CHECK_DATE.toString())
+                    //Log.e("bot","그냥보내기")
                 addMessageToList(message, false)
                 sendMessageToBot(message)}
             } else {
@@ -155,7 +172,7 @@ class ChatbotFragment:Fragment() {
             sendMessageInBg(queryInput,s)
         }
     }
-    private fun sendFianlMessageToBot(message: String) {
+    private fun sendRegisterMessageToBot(message: String) {
 
         val queryInput = QueryInput.newBuilder()
             .setText(TextInput.newBuilder().setText(message).setLanguageCode("ko"))
@@ -182,6 +199,30 @@ class ChatbotFragment:Fragment() {
                     Value.newBuilder().setStringValue(scheduleType).build()
                 )
                 .build()
+        ).build()
+
+
+        GlobalScope.launch {
+            sendMessageInBg(queryInput,s)
+        }
+    }
+    private fun sendNotificationMessageToBot(message: String) {
+
+        val queryInput = QueryInput.newBuilder()
+            .setText(TextInput.newBuilder().setText(message).setLanguageCode("ko"))
+            .build()
+
+        val s = QueryParameters.newBuilder().setPayload(
+            Struct.newBuilder().putFields(
+                "userId",
+                Value.newBuilder().setStringValue(App.prefs.userId).build()
+            ).putFields(
+                "notificationDate",
+                Value.newBuilder().setStringValue(notificationDate).build()
+            ).putFields(
+                "notificationTime",
+                Value.newBuilder().setStringValue(notificationTime).build()
+            ).build()
         ).build()
 
 
@@ -317,12 +358,29 @@ class ChatbotFragment:Fragment() {
             dialogView.end_txt.text = endDateString+" "+endTimeString
         }
         dlg.setPositiveButton("확인") { dialog, which ->
-            start=" 시작 "+startDateString+" "+startTimeString
-            end=" 끝 "+endDateString+" "+endTimeString
+            start=" 시작 : "+startDateString+" "+startTimeString
+            end=" 끝 : "+endDateString+" "+endTimeString
             editMessage.setText(start+" "+end)
             CHECK_DATE=true
             Log.e("Check_Date",CHECK_DATE.toString())
         }
         dlg.show()
+    }
+
+    fun clickNotification(){
+        CHECK_NOTIFICATION=true
+      //  var dlg = AlertDialog.Builder(requireContext())
+      //  var dialogView = View.inflate(context, R.layout.dialog_schedule_date, null)
+     //   dlg.setView(dialogView)
+    }
+
+    fun clickNotificationTime(time: String){
+
+        notificationTime = time
+        editMessage.setText(time)
+        CHECK_NOTIFICATION=false
+        CHECK_NOTIFICATION_TIME=true
+        Log.e("bot CHECK_NOTIFICATION",CHECK_NOTIFICATION.toString())
+       // Log.e("bot",CHECK_NOTIFICATION_TIME.toString())
     }
 }

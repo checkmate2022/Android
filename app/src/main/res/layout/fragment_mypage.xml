@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context=".Fragment.MyPageFragment"
     android:focusable="true"
+    android:background="@color/ivory"
     android:focusableInTouchMode="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -69,6 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
+
                 android:orientation="vertical"
                 android:padding="30dp">
 
@@ -78,43 +80,27 @@
                     android:topLeftRadius="30dp"
                     android:topRightRadius="30dp"
                     android:id="@+id/pf_img"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:letterSpacing="-0.05"
-                    android:layout_marginTop="5dp"
-                    android:text="기본정보"
-                    android:id="@+id/pf_avatar_name"
-                    android:textColor="@color/black"
-                    android:textSize="18dp" />
+                    android:layout_width="120dp"
+                    android:src="@drawable/profile_none"
+                    android:layout_height="120dp" />
+
 
 
             </LinearLayout>
 
             <!--기본정보-->
             <LinearLayout
-                android:layout_width="match_parent"
+              android:layout_marginLeft="30dp"
+                android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/backgrount_round_profile"
                 android:padding="30dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:letterSpacing="-0.05"
-                        android:text="사용자 정보"
-                        android:textColor="@color/white"
-                        android:textSize="20dp" />
 
                 </LinearLayout>
 
@@ -129,6 +115,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:layout_marginTop="10dp"
                         android:orientation="vertical"
                         android:layout_marginRight="10dp">
 
@@ -140,12 +127,12 @@
                             android:layout_marginBottom="10dp">
 
                             <TextView
-                                android:layout_width="60dp"
-                                android:layout_height="30dp"
+                                android:layout_width="100dp"
+                                android:layout_height="35dp"
                                 android:layout_marginRight="15dp"
                                 android:background="@drawable/btn_white"
                                 android:gravity="center"
-                                android:text="아이디"
+                                android:text="아바타 이름"
                                 android:textSize="14dp"
                                 android:textStyle="bold"
                                 android:textColor="@color/colorPrimaryDark"
@@ -153,7 +140,7 @@
 
                             <EditText
                                android:enabled="false"
-                                android:id="@+id/pf_id"
+                                android:id="@+id/pf_avatar_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:letterSpacing="-0.05"
@@ -172,8 +159,38 @@
                             android:layout_marginBottom="10dp">
 
                             <TextView
-                                android:layout_width="60dp"
-                                android:layout_height="30dp"
+                                android:layout_width="100dp"
+                                android:layout_height="35dp"
+                                android:layout_marginRight="15dp"
+                                android:background="@drawable/btn_white"
+                                android:gravity="center"
+                                android:text="아이디"
+                                android:textSize="14dp"
+                                android:textStyle="bold"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:letterSpacing="-0.05"/>
+
+                            <EditText
+                                android:enabled="false"
+                                android:id="@+id/pf_id"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:letterSpacing="-0.05"
+                                android:text=""
+                                android:background="@null"
+                                android:textColor="@color/white"
+                                android:textSize="14dp" />
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="10dp">
+
+                            <TextView
+                                android:layout_width="100dp"
+                                android:layout_height="35dp"
                                 android:layout_marginRight="15dp"
                                 android:background="@drawable/btn_white"
                                 android:gravity="center"
@@ -195,73 +212,73 @@
                                 android:textSize="14dp" />
 
                         </LinearLayout>
-
                     </LinearLayout>
 
                 </LinearLayout>
             </LinearLayout>
 
             <!--캐릭터 정보-->
+
+            <!--Footer-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:orientation="vertical"
-                android:background="@color/ivory"
-                android:padding="30dp">
+                android:padding="20dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@color/ivory">
+                    android:background="@color/ivory"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="캐릭터"
-                    android:textSize="20dp"
-                    android:textColor="@color/colorPrimary"
-                    android:letterSpacing="-0.05"
-                    android:layout_marginBottom="10dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:letterSpacing="-0.05"
+                        android:text="아바타"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="20dp" />
 
                     <Button
                         android:id="@+id/av_add"
                         style="@style/registerEditText"
-                        android:layout_width="50dp"
+                        android:layout_width="52dp"
                         android:layout_height="35dp"
-                        android:layout_marginTop="36dp"
-                        android:layout_marginLeft="250dp"
                         android:layout_gravity="right"
+                        android:layout_marginLeft="250dp"
+                        android:layout_marginTop="36dp"
                         android:layout_marginRight="30dp"
                         android:background="@drawable/btn_pup"
-
                         android:text="+"
                         android:textColor="@color/white"
                         android:textSize="14dp" />
 
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:gravity="center"
+                    android:orientation="horizontal"
                     android:padding="16dp">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView_avatar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:overScrollMode="never"
-                    android:layout_marginBottom="5dp" />
-
-
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView_avatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:nestedScrollingEnabled="false"
+                        android:overScrollMode="never" />
 
 
                 </LinearLayout>
             </LinearLayout>
 
-            <!--Footer-->
             <LinearLayout
                 android:id="@+id/footer"
                 android:layout_width="match_parent"
