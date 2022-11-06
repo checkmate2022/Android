@@ -101,7 +101,11 @@ class AvatarRegisterFragment  : Fragment(){
 
                 R.id.caricature -> avatar_style = "caricature"
 
-                R.id.anime -> avatar_style = "anime"
+                R.id.webtoon -> {
+                    avatar_style = "webtoon"
+                    viewPager_image.adapter = avatarExampleAdapter(getWebtoons())
+                }
+
             }
         }
 
@@ -115,8 +119,9 @@ class AvatarRegisterFragment  : Fragment(){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 //Log.d("ViewPagerFragment", "Page ${position}")
-                styleId=10
-                register_avatar_styleid.setText("10")
+               //
+                styleId=1
+                register_avatar_styleid.setText("1")
             }
         })
 
@@ -438,20 +443,27 @@ class AvatarRegisterFragment  : Fragment(){
             )
     }
 
+    private fun getWebtoons(): ArrayList<Int> {
+        return arrayListOf<Int>(
+            R.drawable.webtoon
+
+        )
+    }
+
     fun melonEmotikon(){
         Glide.with(requireContext())
-            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/angry_melon.png") // 불러올 이미지 url
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/sad.png") // 불러올 이미지 url
             .into(re_i1)
         Glide.with(requireContext())
-            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/happy_melon.png") // 불러올 이미지 url
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/wink.png") // 불러올 이미지 url
             .into(re_i2)
 
         Glide.with(requireContext())
-            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/sad_melon.png") // 불러올 이미지 url
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/happy.png") // 불러올 이미지 url
             .into(re_i3)
 
         Glide.with(requireContext())
-            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/wink_melon.png") // 불러올 이미지 url
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/angry.png") // 불러올 이미지 url
             .into(re_i4)
     }
 

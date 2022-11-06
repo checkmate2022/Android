@@ -11,9 +11,10 @@ import java.io.File
 
 interface AvatarService {
     companion object{
-        public val API_URL = " http://192.168.0.14:8080/api/v1/"
-        public val API_URL2 = "http://192.168.0.14:5000/"
-        // http://127:5000/
+        public val API_URL = " http://10.0.2.2:8080/api/v1/"
+        public val API_URL2 = "http://10.0.2.2:5000/"
+        // http://127:5000/ 10.0.2.2:8080
+        // public val API_URL2 = "http://172.20.9.2:5000/"
     }
 
     //캐릭터 등록

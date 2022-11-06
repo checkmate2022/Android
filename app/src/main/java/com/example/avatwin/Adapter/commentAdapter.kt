@@ -3,6 +3,7 @@ package com.example.avatwin.Adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.avatwin.DataClass.*
@@ -54,9 +55,13 @@ class commentAdapter():RecyclerView.Adapter<commentAdapter.ViewHolder>(){
 
         fun setItem(item:commentBody){
             itemView.comment_username.text = item.username
+            if(item.content==""){
+                itemView.comment_content.visibility= View.GONE
+            }
             itemView.comment_content.text = item.content
            // var a= URLDecoder.decode(item.image!!.substring(ApiService.API_URL.length+1), "utf-8");
             Glide.with(itemView).load(item.userImage).into(itemView.comment_userimage)
+            Glide.with(itemView).load(item.emoticonUrl).into(itemView.comment_emoticon)
 
         }
     }

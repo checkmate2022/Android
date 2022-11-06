@@ -18,6 +18,10 @@ interface ScheduleService {
     @GET("schedule/team/{teamId}")
     fun get_teamSchedule(@Path("teamId") teamId:Long):Call<scheduleTeamGetBody>
 
+    //챗봇 알람 설정할 수 있는 일정 가져오기
+    @GET("chatbot")
+    fun get_chatbotSchedule():Call<scheduleTeamGetBody>
+
     //단건 일정 조회
     @GET("schedule/{scheduleId}")
     fun get_ScheduleById(@Path("scheduleId") scheduleId:Long):Call<scheduleGetBody>

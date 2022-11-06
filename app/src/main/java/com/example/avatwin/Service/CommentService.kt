@@ -13,13 +13,17 @@ interface CommentService {
 
     //댓글 등록
     @POST("comment")
-    fun post_comment(@Query("boardId") boardId:Long,
-                     @Query("content") content: String):Call<commentGetBody>
+    fun post_comment(
+        @Query("boardId") boardId: Long,
+        @Query("content") content: String,
+        @Query("emoticonUrl") emoticonUrl:String
+    ):Call<commentGetBody>
 
     //댓글 수정
     @PUT("comment")
     fun put_comment(@Query("commentSeq") boardId:Long,
-                     @Query("content") content: String):Call<commentGetBody>
+                     @Query("content") content: String,
+                    @Query("emoticonUrl") emoticonUrl:String):Call<commentGetBody>
     //댓글 삭제
     @DELETE("comment")
     fun delete_comment(@Query("commentSeq") commentSeq:Long):Call<ResponseBody>

@@ -127,6 +127,7 @@ class chatbotAdapter(private var context:Context, private var messageList: List<
                 holder.messageReceive.text = message
                 holder.robotImage.visibility = View.VISIBLE
                 ChatbotFragment!!.clickNotification()
+                //버튼누르면
             }else if(message.contains("몇 분 전")){
                 holder.btnDate.visibility = View.GONE
                 holder.messageReceive.visibility = View.VISIBLE
