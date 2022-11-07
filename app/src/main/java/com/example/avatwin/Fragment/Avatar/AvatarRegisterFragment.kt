@@ -7,6 +7,8 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -101,7 +103,11 @@ class AvatarRegisterFragment  : Fragment(){
 
                 R.id.caricature -> avatar_style = "caricature"
 
-                R.id.anime -> avatar_style = "anime"
+                R.id.webtoon -> {
+                    avatar_style = "webtoon"
+                    viewPager_image.adapter = avatarExampleAdapter(getWebtoons())
+                }
+
             }
         }
 
@@ -115,8 +121,9 @@ class AvatarRegisterFragment  : Fragment(){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 //Log.d("ViewPagerFragment", "Page ${position}")
-                styleId=10
-                register_avatar_styleid.setText("10")
+               //
+                styleId=1
+                register_avatar_styleid.setText("1")
             }
         })
 
@@ -201,21 +208,7 @@ class AvatarRegisterFragment  : Fragment(){
                     Log.e("avatar_create", "OnFailuer+${t.message}")
                 }
             })
-/*
-            apiService.make_avatar(
-                multipartBodyProfile, avatarStyleId, avatarName,avatarStyle
-            ).enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
 
-                    val file = response.body()?.byteStream()
-                    val bitmap = BitmapFactory.decodeStream(file)
-                    avatar_origin_image.setImageBitmap(bitmap)
-                }
-
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Log.e("avatar_create", "OnFailuer+${t.message}")
-                }
-            })*/
         }
 
         catch (e: IOException) {
@@ -340,9 +333,26 @@ class AvatarRegisterFragment  : Fragment(){
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(intent, OPEN_GALLERY)
         }
+    private fun rotate(bitmap: Bitmap, degree: Int) : Bitmap {
+        Log.d("rotate","init rotate")
+        val matrix = Matrix()
+        matrix.postRotate(degree.toFloat())
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix,true)
+    }
+    private fun exifOrientationToDegress(exifOrientation: Int): Int {
+        //https://kangmin1012.tistory.com/29
+        when(exifOrientation){
+            ExifInterface.ORIENTATION_ROTATE_90 -> return 90
+
+            ExifInterface.ORIENTATION_ROTATE_180 -> return 180
+
+            ExifInterface.ORIENTATION_ROTATE_270 -> return 270
+
+            else -> return 0
 
 
-
+        }
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if( resultCode == Activity.RESULT_OK) {
@@ -357,19 +367,29 @@ class AvatarRegisterFragment  : Fragment(){
                 e.printStackTrace()
             }
             Log.d("Uri", profileUri.toString())
-
+//avatar_origin_image.setImageBitmap(rotate(it, exifDegree))
         }
         else if( requestCode == REQUEST_IMAGE_CAPTURE)
-        { m_imageFile?.let {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val source = ImageDecoder.createSource(requireActivity().contentResolver, Uri.fromFile(it))
-                ImageDecoder.decodeBitmap(source)?.let {
-                    avatar_origin_image.setImageBitmap(it)
+        {
+
+            val bitmap = BitmapFactory.decodeFile(currentPhotoPath)
+            lateinit var exif : ExifInterface
+
+            try{
+                exif = ExifInterface(currentPhotoPath)
+                var exifOrientation = 0
+                var exifDegree = 0
+
+                if (exif != null) {
+                    exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_NORMAL)
+                    exifDegree = exifOrientationToDegress(exifOrientation)
                 }
-            } else {
-                MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, Uri.fromFile(it))?.let {
-                    avatar_origin_image.setImageBitmap(it)
-                }}}}
+
+                avatar_origin_image.setImageBitmap(rotate(bitmap, exifDegree))
+            }catch (e : IOException){
+                e.printStackTrace()
+            }}
         }
     }
 
@@ -438,20 +458,27 @@ class AvatarRegisterFragment  : Fragment(){
             )
     }
 
+    private fun getWebtoons(): ArrayList<Int> {
+        return arrayListOf<Int>(
+            R.drawable.webtoon
+
+        )
+    }
+
     fun melonEmotikon(){
         Glide.with(requireContext())
-            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/angry_melon.png") // 불러올 이미지 url
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/sad.png") // 불러올 이미지 url
             .into(re_i1)
         Glide.with(requireContext())
-            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/happy_melon.png") // 불러올 이미지 url
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/wink.png") // 불러올 이미지 url
             .into(re_i2)
 
         Glide.with(requireContext())
-            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/sad_melon.png") // 불러올 이미지 url
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/happy.png") // 불러올 이미지 url
             .into(re_i3)
 
         Glide.with(requireContext())
-            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/wink_melon.png") // 불러올 이미지 url
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/angry.png") // 불러올 이미지 url
             .into(re_i4)
     }
 

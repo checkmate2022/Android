@@ -75,12 +75,12 @@ class ChatListFragment: Fragment() {
                 adapter.setItemClickListener(object : roomAdapter.ItemClickListener {
                     override fun onClick(view: View, position: Int) {
                         if(App.prefs.userId==result.list[position].username1){
-                            receiver = result.list[position].username2.toString()
-                            receiverImage = result.list[position].userImage2.toString()
-                        }
-                        else{
                             receiver = result.list[position].username1.toString()
                             receiverImage = result.list[position].userImage1.toString()
+                        }
+                        else{
+                            receiver = result.list[position].username2.toString()
+                            receiverImage = result.list[position].userImage2.toString()
                         }
                         Log.e("receiver",receiver)
                         bundle.putString("receiver", receiver)

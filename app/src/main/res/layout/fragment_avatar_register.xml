@@ -32,7 +32,7 @@
         android:gravity="center_vertical"
         android:letterSpacing="-0.05"
         android:paddingLeft="20dp"
-        android:text="캐릭터 등록"
+        android:text="아바타 등록"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -218,10 +218,10 @@
                         android:text="caricature"></RadioButton>
 
                     <RadioButton
-                        android:id="@+id/anime"
+                        android:id="@+id/webtoon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="anime"></RadioButton>
+                        android:text="여신강림"></RadioButton>
 
                 </RadioGroup>
 

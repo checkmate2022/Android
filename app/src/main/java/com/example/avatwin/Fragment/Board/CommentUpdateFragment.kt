@@ -60,7 +60,7 @@ class CommentUpdateFragment(var item: commentBody): Fragment() {
 
         var apiService = retrofit.create(CommentService::class.java)
 
-        apiService.put_comment(item.commentSeq!!, write_content.text.toString())
+        apiService.put_comment(item.commentSeq!!, write_content.text.toString(),"")
             .enqueue(object : Callback<commentGetBody> {
                 override fun onResponse(
                     call: Call<commentGetBody>,

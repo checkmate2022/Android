@@ -16,6 +16,6 @@ data class scheduleBody(val scheduleSeq:Long?,val scheduleName:String?,val sched
 data class scheduleGetBody(val success:String?,val code:Long?, val msg:String?,val data:scheduleBody)
 
 //팀아니디로 팀별 일정 조회
-data class scheduleTeamGetBody(val list:ArrayList<scheduleBody>)
+data class scheduleTeamGetBody(val success: String?, val list:ArrayList<scheduleBody>)
 
 
