@@ -7,7 +7,7 @@ import retrofit2.http.*
 interface ApiService {
     companion object{
         //192.168.0.14 10.0.2.2:8080
-        public val API_URL = "http://10.0.2.2:8080/api/v1/"
+        public val API_URL = "http://172.30.1.17:8080/api/v1/"
     }
     //auth
     @POST("auth/login")

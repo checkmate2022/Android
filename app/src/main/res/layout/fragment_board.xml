@@ -243,6 +243,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/emoticon_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"

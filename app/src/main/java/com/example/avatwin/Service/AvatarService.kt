@@ -11,8 +11,8 @@ import java.io.File
 
 interface AvatarService {
     companion object{
-        public val API_URL = " http://10.0.2.2:8080/api/v1/"
-        public val API_URL2 = "http://10.0.2.2:5000/"
+        public val API_URL = " http://172.30.1.17:8080/api/v1/"
+        public val API_URL2 = "http://172.30.1.17:5000/"
         // http://127:5000/ 10.0.2.2:8080
         // public val API_URL2 = "http://172.20.9.2:5000/"
     }
@@ -54,7 +54,7 @@ interface AvatarService {
     @GET("avatar/{avatarId}")
     fun get_avatarId(@Path("avatarId") avatarId:Long):Call<avatarGetIdRes>
 
-    //아바타 변형
+    //아바타 생성: local flask test용
     @Multipart
     @POST("uploader")
     fun make_avatar(
@@ -63,14 +63,7 @@ interface AvatarService {
     ): Call<ResponseBody>
 
 
-    @Multipart
-    @GET
-    fun FF(
-        @Part file: MultipartBody.Part,
-        @Part("user_id") id: Long,
-    ): Call<ResponseBody>
-
-    //아바타 변형
+    //아바타 생성: 실제flask서버
     @Multipart
     @POST("aa")
     fun make_avatar(

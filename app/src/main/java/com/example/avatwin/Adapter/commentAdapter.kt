@@ -61,7 +61,7 @@ class commentAdapter():RecyclerView.Adapter<commentAdapter.ViewHolder>(){
             itemView.comment_content.text = item.content
            // var a= URLDecoder.decode(item.image!!.substring(ApiService.API_URL.length+1), "utf-8");
             Glide.with(itemView).load(item.userImage).into(itemView.comment_userimage)
-            Glide.with(itemView).load(item.emoticonUrl).into(itemView.comment_emoticon)
+            Glide.with(itemView).load(item.emoticon).into(itemView.comment_emoticon)
 
         }
     }

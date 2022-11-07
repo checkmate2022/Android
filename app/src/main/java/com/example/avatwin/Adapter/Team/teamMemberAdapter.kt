@@ -47,7 +47,7 @@ fun addItem(item : joinGetBody){items.add(item)}
             itemView.member_username.text = item.username
 
            // var a= URLDecoder.decode(item.image!!.substring(ApiService.API_URL.length+1), "utf-8");
-           // Glide.with(itemView).load(item.userImg).into(itemView.member_img)
+           Glide.with(itemView).load(item.userImg).into(itemView.member_img)
 
         }
     }

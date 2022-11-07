@@ -120,13 +120,16 @@ class chatbotAdapter(private var context:Context, private var messageList: List<
                     ChatbotFragment!!.clickScheduleDate()
                 }
             }else if(message.contains("알람을")){
-                holder.btnDate.visibility = View.GONE
+                holder.btnDate.visibility = View.VISIBLE
                 holder.messageReceive.visibility = View.VISIBLE
                 holder.messageSend.visibility = View.GONE
                 holder.recyclerView.visibility=View.GONE
                 holder.messageReceive.text = message
                 holder.robotImage.visibility = View.VISIBLE
-                ChatbotFragment!!.clickNotification()
+                holder.btnDate.setOnClickListener {
+                    ChatbotFragment!!.clickNotification()
+                }
+
                 //버튼누르면
             }else if(message.contains("몇 분 전")){
                 holder.btnDate.visibility = View.GONE

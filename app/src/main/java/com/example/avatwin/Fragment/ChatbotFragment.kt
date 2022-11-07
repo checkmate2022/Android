@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.avatwin.Adapter.Chatbot.chatbotAdapter
 import com.example.avatwin.Adapter.Schedule.scheduleAdapter
 import com.example.avatwin.Auth.App
@@ -21,6 +22,7 @@ import com.example.avatwin.Decorator.TodayDecorator
 import com.example.avatwin.Fragment.Schedule.ScheduleDetailFragment
 import com.example.avatwin.Fragment.Schedule.ScheduleRegisterFragment
 import com.example.avatwin.R
+import com.example.avatwin.Service.ChatbotService
 import com.example.avatwin.Service.ScheduleService
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -101,16 +103,16 @@ class ChatbotFragment:Fragment() {
     lateinit var scheduleAdapter: scheduleAdapter
     lateinit var calendar: MaterialCalendarView
     var scheduleList = ArrayList<scheduleBody>()
-    var scheduleSeq =0
+    var scheduleSeq :Long=0
     var notificationTime=""
     var notificationDate=""
-    var dlgN = AlertDialog.Builder(requireContext())
-    var dialogViewN = View.inflate(context, R.layout.dialog_chatbot_schedule, null)
 
+    var selectDate = ""
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_chatbot, container, false)
+        Log.e("chabot","chabot")
         chatAdapter = chatbotAdapter(requireActivity(), messageList)
 
         root.chatView.adapter = chatAdapter
@@ -141,12 +143,13 @@ class ChatbotFragment:Fragment() {
                 }else if(CHECK_NOTIFICATION) {
                     Log.e("bot","알람")
                     addMessageToList(message, false)
-                    notificationDate = message
                     sendMessageToBot("지정일 "+message)
                     CHECK_NOTIFICATION=false
                     Log.e("bot",CHECK_NOTIFICATION.toString())
                 }else if(CHECK_NOTIFICATION_TIME) {
                     Log.e("bot","알람시간")
+                    Log.e("bot",scheduleSeq.toString())
+                    Log.e("bot",notificationTime)
                     addMessageToList(message, false)
                     CHECK_NOTIFICATION_TIME=false
                     sendNotificationMessageToBot("알람 "+message+"분전")
@@ -257,8 +260,8 @@ class ChatbotFragment:Fragment() {
                 "userId",
                 Value.newBuilder().setStringValue(App.prefs.userId).build()
             ).putFields(
-                "notificationDate",
-                Value.newBuilder().setStringValue(notificationDate).build()
+                "scheduleSeq",
+                Value.newBuilder().setStringValue(scheduleSeq.toString()).build()
             ).putFields(
                 "notificationTime",
                 Value.newBuilder().setStringValue(notificationTime).build()
@@ -415,12 +418,15 @@ class ChatbotFragment:Fragment() {
 
         //diag가져오기
       //var dlgN = AlertDialog.Builder(requireContext())
-
+        var dlgN  = AlertDialog.Builder(requireContext())
+        var dialogViewN = View.inflate(context, R.layout.dialog_chatbot_schedule, null)
         dlgN.setView(dialogViewN)
 
+        val layoutManager1 = LinearLayoutManager(activity)
+        dialogViewN.recycler_scheduleN.layoutManager = layoutManager1
         getTeamSchedule()
-
-        calendar = requireView().calendar
+       // calendar = requireView().calendar
+        calendar = dialogViewN.calendar
         calendar.addDecorator(TodayDecorator())
 
 
@@ -459,12 +465,61 @@ class ChatbotFragment:Fragment() {
 
                 var rselect = ""
                 rselect = year + "-" + rmonth + "-" + rday
-
+                Log.e("schedule1", rselect)
+                selectDate=year + "년 " + rmonth + "월 " + rday+"일 "
                 //tnrBottomSheetDialog.dialog_date.text = rselect
                 //날짜에 맞는 어댑터 item 설정
                 scheduleAdapter = scheduleAdapter()
                 scheduleAdapter.clearItem()
-                getTeamDetailSchedule(rselect)
+                val gson = GsonBuilder()
+                    .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter())
+                    .registerTypeAdapter(LocalDateTime::class.java, object :
+                        JsonDeserializer<LocalDateTime> {
+                        override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): LocalDateTime {
+                            return LocalDateTime.parse(json!!.asString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                        }
+                    }).create()
+
+                val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
+                var retrofit = Retrofit.Builder()
+                    .client(okHttpClient)
+                    .baseUrl(ChatbotService.API_URL)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addConverterFactory(ScalarsConverterFactory.create()).build()
+
+                var apiService = retrofit.create(ChatbotService::class.java)
+
+
+                apiService.get_chatbotSchedule().enqueue(object :
+                    Callback<scheduleTeamGetBody> {
+                    override fun onResponse(call: Call<scheduleTeamGetBody>, response: Response<scheduleTeamGetBody>) {
+                        val result = response.body()
+                        Log.e("schedule1", result!!.list.toString())
+                        var scheduleList=ArrayList<scheduleBody>()
+                        for (i: scheduleBody in result!!.list) {
+                            if (i.scheduleStartDate.toString().substring(0, 10) == rselect) {
+                                //다른 정보를 가져온다. 확인할것
+                                scheduleList.add(i)
+                                scheduleAdapter.addItem(i)
+                            }
+                        }
+
+                        dialogViewN.recycler_scheduleN.adapter = scheduleAdapter
+                        scheduleAdapter.setItemClickListener(object : scheduleAdapter.ItemClickListener {
+                            override fun onClick(view: View, position: Int) {
+                                Log.e("schedule1",scheduleList[position].scheduleName!!)
+                                dialogViewN.ava_date.setText(selectDate+ scheduleList[position].scheduleName+" 일정")
+
+                                editMessage.setText(selectDate+ scheduleList[position].scheduleName)
+                                scheduleSeq= scheduleList[position].scheduleSeq!!
+
+                            } })
+                    }
+
+                    override fun onFailure(call: Call<scheduleTeamGetBody>, t: Throwable) {
+                        Log.e("schedule", "OnFailuer+${t.message}")
+                    }
+                })
 
 
             }
@@ -474,9 +529,9 @@ class ChatbotFragment:Fragment() {
             CHECK_NOTIFICATION=true
             Log.e("Check_Date",CHECK_DATE.toString())
         }
+
+
         dlgN.show()
-
-
     }
 
 
@@ -504,21 +559,20 @@ class ChatbotFragment:Fragment() {
         val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
         var retrofit = Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl(ScheduleService.API_URL)
+            .baseUrl(ChatbotService.API_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addConverterFactory(ScalarsConverterFactory.create()).build()
 
-        var apiService = retrofit.create(ScheduleService::class.java)
+        var apiService = retrofit.create(ChatbotService::class.java)
 
 
-        apiService.get_chatbotSchedule()
-            .enqueue(object : Callback<scheduleTeamGetBody> {
+        apiService.get_chatbotSchedule().enqueue(object : Callback<scheduleTeamGetBody> {
                 override fun onResponse(
                     call: Call<scheduleTeamGetBody>, response: Response<scheduleTeamGetBody>) {
                     val result = response.body()
 
                     var scheduleList = ArrayList<scheduleBody>()
-                  //  Log.e("ScheduleList",result!!.toString())
+                   Log.e("ScheduleList",result!!.success.toString())
 
                     for (i: scheduleBody in result!!.list) {
                         var dateString = i.scheduleStartDate.toString()
@@ -557,7 +611,7 @@ class ChatbotFragment:Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getTeamDetailSchedule(rselect: String) {
 
-        val gson = GsonBuilder()
+      /*  val gson = GsonBuilder()
             .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter())
             .registerTypeAdapter(LocalDateTime::class.java, object :
                 JsonDeserializer<LocalDateTime> {
@@ -576,7 +630,7 @@ class ChatbotFragment:Fragment() {
         var apiService = retrofit.create(ScheduleService::class.java)
 
 
-        apiService.get_teamSchedule(App.prefs.teamSeq!!.toLong()).enqueue(object :
+        apiService.get_chatbotSchedule().enqueue(object :
             Callback<scheduleTeamGetBody> {
             override fun onResponse(call: Call<scheduleTeamGetBody>, response: Response<scheduleTeamGetBody>) {
                 val result = response.body()
@@ -589,14 +643,14 @@ class ChatbotFragment:Fragment() {
                     }
                 }
 
-                dialogViewN.recycler_scheduleN.adapter = scheduleAdapter
+               // dialogViewN.recycler_scheduleN.adapter = scheduleAdapter
                 scheduleAdapter.setItemClickListener(object : scheduleAdapter.ItemClickListener {
                     override fun onClick(view: View, position: Int) {
 
-                       // ava_date.text=
-                        //schdeuldeDateString = "" 년월일
-                        //   editMessage.setText(time)
-                         //   scheduleSeq=scheduleList[position].scheduleSeq
+                         ava_date.text= selectDate+ scheduleList[position].scheduleName+" 일정"
+
+                         editMessage.setText(selectDate+ scheduleList[position].scheduleName)
+                         scheduleSeq= scheduleList[position].scheduleSeq!!
 
                     } })
             }
@@ -604,7 +658,7 @@ class ChatbotFragment:Fragment() {
             override fun onFailure(call: Call<scheduleTeamGetBody>, t: Throwable) {
                 Log.e("schedule", "OnFailuer+${t.message}")
             }
-        })
+        })*/
     }
 
 

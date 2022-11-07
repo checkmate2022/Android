@@ -75,8 +75,9 @@ class BoardDetailFragment(): Fragment() {
 
         //init
         initBoard()
+        root.emoticon_group.isVisible=false
         root.emoticon_add_button.setOnClickListener{
-            root.chat_emoticon_group.isVisible=true
+            root.emoticon_group.isVisible=true
             //기본 아바타 이모티콘 설정해주기
             setEmoticon()
             //이모티콘 클릭 시 채팅에
@@ -128,14 +129,18 @@ class BoardDetailFragment(): Fragment() {
             override fun onResponse(call: Call<boardGetBodyById>, response: Response<boardGetBodyById>) {
                 if (response.isSuccessful) {
                     var mList = response.body()!!
+                    Log.e("board",mList.data.toString())
 
                     //날짜
                     var date = mList.data.createDate.toString().substring(0,10)+" "+mList.data.createDate.toString().substring(11,16)
+                    Log.i("board",date)
                     board_detail_date.setText(date)
                     //제목
                     board_detail_title.setText(mList.data.title)
                     //이미지
                     //board_detail_image
+                    Log.i("boardDetail",mList.data.userImage.toString())
+                    Log.i("boardDetail2",mList.data.userImg.toString())
                     Glide.with(view!!).load(mList.data.userImage).into(board_detail_image)
                     //별명
                     board_detail_name.setText(mList.data.username)
@@ -207,7 +212,7 @@ class BoardDetailFragment(): Fragment() {
             override fun onResponse(call: Call<commentGetBody>, response: Response<commentGetBody>) {
                 val result = response.body()
                 //Log.e("성공",result.toString())
-                chat_emoticon_group.visibility=View.GONE
+                emoticon_group.visibility=View.GONE
                 adapter.addItem(result!!.data)
                 comment_text.setText("")
             }

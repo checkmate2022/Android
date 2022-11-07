@@ -57,6 +57,7 @@ class TeamMemberFragment(): Fragment() {
                 val len: Int = result!!.list.size
                 for(i in 0..len-1){
                     adapter.addItem(result!!.list[i])
+                    Log.e("userimage", result!!.list[i].toString())
                     }
                 root.recyclerView_team.adapter = adapter
 
