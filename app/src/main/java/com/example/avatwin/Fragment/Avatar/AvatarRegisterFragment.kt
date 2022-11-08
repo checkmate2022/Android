@@ -29,6 +29,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.avatwin.Adapter.Avatar.avatarExampleAdapter
 import com.example.avatwin.Auth.AuthInterceptor
+import com.example.avatwin.DataClass.emoticonGetBody
 import com.example.avatwin.DataClass.myAvatarRes
 import com.example.avatwin.Fragment.MyPageFragment
 import com.example.avatwin.R
@@ -97,6 +98,7 @@ class AvatarRegisterFragment  : Fragment(){
             when(checkedId){
                 R.id.cartoon -> {
                     avatar_style = "cartoon"
+                    viewPager_image.adapter = avatarExampleAdapter(getCaricutures())
                 }
 
                 R.id.arcane -> avatar_style = "arcane"
@@ -121,9 +123,14 @@ class AvatarRegisterFragment  : Fragment(){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 //Log.d("ViewPagerFragment", "Page ${position}")
-               //
-                styleId=1
-                register_avatar_styleid.setText("1")
+                styleId=0 //
+                register_avatar_styleid.setText("0")
+                if(position==0){
+                styleId=0
+                register_avatar_styleid.setText("0")}
+                else if(position==1){
+                    styleId=1
+                    register_avatar_styleid.setText("1")}
             }
         })
 
@@ -134,7 +141,8 @@ class AvatarRegisterFragment  : Fragment(){
 
         //이모티콘 생성
         avatar_imo_button.setOnClickListener{
-           melonEmotikon()
+           //melonEmotikon() emoticonGetBody
+            makeEmoticon()
         }
 
         //아바타 등록
@@ -243,16 +251,16 @@ class AvatarRegisterFragment  : Fragment(){
             val multipartBodyProfile2 = MultipartBody.Part.createFormData(
                     "createdfile", c_imageFile!!.name, requestBodyProfile2
             )
-            val nameBody = RequestBody.create(MediaType.parse("text/plain"), "cartoon")
+           // val nameBody = RequestBody.create(MediaType.parse("text/plain"), "cartoon")
             apiService.post_avatar(
                     multipartBodyProfile,
-                    multipartBodyProfile2, avatarName, avatarDescription,"cartoon", avatarStyleId,"d",
-                "D","d","d"
+                    multipartBodyProfile2, avatarName, avatarDescription,avatarStyle, avatarStyleId,sadUrl,
+                happyUrl,winkUrl,angryUrl
             ).enqueue(object : Callback<myAvatarRes> {
                 override fun onResponse(call: Call<myAvatarRes>, response: Response<myAvatarRes>) {
                     val newProfileUpdataResult = response.body()
                     Log.e("avatar",newProfileUpdataResult.toString())
-                    val fragmentA = MyPageFragment()
+                   val fragmentA = MyPageFragment()
                     val bundle = Bundle()
                     fragmentA.arguments = bundle
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
@@ -482,7 +490,7 @@ class AvatarRegisterFragment  : Fragment(){
             .into(re_i4)
     }
 
-    fun makeEmotiron(){
+    fun makeEmoticon(){
         val gson = GsonBuilder()
             .setLenient()
             .create()
@@ -505,49 +513,33 @@ class AvatarRegisterFragment  : Fragment(){
 
         apiService.make_emoticon(
             multipartBodyProfile
-        ).enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-//  var sadUrl=""
-//    var happyUrl=""
-//    var winkUrl=""
-//    var angryUrl=""
-                //서버에서 아바타등록시" 이거 제거해야함
-                /*
-                  Glide.with(requireContext())
-                                .load(url1) // 불러올 이미지 url
-                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                                .circleCrop() // 동그랗게 자르기
-                                .into(iv1_image)
-                            Glide.with(requireContext())
-                                .load(url2) // 불러올 이미지 url
-                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                                .circleCrop() // 동그랗게 자르기
-                                .into(iv2_image)
+        ).enqueue(object : Callback<List<emoticonGetBody>> {
+            override fun onResponse(call: Call<List<emoticonGetBody>>, response: Response<List<emoticonGetBody>>) {
+                sadUrl= response.body()!![0].sad!!
+                happyUrl= response.body()!![0].happy!!
+                winkUrl= response.body()!![0].wink!!
+                angryUrl= response.body()!![0].angry!!
 
-                            Glide.with(requireContext())
-                                .load(url3) // 불러올 이미지 url
-                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                                .circleCrop() // 동그랗게 자르기
-                                .into(iv3_image)
+                //val result = response.body()!!
+                Log.e("emonticon",response.body()!![0].angry.toString())
+                Glide.with(requireContext())
+                    .load(response.body()!![0].angry) // 불러올 이미지 url
+                    .into(re_i1)
+                Glide.with(requireContext())
+                    .load(response.body()!![0].happy) // 불러올 이미지 url
+                    .into(re_i2)
 
-                            Glide.with(requireContext())
-                                .load(url4) // 불러올 이미지 url
-                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                                .circleCrop() // 동그랗게 자르기
-                                .into(iv4_image)
-                 */
+                Glide.with(requireContext())
+                    .load(response.body()!![0].sad) // 불러올 이미지 url
+                    .into(re_i3)
+
+                Glide.with(requireContext())
+                    .load(response.body()!![0].wink) // 불러올 이미지 url
+                    .into(re_i4)
             }
 
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e("avatar_create", "OnFailuer+${t.message}")
+            override fun onFailure(call: Call<List<emoticonGetBody>>, t: Throwable) {
+                Log.e("emonticon", "OnFailuer+${t.message}")
             }
         })
     }
