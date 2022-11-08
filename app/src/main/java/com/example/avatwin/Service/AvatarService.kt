@@ -11,8 +11,9 @@ import java.io.File
 
 interface AvatarService {
     companion object{
-        public val API_URL = " http://172.30.1.17:8080/api/v1/"
-        public val API_URL2 = "http://172.30.1.17:5000/"
+        public val API_URL = " http://172.20.4.93:8080/api/v1/"
+        public val API_URL2 = "http://172.20.4.93:5000/"
+        public val API_URL3 = "http://172.20.4.93:5001/"
         // http://127:5000/ 10.0.2.2:8080
         // public val API_URL2 = "http://172.20.9.2:5000/"
     }
@@ -66,7 +67,7 @@ interface AvatarService {
     //아바타 생성: 실제flask서버
     @Multipart
     @POST("aa")
-    fun make_avatar(
+    fun make_avatar2(
         @Part file: MultipartBody.Part,
         @Part("style")style: String,
         @Part("id")id: Long,
@@ -87,7 +88,6 @@ interface AvatarService {
     @POST("aa")
     fun make_emoticon(
         @Part file: MultipartBody.Part,
-
-        ): Call<ResponseBody>
+        ): Call<List<emoticonGetBody>>
 }
 
