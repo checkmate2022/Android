@@ -7,6 +7,8 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -24,13 +26,17 @@ import androidx.core.content.FileProvider
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.example.avatwin.Adapter.Avatar.avatarExampleAdapter
 import com.example.avatwin.Auth.AuthInterceptor
+import com.example.avatwin.DataClass.emoticonGetBody
 import com.example.avatwin.DataClass.myAvatarRes
+import com.example.avatwin.Fragment.MyPageFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.AvatarService
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.fragment_avatar_register.*
+import kotlinx.android.synthetic.main.fragment_chat.*
 import okhttp3.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -92,13 +98,18 @@ class AvatarRegisterFragment  : Fragment(){
             when(checkedId){
                 R.id.cartoon -> {
                     avatar_style = "cartoon"
+                    viewPager_image.adapter = avatarExampleAdapter(getCaricutures())
                 }
 
                 R.id.arcane -> avatar_style = "arcane"
 
                 R.id.caricature -> avatar_style = "caricature"
 
-                R.id.anime -> avatar_style = "anime"
+                R.id.webtoon -> {
+                    avatar_style = "webtoon"
+                    viewPager_image.adapter = avatarExampleAdapter(getWebtoons())
+                }
+
             }
         }
 
@@ -112,15 +123,29 @@ class AvatarRegisterFragment  : Fragment(){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 //Log.d("ViewPagerFragment", "Page ${position}")
-                styleId=position
+                styleId=0 //
+                register_avatar_styleid.setText("0")
+                if(position==0){
+                styleId=0
+                register_avatar_styleid.setText("0")}
+                else if(position==1){
+                    styleId=1
+                    register_avatar_styleid.setText("1")}
             }
         })
 
-
+        //아바타 변형
         avatar_created_button.setOnClickListener{
          makeAvatar(register_avatar_name.getText().toString(), avatar_style, styleId.toLong())
         }
 
+        //이모티콘 생성
+        avatar_imo_button.setOnClickListener{
+           //melonEmotikon() emoticonGetBody
+            makeEmoticon()
+        }
+
+        //아바타 등록
         register_avatar_button.setOnClickListener{
             registerAvatar(register_avatar_name.getText().toString(), register_avatar_description.getText().toString(), avatar_style, register_avatar_styleid.getText().toString().toLong())
           }
@@ -152,7 +177,7 @@ class AvatarRegisterFragment  : Fragment(){
             )
 
             apiService.make_avatar(
-                    multipartBodyProfile, avatarStyleId
+                    multipartBodyProfile, 10
             ).enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     //미리보기
@@ -191,21 +216,7 @@ class AvatarRegisterFragment  : Fragment(){
                     Log.e("avatar_create", "OnFailuer+${t.message}")
                 }
             })
-/*
-            apiService.make_avatar(
-                multipartBodyProfile, avatarStyleId, avatarName,avatarStyle
-            ).enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
 
-                    val file = response.body()?.byteStream()
-                    val bitmap = BitmapFactory.decodeStream(file)
-                    avatar_origin_image.setImageBitmap(bitmap)
-                }
-
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Log.e("avatar_create", "OnFailuer+${t.message}")
-                }
-            })*/
         }
 
         catch (e: IOException) {
@@ -240,22 +251,22 @@ class AvatarRegisterFragment  : Fragment(){
             val multipartBodyProfile2 = MultipartBody.Part.createFormData(
                     "createdfile", c_imageFile!!.name, requestBodyProfile2
             )
-            val nameBody = RequestBody.create(MediaType.parse("text/plain"), "cartoon")
+           // val nameBody = RequestBody.create(MediaType.parse("text/plain"), "cartoon")
             apiService.post_avatar(
                     multipartBodyProfile,
-                    multipartBodyProfile2, avatarName, avatarDescription,"cartoon", avatarStyleId,"d",
-                "D","d","d"
+                    multipartBodyProfile2, avatarName, avatarDescription,avatarStyle, avatarStyleId,sadUrl,
+                happyUrl,winkUrl,angryUrl
             ).enqueue(object : Callback<myAvatarRes> {
                 override fun onResponse(call: Call<myAvatarRes>, response: Response<myAvatarRes>) {
                     val newProfileUpdataResult = response.body()
                     Log.e("avatar",newProfileUpdataResult.toString())
-                   /* val fragmentA = MyPageFragment()
+                   val fragmentA = MyPageFragment()
                     val bundle = Bundle()
                     fragmentA.arguments = bundle
                     val transaction = requireActivity().supportFragmentManager.beginTransaction()
                     transaction.add(R.id.container, fragmentA)
                     transaction.replace(R.id.container, fragmentA.apply { arguments = bundle }).addToBackStack(null)
-                    transaction.commit()*/
+                    transaction.commit()
                 }
 
                 override fun onFailure(call: Call<myAvatarRes>, t: Throwable) {
@@ -330,9 +341,26 @@ class AvatarRegisterFragment  : Fragment(){
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(intent, OPEN_GALLERY)
         }
+    private fun rotate(bitmap: Bitmap, degree: Int) : Bitmap {
+        Log.d("rotate","init rotate")
+        val matrix = Matrix()
+        matrix.postRotate(degree.toFloat())
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix,true)
+    }
+    private fun exifOrientationToDegress(exifOrientation: Int): Int {
+        //https://kangmin1012.tistory.com/29
+        when(exifOrientation){
+            ExifInterface.ORIENTATION_ROTATE_90 -> return 90
+
+            ExifInterface.ORIENTATION_ROTATE_180 -> return 180
+
+            ExifInterface.ORIENTATION_ROTATE_270 -> return 270
+
+            else -> return 0
 
 
-
+        }
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if( resultCode == Activity.RESULT_OK) {
@@ -347,19 +375,29 @@ class AvatarRegisterFragment  : Fragment(){
                 e.printStackTrace()
             }
             Log.d("Uri", profileUri.toString())
-
+//avatar_origin_image.setImageBitmap(rotate(it, exifDegree))
         }
         else if( requestCode == REQUEST_IMAGE_CAPTURE)
-        { m_imageFile?.let {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val source = ImageDecoder.createSource(requireActivity().contentResolver, Uri.fromFile(it))
-                ImageDecoder.decodeBitmap(source)?.let {
-                    avatar_origin_image.setImageBitmap(it)
+        {
+
+            val bitmap = BitmapFactory.decodeFile(currentPhotoPath)
+            lateinit var exif : ExifInterface
+
+            try{
+                exif = ExifInterface(currentPhotoPath)
+                var exifOrientation = 0
+                var exifDegree = 0
+
+                if (exif != null) {
+                    exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_NORMAL)
+                    exifDegree = exifOrientationToDegress(exifOrientation)
                 }
-            } else {
-                MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, Uri.fromFile(it))?.let {
-                    avatar_origin_image.setImageBitmap(it)
-                }}}}
+
+                avatar_origin_image.setImageBitmap(rotate(bitmap, exifDegree))
+            }catch (e : IOException){
+                e.printStackTrace()
+            }}
         }
     }
 
@@ -422,11 +460,37 @@ class AvatarRegisterFragment  : Fragment(){
         return arrayListOf<Int>(
             R.drawable.caricuture0,
             R.drawable.caricuture1,
+            R.drawable.caricuture4,
             R.drawable.caricuture2,
-            R.drawable.caricuture3)
+            R.drawable.caricuture3
+            )
     }
 
-    fun makeEmotiron(){
+    private fun getWebtoons(): ArrayList<Int> {
+        return arrayListOf<Int>(
+            R.drawable.webtoon
+
+        )
+    }
+
+    fun melonEmotikon(){
+        Glide.with(requireContext())
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/sad.png") // 불러올 이미지 url
+            .into(re_i1)
+        Glide.with(requireContext())
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/wink.png") // 불러올 이미지 url
+            .into(re_i2)
+
+        Glide.with(requireContext())
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/happy.png") // 불러올 이미지 url
+            .into(re_i3)
+
+        Glide.with(requireContext())
+            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/angry.png") // 불러올 이미지 url
+            .into(re_i4)
+    }
+
+    fun makeEmoticon(){
         val gson = GsonBuilder()
             .setLenient()
             .create()
@@ -449,49 +513,33 @@ class AvatarRegisterFragment  : Fragment(){
 
         apiService.make_emoticon(
             multipartBodyProfile
-        ).enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-//  var sadUrl=""
-//    var happyUrl=""
-//    var winkUrl=""
-//    var angryUrl=""
-                //서버에서 아바타등록시" 이거 제거해야함
-                /*
-                  Glide.with(requireContext())
-                                .load(url1) // 불러올 이미지 url
-                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                                .circleCrop() // 동그랗게 자르기
-                                .into(iv1_image)
-                            Glide.with(requireContext())
-                                .load(url2) // 불러올 이미지 url
-                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                                .circleCrop() // 동그랗게 자르기
-                                .into(iv2_image)
+        ).enqueue(object : Callback<List<emoticonGetBody>> {
+            override fun onResponse(call: Call<List<emoticonGetBody>>, response: Response<List<emoticonGetBody>>) {
+                sadUrl= response.body()!![0].sad!!
+                happyUrl= response.body()!![0].happy!!
+                winkUrl= response.body()!![0].wink!!
+                angryUrl= response.body()!![0].angry!!
 
-                            Glide.with(requireContext())
-                                .load(url3) // 불러올 이미지 url
-                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                                .circleCrop() // 동그랗게 자르기
-                                .into(iv3_image)
+                //val result = response.body()!!
+                Log.e("emonticon",response.body()!![0].angry.toString())
+                Glide.with(requireContext())
+                    .load(response.body()!![0].angry) // 불러올 이미지 url
+                    .into(re_i1)
+                Glide.with(requireContext())
+                    .load(response.body()!![0].happy) // 불러올 이미지 url
+                    .into(re_i2)
 
-                            Glide.with(requireContext())
-                                .load(url4) // 불러올 이미지 url
-                                .placeholder(defaultImage) // 이미지 로딩 시작하기 전 표시할 이미지
-                                .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
-                                .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
-                                .circleCrop() // 동그랗게 자르기
-                                .into(iv4_image)
-                 */
+                Glide.with(requireContext())
+                    .load(response.body()!![0].sad) // 불러올 이미지 url
+                    .into(re_i3)
+
+                Glide.with(requireContext())
+                    .load(response.body()!![0].wink) // 불러올 이미지 url
+                    .into(re_i4)
             }
 
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e("avatar_create", "OnFailuer+${t.message}")
+            override fun onFailure(call: Call<List<emoticonGetBody>>, t: Throwable) {
+                Log.e("emonticon", "OnFailuer+${t.message}")
             }
         })
     }

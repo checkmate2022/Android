@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface BoardService {
     companion object{
-        public val API_URL = " http://10.0.2.2:8080/api/v1/"
+        public val API_URL = " http://172.20.4.93:8080/api/v1/"
     }
 
 
@@ -25,7 +25,7 @@ interface BoardService {
     fun get_Board(@Query("teamId") teamId:Long):Call<boardTeamGetBody>
 
     //게시판 단건 조회
-    @GET("board/board/{boardId}")
+    @GET("board/{boardId}")
     fun get_BoardById(@Path("boardId") boardId:Long):Call<boardGetBodyById>
 
     //게시판 수정

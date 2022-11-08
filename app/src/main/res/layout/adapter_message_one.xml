@@ -64,4 +64,6 @@
         android:background="@drawable/btn_teal_off"
         android:text="날짜선택하기"
         android:textColor="@color/purple_700"/>
+
+
 </LinearLayout>

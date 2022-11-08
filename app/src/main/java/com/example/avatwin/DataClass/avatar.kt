@@ -17,3 +17,7 @@ data class avatarPutRes(val success:String?,val code:Long?, val msg:String?,val 
 
 //아바타 삭제
 data class avatarDelRes(val success:String?,val code:Long?, val msg:String?)
+
+//이모티콘 생성
+data class emoticonGetBody(val happy:String?,val sad:String?,val angry:String?,val wink:String?)
+

@@ -143,6 +143,7 @@ class ChatFragment: Fragment() {
                     stomp.send("/chat/pub/message", jsonObject.toString()).subscribe()
 
                     root.send.setOnClickListener {
+                        root.chat_emoticon_group.visibility=View.GONE
                         try {
                             jsonObject.put("type", "TALK")
                             jsonObject.put("roomId", constant.CHATROOM_ID)

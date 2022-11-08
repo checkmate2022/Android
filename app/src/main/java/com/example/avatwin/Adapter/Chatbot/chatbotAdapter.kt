@@ -119,6 +119,39 @@ class chatbotAdapter(private var context:Context, private var messageList: List<
                 holder.btnDate.setOnClickListener {
                     ChatbotFragment!!.clickScheduleDate()
                 }
+            }else if(message.contains("알람을")){
+                holder.btnDate.visibility = View.VISIBLE
+                holder.messageReceive.visibility = View.VISIBLE
+                holder.messageSend.visibility = View.GONE
+                holder.recyclerView.visibility=View.GONE
+                holder.messageReceive.text = message
+                holder.robotImage.visibility = View.VISIBLE
+                holder.btnDate.setOnClickListener {
+                    ChatbotFragment!!.clickNotification()
+                }
+
+                //버튼누르면
+            }else if(message.contains("몇 분 전")){
+                holder.btnDate.visibility = View.GONE
+                holder.messageReceive.visibility = View.VISIBLE
+                holder.messageSend.visibility = View.GONE
+                holder.robotImage.visibility = View.VISIBLE
+                holder.messageReceive.text = message
+                lateinit var adapter: chatbotNotificationTimeAdapter
+                val layoutManager1 = LinearLayoutManager(context)
+                holder.recyclerView.layoutManager = layoutManager1
+                var items : ArrayList<String> = arrayListOf("10","30","60")
+                adapter = chatbotNotificationTimeAdapter(items,context)
+                holder.recyclerView.adapter=adapter
+                holder.recyclerView.visibility=View.VISIBLE
+                adapter.setItemClickListener(object :
+                    chatbotNotificationTimeAdapter.ItemClickListener {
+                    override fun onClick(view: View, position: Int) {
+
+                        ChatbotFragment!!.clickNotificationTime(items[position])
+
+                    }
+                })
             }
             else
             {   holder.robotImage.visibility = View.VISIBLE

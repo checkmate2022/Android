@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.avatwin.DataClass.joinGetBody
 import com.example.avatwin.R
 import kotlinx.android.synthetic.main.item_team_member.view.*
@@ -46,7 +47,7 @@ fun addItem(item : joinGetBody){items.add(item)}
             itemView.member_username.text = item.username
 
            // var a= URLDecoder.decode(item.image!!.substring(ApiService.API_URL.length+1), "utf-8");
-            //Glide.with(itemView).load(item.image!!).into(itemView.limg)
+           Glide.with(itemView).load(item.userImg).into(itemView.member_img)
 
         }
     }

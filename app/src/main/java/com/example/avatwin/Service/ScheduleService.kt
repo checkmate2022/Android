@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface ScheduleService {
     companion object{
-        public val API_URL = " http://10.0.2.2:8080/api/v1/"
+        public val API_URL = " http://172.20.4.93:8080/api/v1/"
     }
 
     //일정등록
@@ -17,6 +17,10 @@ interface ScheduleService {
     //팀별 일정 가져오기
     @GET("schedule/team/{teamId}")
     fun get_teamSchedule(@Path("teamId") teamId:Long):Call<scheduleTeamGetBody>
+
+    //챗봇 알람 설정할 수 있는 일정 가져오기
+    @GET("chatbot")
+    fun get_chatbotSchedule():Call<scheduleTeamGetBody>
 
     //단건 일정 조회
     @GET("schedule/{scheduleId}")
