@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface FcmService {
     companion object{
-        public val API_URL = " http://172.20.4.93:8080/api/v1/"
+        public val API_URL = " http://10.0.2.2:8080/api/v1/"
     }
 
     //디바이스 토큰 등록

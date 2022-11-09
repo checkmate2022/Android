@@ -9,7 +9,7 @@ import retrofit2.http.*
 
 interface ChatService {
     companion object{
-        public val API_URL = " http://172.20.4.93:8080/api/v1/"
+        public val API_URL = " http://172.20.7.122:8080/api/v1/"
     }
 
     //사용자별 방 조회

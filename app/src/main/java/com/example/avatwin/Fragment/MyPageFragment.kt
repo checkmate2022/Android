@@ -140,7 +140,7 @@ class MyPageFragment  : Fragment(){
             override fun onResponse(call: Call<myAvatarRes>, response: Response<myAvatarRes>) {
                 if (response.isSuccessful) {
                     var re = response.body()!!
-                    Log.e("avata555555555r", re.toString())
+                    //Log.e("avata555555555r", re.toString())
                     adapter = avatarAdapter(re.list)
                     for(i: avatarBody in re.list){
                         if(i.isBasic==true){

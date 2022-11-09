@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface ChatbotService {
     companion object{
-        public val API_URL = " http://172.20.4.93:8080/"
+        public val API_URL = " http://172.20.7.122:8080/"
     }
 
 

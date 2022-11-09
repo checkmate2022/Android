@@ -5,7 +5,7 @@ object Constant{
     val MESSAGE_TYPE_ENTER: String = "ENTER"
     val MESSAGE_TYPE_TALK: String = "TALK"
     var SENDER: String = "DEFAULT"
-    val URL: String = "ws://172.20.4.93:8080/chat/chatting/websocket"
+    val URL: String = "ws://10.0.2.2:8080/chat/chatting/websocket"
     //ws://[도메인]/[엔드포인트]/websocket
     var CHATROOM_ID: String = "0"
 

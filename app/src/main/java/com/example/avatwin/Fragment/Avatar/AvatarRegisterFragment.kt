@@ -47,6 +47,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class AvatarRegisterFragment  : Fragment(){
@@ -123,10 +124,10 @@ class AvatarRegisterFragment  : Fragment(){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 //Log.d("ViewPagerFragment", "Page ${position}")
-                styleId=0 //
+                styleId=1 //
                 register_avatar_styleid.setText("0")
                 if(position==0){
-                styleId=0
+                styleId=1
                 register_avatar_styleid.setText("0")}
                 else if(position==1){
                     styleId=1
@@ -159,8 +160,18 @@ class AvatarRegisterFragment  : Fragment(){
             val gson = GsonBuilder()
                     .setLenient()
                     .create()
-            val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
+            val okHttpClient = OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .addInterceptor(Interceptor { chain ->
+                    chain.request().newBuilder()
+                        .addHeader("Connection", "close")
+                        .addHeader("Accept-Encoding", "identity")
+                        .build()
+                        .let(chain::proceed) }).build()
             var retrofit = Retrofit.Builder()
+                .client(okHttpClient)
                 .baseUrl(AvatarService.API_URL2)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addConverterFactory(ScalarsConverterFactory.create()).build()
@@ -176,11 +187,12 @@ class AvatarRegisterFragment  : Fragment(){
                     "file", m_imageFile!!.name, requestBodyProfile
             )
 
-            apiService.make_avatar(
-                    multipartBodyProfile, 10
+            apiService.make_avatar2(
+                    multipartBodyProfile, avatarStyle,avatarStyleId,avatarName
             ).enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     //미리보기
+                    Log.e("avatar",response.body()!!.byteStream().toString())
                      creadImageFile = response.body()!!.byteStream()
                     val bitmap = BitmapFactory.decodeStream(creadImageFile)
                     avatar_created_image.setImageBitmap(bitmap)
@@ -496,7 +508,7 @@ class AvatarRegisterFragment  : Fragment(){
             .create()
         val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
         var retrofit = Retrofit.Builder()
-            .baseUrl(AvatarService.API_URL2)
+            .baseUrl(AvatarService.API_URL3)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addConverterFactory(ScalarsConverterFactory.create()).build()
 

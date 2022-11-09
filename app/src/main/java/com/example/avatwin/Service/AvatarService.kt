@@ -11,9 +11,9 @@ import java.io.File
 
 interface AvatarService {
     companion object{
-        public val API_URL = " http://172.20.4.93:8080/api/v1/"
-        public val API_URL2 = "http://172.20.4.93:5000/"
-        public val API_URL3 = "http://172.20.4.93:5001/"
+        public val API_URL = " http://10.0.2.2:8080/api/v1/"
+        public val API_URL2 = "http://172.20.7.122:5000/"
+        public val API_URL3 = "http://172.20.7.122:5001/"
         // http://127:5000/ 10.0.2.2:8080
         // public val API_URL2 = "http://172.20.9.2:5000/"
     }
@@ -85,7 +85,7 @@ interface AvatarService {
 
     //이모티콘생성
     @Multipart
-    @POST("aa")
+    @POST("anime")
     fun make_emoticon(
         @Part file: MultipartBody.Part,
         ): Call<List<emoticonGetBody>>

@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface ScheduleService {
     companion object{
-        public val API_URL = " http://172.20.4.93:8080/api/v1/"
+        public val API_URL = " http://172.20.7.122:8080/api/v1/"
     }
 
     //일정등록
