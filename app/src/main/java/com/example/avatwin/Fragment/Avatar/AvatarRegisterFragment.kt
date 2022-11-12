@@ -143,7 +143,7 @@ class AvatarRegisterFragment  : Fragment(){
         //이모티콘 생성
         avatar_imo_button.setOnClickListener{
            //melonEmotikon() emoticonGetBody
-            makeEmoticon()
+            makeEmoticon(register_avatar_name.getText().toString())
         }
 
         //아바타 등록
@@ -180,14 +180,14 @@ class AvatarRegisterFragment  : Fragment(){
 
 
             val requestBodyProfile = RequestBody.create(
-                    MediaType.parse("image/jpeg"), m_imageFile
+                    MediaType.parse("image/png"), m_imageFile
             )
 
             val multipartBodyProfile = MultipartBody.Part.createFormData(
                     "file", m_imageFile!!.name, requestBodyProfile
             )
 
-            apiService.make_avatar2(
+            apiService.make_avatar(
                     multipartBodyProfile, avatarStyle,avatarStyleId,avatarName
             ).enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -216,7 +216,8 @@ class AvatarRegisterFragment  : Fragment(){
                     var out: OutputStream? = null
                     try{
                         out = FileOutputStream(c_imageFile)
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out)
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 80, out)
+                       // https://github.com/gcacace/android-signaturepad/issues/80
                     }finally{
                         out?.close()
                     }
@@ -252,10 +253,10 @@ class AvatarRegisterFragment  : Fragment(){
 
 
             val requestBodyProfile = RequestBody.create(
-                    MediaType.parse("image/jpeg"), m_imageFile
+                    MediaType.parse("image/png"), m_imageFile
             )
             val requestBodyProfile2 = RequestBody.create(
-                    MediaType.parse("image/jpeg"), c_imageFile
+                    MediaType.parse("image/png"), c_imageFile
             )
             val multipartBodyProfile = MultipartBody.Part.createFormData(
                     "originfile", m_imageFile!!.name, requestBodyProfile
@@ -449,7 +450,7 @@ class AvatarRegisterFragment  : Fragment(){
         private fun createImageFile(): File {
             val timestamp : String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
             val storageDir : File? = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-            return File.createTempFile("JPEG_${timestamp}_", ".jpeg", storageDir).apply {
+            return File.createTempFile("PNG_${timestamp}_", ".png", storageDir).apply {
                 currentPhotoPath = absolutePath
             }
         }
@@ -485,24 +486,9 @@ class AvatarRegisterFragment  : Fragment(){
         )
     }
 
-    fun melonEmotikon(){
-        Glide.with(requireContext())
-            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/sad.png") // 불러올 이미지 url
-            .into(re_i1)
-        Glide.with(requireContext())
-            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/wink.png") // 불러올 이미지 url
-            .into(re_i2)
 
-        Glide.with(requireContext())
-            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/happy.png") // 불러올 이미지 url
-            .into(re_i3)
 
-        Glide.with(requireContext())
-            .load("https://checkmatebucket.s3.ap-northeast-2.amazonaws.com/emoticons/angry.png") // 불러올 이미지 url
-            .into(re_i4)
-    }
-
-    fun makeEmoticon(){
+    fun makeEmoticon(avatarName: String){
         val gson = GsonBuilder()
             .setLenient()
             .create()
@@ -524,7 +510,7 @@ class AvatarRegisterFragment  : Fragment(){
         )
 
         apiService.make_emoticon(
-            multipartBodyProfile
+            multipartBodyProfile,avatarName
         ).enqueue(object : Callback<List<emoticonGetBody>> {
             override fun onResponse(call: Call<List<emoticonGetBody>>, response: Response<List<emoticonGetBody>>) {
                 sadUrl= response.body()!![0].sad!!
@@ -534,19 +520,20 @@ class AvatarRegisterFragment  : Fragment(){
 
                 //val result = response.body()!!
                 Log.e("emonticon",response.body()!![0].angry.toString())
+                //Log.e("emonticon",response.body()!![1].angry.toString())
                 Glide.with(requireContext())
-                    .load(response.body()!![0].angry) // 불러올 이미지 url
+                    .load(angryUrl)
                     .into(re_i1)
                 Glide.with(requireContext())
-                    .load(response.body()!![0].happy) // 불러올 이미지 url
+                    .load(response.body()!![0].happy)
                     .into(re_i2)
 
                 Glide.with(requireContext())
-                    .load(response.body()!![0].sad) // 불러올 이미지 url
+                    .load(response.body()!![0].sad)
                     .into(re_i3)
 
                 Glide.with(requireContext())
-                    .load(response.body()!![0].wink) // 불러올 이미지 url
+                    .load(response.body()!![0].wink)
                     .into(re_i4)
             }
 

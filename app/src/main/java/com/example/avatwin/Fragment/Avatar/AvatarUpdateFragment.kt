@@ -176,7 +176,7 @@ class AvatarUpdateFragment(val avatarSeq: Long)  : Fragment(){
             )
 
             apiService.make_avatar(
-                    multipartBodyProfile, avatarStyleId
+                    multipartBodyProfile, avatarStyle,avatarStyleId,avatarName
             ).enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     //미리보기
