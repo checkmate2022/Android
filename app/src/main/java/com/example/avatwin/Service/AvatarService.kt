@@ -11,9 +11,9 @@ import java.io.File
 
 interface AvatarService {
     companion object{
-        public val API_URL = " http://10.0.2.2:8080/api/v1/"
-        public val API_URL2 = "http://172.20.7.122:5000/"
-        public val API_URL3 = "http://172.20.7.122:5001/"
+        public val API_URL = " http://172.30.1.17:8080/api/v1/"
+        public val API_URL2 = "http://172.30.1.17:5000/"
+        public val API_URL3 = "http://172.30.1.17:5000/"
         // http://127:5000/ 10.0.2.2:8080
         // public val API_URL2 = "http://172.20.9.2:5000/"
     }
@@ -55,19 +55,10 @@ interface AvatarService {
     @GET("avatar/{avatarId}")
     fun get_avatarId(@Path("avatarId") avatarId:Long):Call<avatarGetIdRes>
 
-    //아바타 생성: local flask test용
-    @Multipart
-    @POST("uploader")
-    fun make_avatar(
-        @Part file: MultipartBody.Part,
-        @Part("user_id")id: Long
-    ): Call<ResponseBody>
-
-
     //아바타 생성: 실제flask서버
     @Multipart
     @POST("aa")
-    fun make_avatar2(
+    fun make_avatar(
         @Part file: MultipartBody.Part,
         @Part("style")style: String,
         @Part("id")id: Long,
@@ -80,7 +71,7 @@ interface AvatarService {
     fun delete_avatar(@Path("avatarId") avatarId:Long):Call<avatarDelRes>
 
     //아바타 기본설정
-    @GET("avatar/isBasic/{avatarId}")
+    @POST("avatar/isBasic/{avatarId}")
     fun basic_avatar(@Path("avatarId") avatarId:Long):Call<avatarDelRes>
 
     //이모티콘생성
@@ -88,6 +79,7 @@ interface AvatarService {
     @POST("anime")
     fun make_emoticon(
         @Part file: MultipartBody.Part,
+        @Part("name")name: String
         ): Call<List<emoticonGetBody>>
 }
 

@@ -61,66 +61,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class AvatarUpdateFragment(val avatarSeq: Long)  : Fragment(){
-    private val OPEN_GALLERY = 1
-    private val REQUEST_IMAGE_CAPTURE = 2
-    private val GALLERY_ACCESS_REQUEST_CODE = 1001
-    var profileUri: Uri? = null
-    lateinit var currentPhotoPath : String //문자열 형태의 사진 경로값 (초기값을 null로 시작하고 싶을 때 - lateinti var)
-    val REQUEST_IMAGE_PICK = 10
-    var m_imageFile: File? = null
-    var creadImageFile: InputStream? = null
-    var c_imageFile: File? = null
+class AvatarSelectFragment(val avatarSeq: Long)  : Fragment(){
 
-    var requestBodyProfile2:RequestBody?=null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        var root = inflater.inflate(R.layout.fragment_avatar_update, container, false)
-
-        //기존 아바타 정보 가져오기
-        val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
-        var retrofit = Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(AvatarService.API_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addConverterFactory(ScalarsConverterFactory.create()).build()
-
-        var apiService = retrofit.create(AvatarService::class.java)
+        var root = inflater.inflate(R.layout.fragment_avatar_select, container, false)
 
 
-        apiService.get_avatarId(avatarSeq).enqueue(object : Callback<avatarGetIdRes> {
-            override fun onResponse(call: Call<avatarGetIdRes>, response: Response<avatarGetIdRes>) {
-                val result = response.body()
-
-                Glide.with(view!!).load(result!!.data.avatarCreatedUrl).into(root.avatar_created_image)
-                Glide.with(requireContext())
-                    .load(result!!.data.emoticons[0].emoticonUrl)
-                    .into(root.re_i1)
-                Glide.with(requireContext())
-                    .load(result!!.data.emoticons[1].emoticonUrl)
-                    .into(root.re_i2)
-
-                Glide.with(requireContext())
-                    .load(result!!.data.emoticons[2].emoticonUrl)
-                    .into(root.re_i3)
-
-                Glide.with(requireContext())
-                    .load(result!!.data.emoticons[3].emoticonUrl)
-                    .into(root.re_i4)
-
-                root.created_avatar_address.setText(result!!.data.avatarCreatedUrl)
-                root.sad_emoticon_address.setText(result!!.data.emoticons[0].emoticonUrl)
-                root.happy_emoticon_address.setText(result!!.data.emoticons[1].emoticonUrl)
-                root.wink_emoticon_address.setText(result!!.data.emoticons[2].emoticonUrl)
-                root.angry_emoticon_address.setText(result!!.data.emoticons[3].emoticonUrl)
-
-
-            }
-
-            override fun onFailure(call: Call<avatarGetIdRes>, t: Throwable) {
-                Log.e("avatar_create", "OnFailuer+${t.message}")
-            }
-        })
         return root
     }
 
