@@ -171,12 +171,46 @@
 
             </LinearLayout>>
 
+
+
+        <LinearLayout
+            android:id="@+id/register_avatar_image_group"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            app:layout_constraintTop_toBottomOf="@id/register_avatar_style_group">
+            <TextView
+                android:text="만들고 싶은 아바타 스타일의 이미지를 고르세요"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/register_avatar_image_title"
+                app:layout_constraintTop_toTopOf="parent"
+                style="@style/registerTitle"/>
+            <Button
+                android:id="@+id/avatar_image"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_pup"
+                android:letterSpacing="-0.05"
+                android:text="이미지 보기"
+
+                android:layout_marginTop="5dp"
+                android:textColor="@color/white"
+                android:textSize="14dp"
+                />
+        <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/register_avatar_image_title"
+            app:layout_constraintStart_toStartOf="parent"
+  />
             <!--아바타 스타일-->
             <LinearLayout
                 android:id="@+id/register_avatar_style_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/register_avatar_description_group">
 
@@ -206,10 +240,10 @@
                         android:text="cartoon"></RadioButton>
 
                     <RadioButton
-                        android:id="@+id/arcane"
+                        android:id="@+id/pixar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="arcane"></RadioButton>
+                        android:text="pixar"></RadioButton>
 
                     <RadioButton
                         android:id="@+id/caricature"
@@ -227,29 +261,6 @@
 
 
             </LinearLayout>>
-
-        <LinearLayout
-            android:id="@+id/register_avatar_image_group"
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            app:layout_constraintTop_toBottomOf="@id/register_avatar_style_group">
-            <TextView
-                android:text="만들고 싶은 아바타 스타일의 이미지를 고르세요"
-                app:layout_constraintStart_toStartOf="parent"
-                android:id="@+id/register_avatar_image_title"
-                app:layout_constraintTop_toTopOf="parent"
-                style="@style/registerTitle"/>
-
-        <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/register_avatar_image_title"
-            app:layout_constraintStart_toStartOf="parent"
-  />
-
         </LinearLayout>
             <!--스타일 아이디-->
             <LinearLayout
@@ -302,7 +313,8 @@
                         android:textColor="#F44336"
                         style="@style/registerTitle"
                         android:layout_gravity="center"
-                        android:text="버튼을 누르고 잠시만 기다려 주세요"
+                        android:layout_marginTop="10dp"
+                        android:text="버튼을 누르고 25초만 기다려 주세요"
                      />
 
                     <ImageView

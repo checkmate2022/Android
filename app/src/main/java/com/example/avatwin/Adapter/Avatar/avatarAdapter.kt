@@ -50,6 +50,11 @@ class avatarAdapter(var item:ArrayList<avatarBody>):RecyclerView.Adapter<avatarA
             items.remove(item)
             MyPageFragment!!.deleteAvatar(item.avatarSeq)
         }
+
+        holder.itemView.setOnClickListener {
+            itemClickListner.onClick(it, position)
+
+        }
         }
 
     override fun getItemCount()=items.size

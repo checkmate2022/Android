@@ -11,9 +11,9 @@ import java.io.File
 
 interface AvatarService {
     companion object{
-        public val API_URL = " http://192.168.0.14:8080/api/v1/"
-        public val API_URL2 = "http://192.168.0.14:5000/"
-        public val API_URL3 = "http://192.168.0.14:5000/"
+        public val API_URL = " http://172.30.1.17:8080/api/v1/"
+        public val API_URL2 = "http://172.30.1.17:5000/"
+        public val API_URL3 = "http://172.30.1.17:5000/"
         // http://127:5000/ 10.0.2.2:8080
         // public val API_URL2 = "http://172.20.9.2:5000/"
     }
@@ -71,7 +71,7 @@ interface AvatarService {
     fun delete_avatar(@Path("avatarId") avatarId:Long):Call<avatarDelRes>
 
     //아바타 기본설정
-    @GET("avatar/isBasic/{avatarId}")
+    @POST("avatar/isBasic/{avatarId}")
     fun basic_avatar(@Path("avatarId") avatarId:Long):Call<avatarDelRes>
 
     //이모티콘생성

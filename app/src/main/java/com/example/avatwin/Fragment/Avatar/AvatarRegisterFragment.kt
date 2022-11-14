@@ -2,11 +2,11 @@ package com.example.avatwin.Fragment.Avatar
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.avatwin.Adapter.Avatar.avatarExampleAdapter
@@ -34,7 +35,10 @@ import com.example.avatwin.DataClass.myAvatarRes
 import com.example.avatwin.Fragment.MyPageFragment
 import com.example.avatwin.R
 import com.example.avatwin.Service.AvatarService
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.dialog_schedule_list.*
 import kotlinx.android.synthetic.main.fragment_avatar_register.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import okhttp3.*
@@ -65,6 +69,8 @@ class AvatarRegisterFragment  : Fragment(){
     var happyUrl=""
     var winkUrl=""
     var angryUrl=""
+    val layoutManager2 = LinearLayoutManager(activity)
+    lateinit var tnrBottomSheetDialog: BottomSheetDialog
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var root = inflater.inflate(R.layout.fragment_avatar_register, container, false)
@@ -99,23 +105,30 @@ class AvatarRegisterFragment  : Fragment(){
             when(checkedId){
                 R.id.cartoon -> {
                     avatar_style = "cartoon"
-                    viewPager_image.adapter = avatarExampleAdapter(getCaricutures())
+                   // viewPager_image.adapter = avatarExampleAdapter(getCaricutures())
                 }
 
-                R.id.arcane -> avatar_style = "arcane"
+                R.id.pixar -> avatar_style = "pixar"
 
                 R.id.caricature -> avatar_style = "caricature"
 
                 R.id.webtoon -> {
                     avatar_style = "webtoon"
-                    viewPager_image.adapter = avatarExampleAdapter(getWebtoons())
+                   // viewPager_image.adapter = avatarExampleAdapter(getWebtoons())
                 }
 
             }
         }
+        avatar_image.setOnClickListener{
+            val tnrBottomSheetView = layoutInflater.inflate(R.layout.fragment_avatar_select, null)
+            tnrBottomSheetDialog = BottomSheetDialog(requireContext(), R.style.DialogCustomTheme) // dialog에 sytle 추가
+            tnrBottomSheetDialog.setContentView(tnrBottomSheetView)
+            tnrBottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            tnrBottomSheetDialog.show()
+        }
 
-        //스타일 번호도 달라지게 ㅇ
-        viewPager_image.adapter = avatarExampleAdapter(getCaricutures()) // 어댑터 생성
+       /* //스타일 번호도 달라지게 ㅇ
+        viewPager_image.adapter = avatarExampleAdapter(getWebtoons()) // 어댑터 생성
         viewPager_image.orientation = ViewPager2.ORIENTATION_HORIZONTAL // 방향을 가로로
         var styleId=0
         viewPager_image.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -123,21 +136,23 @@ class AvatarRegisterFragment  : Fragment(){
             // Paging 완료되면 호출
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                //Log.d("ViewPagerFragment", "Page ${position}")
-                styleId=1 //
+
+
+
+             /*   styleId=1 //
                 register_avatar_styleid.setText("0")
                 if(position==0){
                 styleId=1
                 register_avatar_styleid.setText("0")}
                 else if(position==1){
                     styleId=1
-                    register_avatar_styleid.setText("1")}
+                    register_avatar_styleid.setText("1")}*/
             }
         })
-
+*/
         //아바타 변형
         avatar_created_button.setOnClickListener{
-         makeAvatar(register_avatar_name.getText().toString(), avatar_style, styleId.toLong())
+         makeAvatar(register_avatar_name.getText().toString(), avatar_style, register_avatar_styleid.getText().toString().toLong())
         }
 
         //이모티콘 생성
@@ -218,6 +233,7 @@ class AvatarRegisterFragment  : Fragment(){
                         out = FileOutputStream(c_imageFile)
                         bitmap.compress(Bitmap.CompressFormat.PNG, 80, out)
                        // https://github.com/gcacace/android-signaturepad/issues/80
+
                     }finally{
                         out?.close()
                     }
@@ -467,7 +483,7 @@ class AvatarRegisterFragment  : Fragment(){
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
 
     }
-
+/*
     //이미지 리스트
     private fun getCaricutures(): ArrayList<Int> {
         return arrayListOf<Int>(
@@ -477,7 +493,7 @@ class AvatarRegisterFragment  : Fragment(){
             R.drawable.caricuture2,
             R.drawable.caricuture3
             )
-    }
+    }*/
 
     private fun getWebtoons(): ArrayList<Int> {
         return arrayListOf<Int>(
@@ -502,7 +518,7 @@ class AvatarRegisterFragment  : Fragment(){
 
 
         val requestBodyProfile = RequestBody.create(
-            MediaType.parse("image/jpeg"), c_imageFile
+            MediaType.parse("image/png"), c_imageFile
         )
 
         val multipartBodyProfile = MultipartBody.Part.createFormData(

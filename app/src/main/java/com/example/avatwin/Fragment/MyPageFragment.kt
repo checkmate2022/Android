@@ -70,6 +70,7 @@ class MyPageFragment  : Fragment(){
     fun basicAvatar(position:Long?,name:String?,imageUrl:String?){
         //아바타이름, 사진변경
         //함수안에
+        Log.e("avatar",position!!.toString())
         val okHttpClient = OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build()
         var retrofit = Retrofit.Builder()
             .client(okHttpClient)
@@ -82,6 +83,7 @@ class MyPageFragment  : Fragment(){
         apiService.basic_avatar(position!!).enqueue(object : Callback<avatarDelRes> {
             override fun onResponse(call: Call<avatarDelRes>, response: Response<avatarDelRes>) {
                 val result = response.body()
+                Log.e("avatar",result!!.success.toString())
                 recyclerView_avatar.adapter!!.notifyDataSetChanged()
                 pf_avatar_name.setText(name)
                 Glide.with(view!!).load(imageUrl).into(pf_img)
@@ -149,7 +151,7 @@ class MyPageFragment  : Fragment(){
                     }
 
                     root.recyclerView_avatar.adapter= adapter
-/*
+
                     adapter.setItemClickListener(object : avatarAdapter.ItemClickListener {
                         override fun onClick(view: View, position: Int) {
 
@@ -165,7 +167,7 @@ class MyPageFragment  : Fragment(){
                             transaction.commit()
 
                         }
-                    })*/
+                    })
                 } }
 
             override fun onFailure(call: Call<myAvatarRes>, t: Throwable) {
